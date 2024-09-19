@@ -14,9 +14,10 @@ import java.time.LocalDateTime;
 public class ErrorData {
 
     String errorMessage;
-    String path;
-    Integer status;
+    String fieldName;
+    int status;
     Timestamp timestamp;
+    String path;
 
     public ErrorData(String errorMessage, String path, Integer status) {
         this.errorMessage = errorMessage;
