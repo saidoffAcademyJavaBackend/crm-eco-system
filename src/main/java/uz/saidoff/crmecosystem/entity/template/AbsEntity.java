@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class AbsEntity implements Serializable {
