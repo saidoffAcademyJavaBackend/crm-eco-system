@@ -1,4 +1,4 @@
-package uz.saidoff.crmecosystem.entity;
+package uz.saidoff.crmecosystem.entity.auth;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +22,7 @@ public class User extends AbsEntity implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-    private String phone;
+    private String phoneNumber;
 
     @ManyToOne(optional = false) //not null
     private Role role;
@@ -35,6 +35,6 @@ public class User extends AbsEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> role.getRoleType().name());
+        return role.getPermission();
     }
 }

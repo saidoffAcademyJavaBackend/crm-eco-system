@@ -33,9 +33,9 @@ public class ResponseData<T> {
         this.success = success;
     }
 
-    public ResponseData(String path, String message, Integer errorCode){
+    public ResponseData(String message, String path, Integer errorCode){
         this.success = false;
-        this.errorData = Collections.singletonList(new ErrorData(path, message, errorCode));
+        this.errorData = Collections.singletonList(new ErrorData(message, path, errorCode));
     }
 
     public ResponseData(List<ErrorData>  errorData){
@@ -51,8 +51,8 @@ public class ResponseData<T> {
     }
 
 
-    public static ResponseData<ErrorData> errorResponse(String path, String message, Integer errorCode) {
-        return new ResponseData<>(path, message, errorCode);
+    public static ResponseData<ErrorData> errorResponse(String message, String path, Integer errorCode) {
+        return new ResponseData<>(message, path, errorCode);
 
     }
     public static ResponseData<ErrorData> errorResponse(List<ErrorData> errors){
