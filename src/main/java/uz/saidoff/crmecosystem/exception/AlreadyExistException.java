@@ -1,6 +1,6 @@
 package uz.saidoff.crmecosystem.exception;
 
-public class NotFoundException extends RuntimeException {
+public class AlreadyExistException extends RuntimeException {
 
     String message;
 
@@ -8,7 +8,8 @@ public class NotFoundException extends RuntimeException {
     public String getMessage() {
         return message;
     }
-    public NotFoundException(String message) {
+
+    public AlreadyExistException(String message) {
         this.message = message;
     }
 }

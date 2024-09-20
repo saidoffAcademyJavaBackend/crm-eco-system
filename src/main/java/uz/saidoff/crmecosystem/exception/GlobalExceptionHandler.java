@@ -39,9 +39,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseData<ErrorData>> handleException(NotFoundException exception, WebRequest request){
         LOGGER.error(exception.getMessage(), exception);
         return new ResponseEntity<>(ResponseData.errorResponse(
-                request.getDescription(false),
                 exception.getMessage(),
+                request.getDescription(false),
                 HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
     }
-
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ResponseData<ErrorData>> handleException(AlreadyExistException exception, WebRequest request){
+        LOGGER.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(ResponseData.errorResponse(
+                exception.getMessage(),
+                request.getDescription(false),
+                HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+    }
 }

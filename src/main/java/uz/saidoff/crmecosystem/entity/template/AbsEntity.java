@@ -20,8 +20,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
+
 public abstract class AbsEntity implements Serializable {
     @Id
     @GeneratedValue
