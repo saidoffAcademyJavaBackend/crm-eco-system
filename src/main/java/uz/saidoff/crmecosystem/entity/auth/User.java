@@ -37,4 +37,9 @@ public class User extends AbsEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getPermission();
     }
+
+    @Override
+    public String getUsername() {
+        return phoneNumber;
+    }
 }

@@ -42,6 +42,7 @@ public class DataLoader implements CommandLineRunner {
             employeeRole.setPermission(Collections.singleton(readOnly));
             roleRepository.save(employeeRole);
 
+
         }
     }
 }

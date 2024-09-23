@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.payload.RegistrationRequest;
+
 import uz.saidoff.crmecosystem.payload.AuthenticateRequest;
 import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
@@ -24,7 +26,7 @@ public class UserMapper {
     private final RoleRepository roleRepository;
 
 
-    public  User toEntity(AuthenticateRequest request){
+    public  User toEntity(RegistrationRequest request){
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());

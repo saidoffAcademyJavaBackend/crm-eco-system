@@ -8,6 +8,10 @@ public interface RestConstant {
 
     String AUTH_API = "api/v1/auth";
     String SIGN_UP_API = "sign-up";
+    String AUTHORIZATION_HEADER = "Authorization";
+    String TOKEN_TYPE = "Bearer ";
+
+
 
 
 

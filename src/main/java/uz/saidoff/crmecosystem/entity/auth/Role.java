@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class Role extends AbsEntity  {
+
     private String name;
     private RoleType roleType;
 
