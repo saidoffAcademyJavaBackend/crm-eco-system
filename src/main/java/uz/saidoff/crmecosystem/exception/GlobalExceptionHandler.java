@@ -87,4 +87,13 @@ public class GlobalExceptionHandler {
                 request.getDescription(false),
                 HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ResponseData<ErrorData>> handleException(ForbiddenException exception, WebRequest request){
+        LOGGER.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(ResponseData.errorResponse(
+                exception.getMessage(),
+                request.getDescription(false),
+                HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+
+    }
 }
