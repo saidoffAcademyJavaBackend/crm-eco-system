@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uz.saidoff.crmecosystem.entity.auth.Role;
+import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.valid.PasswordValidate;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -19,8 +21,7 @@ public class UserCreateDto {
     private String lastName;
     @PasswordValidate
     private String password;
-    private String username;
     private String phoneNumber;
-    private boolean enabled;
-    private Role role;
+    private UUID roleId;
+    private List<Permissions> permissions;
 }
