@@ -17,11 +17,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username.isBlank() || username.isEmpty()){
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        if (phoneNumber.isBlank() || phoneNumber.isEmpty()){
             throw new UsernameNotFoundException(MessageService.getMessage(MessageKey.NULL_USERNAME_FROM_TOKEN));
         }
-        return userRepository.findByPhoneNumber(username).orElseThrow(
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.USERNAME_NOT_FOUND)));
 
     }

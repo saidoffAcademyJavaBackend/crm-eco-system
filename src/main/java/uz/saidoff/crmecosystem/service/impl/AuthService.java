@@ -39,9 +39,9 @@ public class AuthService implements IAuthService {
     public ResponseData<AuthenticationResponse> authenticate(AuthenticationRequest request) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getPhoneNumber(),
                         request.getPassword()));
-        User user = userRepository.findByPhoneNumber(request.getUsername()).orElseThrow(
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.USERNAME_NOT_FOUND)));
         String token = jwtProvider.generateAccessToken(user);
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();

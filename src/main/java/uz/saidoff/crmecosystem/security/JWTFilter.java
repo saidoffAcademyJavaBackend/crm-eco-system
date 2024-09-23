@@ -56,8 +56,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 throw new ServletException(exception.getMessage());
             }
         }
-
-
-
+        filterChain.doFilter(request, response);
     }
 }
