@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.AuthenticateRequest;
+import uz.saidoff.crmecosystem.payload.RegistrationRequest;
+
 import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
@@ -24,11 +25,10 @@ public class UserMapper {
     private final RoleRepository roleRepository;
 
 
-    public  User toEntity(AuthenticateRequest request){
+    public  User toEntity(RegistrationRequest request){
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhoneNumber(request.getPhoneNumber());
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
@@ -40,11 +40,8 @@ public class UserMapper {
         User user = new User();
         user.setFirstName(userCreateDto.getFirstName());
         user.setLastName(userCreateDto.getLastName());
-        user.setUsername(userCreateDto.getUsername());
         user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         user.setPhoneNumber(userCreateDto.getPhoneNumber());
-        user.setRole(roleRepository.findByRoleType(userCreateDto.getRole().getRoleType()).orElseThrow(
-                () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
         return user;
     }
 
@@ -75,9 +72,7 @@ public class UserMapper {
         if (userDto.getLastName() != null) {
             user.setLastName(userDto.getLastName());
         }
-        if (userDto.getUsername() != null) {
-            user.setUsername(userDto.getUsername());
-        }
+
         if (userDto.getPhoneNumber() != null) {
             user.setPhoneNumber(userDto.getPhoneNumber());
         }

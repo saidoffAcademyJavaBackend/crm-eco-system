@@ -17,7 +17,7 @@ public class UserCrudController {
     private final UserCrudService userCrudService;
 
     @PostMapping("create-user")
-    public ResponseData<UserDto> createUser(UserCreateDto userDto) {
+    public ResponseData<?> createUser(UserCreateDto userDto) {
         return this.userCrudService.create(userDto);
     }
 
