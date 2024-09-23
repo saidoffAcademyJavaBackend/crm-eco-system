@@ -48,11 +48,11 @@ public class SecurityConfig  {
                .authenticationProvider(authenticationProvider)
                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//               .logout(logout -> logout
-//                       .logoutUrl("/logout")
-//                       .addLogoutHandler(logoutHandler)
-//                       .logoutSuccessHandler((_, _, _) -> SecurityContextHolder.clearContext())
-//               )
+               .logout(logout -> logout
+                       .logoutUrl("/logout")
+                       .addLogoutHandler(logoutHandler)
+                       .logoutSuccessHandler((_, _, _) -> SecurityContextHolder.clearContext())
+               )
                .exceptionHandling(exception -> exception
                        .accessDeniedHandler(accessDeniedHandler)
                        .authenticationEntryPoint(authenticationEntryPoint)
