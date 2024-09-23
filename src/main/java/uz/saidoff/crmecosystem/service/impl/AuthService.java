@@ -31,7 +31,6 @@ public class AuthService implements IAuthService {
     @Override
     public ResponseData<UserDto> registration(RegistrationRequest request) {
         existByPhone(request.getPhoneNumber());
-        existByUsername(request.getUsername());
         User user = userMapper.toEntity(request);
         user = userRepository.save(user);
         return ResponseData.successResponse(userMapper.toDto(user));
@@ -56,9 +55,5 @@ public class AuthService implements IAuthService {
             throw new AlreadyExistException(MessageService.getMessage(MessageKey.PHONE_NUMBER_ALREADY_USED));
         }
     }
-    private void existByUsername(String username) {
-        if (userRepository.existsByUsername(username)) {
-            throw new AlreadyExistException(MessageService.getMessage(MessageKey.USER_ALREADY_REGISTERED));
-        }
-    }
+
 }

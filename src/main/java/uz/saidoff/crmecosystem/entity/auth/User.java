@@ -1,14 +1,17 @@
 package uz.saidoff.crmecosystem.entity.auth;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
+import uz.saidoff.crmecosystem.enums.Permissions;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,9 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "users")
+@Builder
 public class User extends AbsEntity implements UserDetails {
 
-    private String username;
+
     private String password;
     private String firstName;
     private String lastName;
@@ -33,9 +37,16 @@ public class User extends AbsEntity implements UserDetails {
     private boolean credentialsNonExpired = true;
     private boolean accountNonExpiredOrCredentialsNonExpired = true;
 
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Permissions> permissions;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getPermission();
+        return permissions.stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.name()))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -7,10 +7,15 @@ import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.RegistrationRequest;
+
+import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,11 +29,19 @@ public class UserMapper {
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhoneNumber(request.getPhoneNumber());
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
+        return user;
+    }
+
+    public User toEntity(UserCreateDto userCreateDto){
+        User user = new User();
+        user.setFirstName(userCreateDto.getFirstName());
+        user.setLastName(userCreateDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
+        user.setPhoneNumber(userCreateDto.getPhoneNumber());
         return user;
     }
 
@@ -41,5 +54,32 @@ public class UserMapper {
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setRole(user.getRole());
         return userDto;
+    }
+
+    public List<UserDto> toDto(List<User> users){
+        List<UserDto> userDto = new ArrayList<>();
+        for(User user : users){
+            userDto.add(toDto(user));
+        }
+        return userDto;
+    }
+
+    public User update(UserDto userDto, User user) {
+
+        if (userDto.getFirstName() != null) {
+            user.setFirstName(userDto.getFirstName());
+        }
+        if (userDto.getLastName() != null) {
+            user.setLastName(userDto.getLastName());
+        }
+
+        if (userDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getRole() != null) {
+            user.setRole(roleRepository.findByRoleType(userDto.getRole().getRoleType())
+                    .orElseThrow(() -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
+        }
+        return user;
     }
 }
