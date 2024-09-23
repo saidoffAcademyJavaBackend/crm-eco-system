@@ -1,7 +1,6 @@
 package uz.saidoff.crmecosystem.controller;
 
 
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,6 @@ public class FileController {
         return ResponseEntity.ok(fileService.saveFile(multipartFile));
     }
 
-    @ApiOperation(value = "Download a file")
     @GetMapping("/download/{fileId}")
     public ResponseEntity<FileDownloadResponse> downloadResponseResponseEntity(@PathVariable UUID fileId) {
         FileDownloadResponse downloadResponse = fileService.downloadData(fileId);
@@ -47,7 +45,6 @@ public class FileController {
     }
 
 
-    @ApiOperation(value = "Download a file")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable UUID id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);

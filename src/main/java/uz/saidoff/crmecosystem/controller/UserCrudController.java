@@ -6,6 +6,7 @@ import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.UserCrudService;
+import uz.saidoff.crmecosystem.valid.CheckPermission;
 
 import java.util.UUID;
 
@@ -16,21 +17,25 @@ public class UserCrudController {
 
     private final UserCrudService userCrudService;
 
+    @CheckPermission("CREATE_USER")
     @PostMapping("create-user")
     public ResponseData<?> createUser(UserCreateDto userDto) {
         return this.userCrudService.create(userDto);
     }
 
+    @CheckPermission("EDIT_USER")
     @PutMapping("user-update/{userId}")
     public ResponseData<UserDto> updateUser(@PathVariable UUID userId, UserDto userDto) {
         return this.userCrudService.update(userId,userDto);
     }
 
+    @CheckPermission("GET_USER")
     @GetMapping("/{userId}")
     public ResponseData<UserDto> getUser(@PathVariable UUID userId) {
         return this.userCrudService.getUser(userId);
     }
 
+    @CheckPermission("GET_USER")
     @GetMapping("/get-all-users")
     public ResponseData<?> getUsers(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
