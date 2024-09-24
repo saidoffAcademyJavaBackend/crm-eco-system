@@ -5,9 +5,11 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Permissions;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +28,23 @@ public class User extends AbsEntity implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+    private String fatherName;
     private String phoneNumber;
+    private String secondPhoneNumber;
+    private Timestamp birthDate;
+    private String birthPlace;
+    private String currentResidence;
+    private String specialty;
+    private String passportSeries;
+    private Double salary;
+    private String addedBy;
+    private Timestamp startWork;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Group group;
+
+    private Double monthlyPayment;
+    private String attachedMentor;
 
     @ManyToOne(optional = false) //not null
     private Role role;
