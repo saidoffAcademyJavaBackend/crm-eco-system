@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserCrudService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
