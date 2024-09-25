@@ -1,0 +1,109 @@
+package uz.saidoff.crmecosystem.service.impl;
+
+import com.sun.net.httpserver.Request;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.News;
+import uz.saidoff.crmecosystem.entity.auth.Role;
+import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.RoleType;
+import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.mapper.NewsMapper;
+import uz.saidoff.crmecosystem.payload.NewsCreateDto;
+import uz.saidoff.crmecosystem.payload.NewsGetByUserIdDto;
+import uz.saidoff.crmecosystem.payload.NewsUpdateDto;
+import uz.saidoff.crmecosystem.repository.NewsRepository;
+import uz.saidoff.crmecosystem.repository.RoleRepository;
+import uz.saidoff.crmecosystem.repository.UserRepository;
+import uz.saidoff.crmecosystem.response.ErrorData;
+import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.service.NewsService;
+import uz.saidoff.crmecosystem.util.MessageKey;
+import uz.saidoff.crmecosystem.util.MessageService;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class NewsServiceImpl implements NewsService {
+    private final NewsMapper newsMapper;
+    private final NewsRepository newsRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    @Override
+    public ResponseData<?> getAllNewsByUserRoles(UUID userId, int size, int page) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
+        }
+        Role role = optionalUser.get().getRole();
+        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(), size, page * size);
+        if (news.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        List<NewsGetByUserIdDto> list = news.stream().map(newsMapper::toNewsGetByUserId).toList();
+        return ResponseData.successResponse(list);
+    }
+
+    @Override
+    public ResponseData<?> addNews(UUID userId, NewsCreateDto newsCreateDto) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
+        }
+        List<Role> roles = roleRepository.findAllById(newsCreateDto.getRoleId());
+        if (roles.isEmpty()) {
+            throw new NotFoundException("Role not found");
+        }
+        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto, roles);
+        newsRepository.save(news);
+        return ResponseData.successResponse("News added successfully");
+    }
+
+    @Override
+    public ResponseData<?> updateNews(NewsUpdateDto newsUpdateDto, UUID userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
+        }
+        Optional<News> byId = newsRepository.findById(newsUpdateDto.getNewsId());
+        if (byId.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        News news = byId.get();
+        news.setUpdatedBy(userId);
+        news.setContent(newsUpdateDto.getContent());
+        news.setTitle(newsUpdateDto.getTitle());
+        news.setUpdatedAt(Timestamp.from(Instant.now()));
+        news.setAttachmentId(newsUpdateDto.getAttachmentId());
+        if (newsUpdateDto.getRoleId() != null) {
+            List<Role> allById = roleRepository.findAllById(newsUpdateDto.getRoleId());
+            if (allById.isEmpty()) {
+                throw new NotFoundException("Role not found");
+            }
+            news.setRoles(allById);
+        }
+        newsRepository.save(news);
+        return ResponseData.successResponse("News updated successfully");
+    }
+
+    @Override
+    public ResponseData<?> getByNewsId(UUID newsId) {
+        Optional<News> optionalNews = newsRepository.findById(newsId);
+        if (optionalNews.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()));
+    }
+}
