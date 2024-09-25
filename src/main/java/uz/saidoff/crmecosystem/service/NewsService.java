@@ -13,4 +13,6 @@ public interface NewsService {
     ResponseData<?> addNews(UUID userId, NewsCreateDto news);
 
     ResponseData<?> updateNews(NewsUpdateDto newsUpdateDto, UUID userId);
+
+    ResponseData<?> getByNewsId(UUID newsId);
 }

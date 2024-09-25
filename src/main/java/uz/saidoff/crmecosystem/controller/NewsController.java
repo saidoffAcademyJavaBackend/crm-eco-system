@@ -22,12 +22,17 @@ public class NewsController {
         return this.newsService.getAllNewsByUserRoles(userId,size,page);
     }
 
+    @GetMapping("get-by-newsId")
+    public ResponseData<?> getNewsById(@RequestParam UUID newsId) {
+        return this.newsService.getByNewsId(newsId);
+    }
+
     @PostMapping("add-news/{userId}")
     public ResponseData<?> addNews(@PathVariable UUID userId, @RequestBody NewsCreateDto news) {
         return this.newsService.addNews(userId,news);
     }
 
-    @PutMapping("update-one-by-id/{newsId}/{userId}")
+    @PutMapping("update-one-by-id/{userId}")
     public ResponseData<?> updateOneById(@RequestBody NewsUpdateDto newsUpdateDto, @PathVariable UUID userId) {
         return this.newsService.updateNews(newsUpdateDto,userId);
     }

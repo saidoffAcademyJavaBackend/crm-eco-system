@@ -48,7 +48,7 @@ public class NewsServiceImpl implements NewsService {
             throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
         }
         Role role = optionalUser.get().getRole();
-        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(),size,page*size);
+        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(), size, page * size);
         if (news.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
@@ -81,18 +81,29 @@ public class NewsServiceImpl implements NewsService {
         if (byId.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
-        List<Role> allById = roleRepository.findAllById(newsUpdateDto.getRoleId());
-        if (allById.isEmpty()) {
-            throw new NotFoundException("Role not found");
-        }
         News news = byId.get();
         news.setUpdatedBy(userId);
         news.setContent(newsUpdateDto.getContent());
         news.setTitle(newsUpdateDto.getTitle());
-        news.setRoles(allById);
         news.setUpdatedAt(Timestamp.from(Instant.now()));
         news.setAttachmentId(newsUpdateDto.getAttachmentId());
+        if (newsUpdateDto.getRoleId() != null) {
+            List<Role> allById = roleRepository.findAllById(newsUpdateDto.getRoleId());
+            if (allById.isEmpty()) {
+                throw new NotFoundException("Role not found");
+            }
+            news.setRoles(allById);
+        }
         newsRepository.save(news);
         return ResponseData.successResponse("News updated successfully");
+    }
+
+    @Override
+    public ResponseData<?> getByNewsId(UUID newsId) {
+        Optional<News> optionalNews = newsRepository.findById(newsId);
+        if (optionalNews.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()));
     }
 }
