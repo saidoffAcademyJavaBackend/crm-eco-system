@@ -3,6 +3,10 @@ package uz.saidoff.crmecosystem.service.impl;
 import com.sun.net.httpserver.Request;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.entity.auth.Role;
@@ -38,13 +42,13 @@ public class NewsServiceImpl implements NewsService {
     private final RoleRepository roleRepository;
 
     @Override
-    public ResponseData<?> getAllNewsByUserRoles(UUID userId) {
+    public ResponseData<?> getAllNewsByUserRoles(UUID userId, int size, int page) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
         }
         Role role = optionalUser.get().getRole();
-        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name());
+        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(),size,page*size);
         if (news.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
@@ -62,7 +66,7 @@ public class NewsServiceImpl implements NewsService {
         if (roles.isEmpty()) {
             throw new NotFoundException("Role not found");
         }
-        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto,roles);
+        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto, roles);
         newsRepository.save(news);
         return ResponseData.successResponse("News added successfully");
     }

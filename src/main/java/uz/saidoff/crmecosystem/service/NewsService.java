@@ -8,7 +8,7 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import java.util.UUID;
 
 public interface NewsService {
-    ResponseData<?> getAllNewsByUserRoles(UUID userId);
+    ResponseData<?> getAllNewsByUserRoles(UUID userId,int size, int page);
 
     ResponseData<?> addNews(UUID userId, NewsCreateDto news);
 

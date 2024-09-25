@@ -18,8 +18,8 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping("get-allNews-by-userId/{userId}")
-    public ResponseData<?> getAllNews(@PathVariable UUID userId) {
-        return this.newsService.getAllNewsByUserRoles(userId);
+    public ResponseData<?> getAllNews(@PathVariable UUID userId,@RequestParam int page,@RequestParam int size) {
+        return this.newsService.getAllNewsByUserRoles(userId,size,page);
     }
 
     @PostMapping("add-news/{userId}")
