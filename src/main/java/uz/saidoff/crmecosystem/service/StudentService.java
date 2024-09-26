@@ -13,9 +13,13 @@ import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
+import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
 import uz.saidoff.crmecosystem.repository.GroupRepository;
+import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.StudentRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.util.MessageKey;
+import uz.saidoff.crmecosystem.util.MessageService;
 
 import java.util.*;
 
@@ -25,18 +29,16 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private StudentMapper studentMapper;
+    private final RoleRepository roleRepository;
 
-    public ResponseData<?> saved(StudentResponseDto studentResponseDto) {
+    public ResponseData<?> saved(UUID groupId, StudentResponseDto studentResponseDto) {
 
-        Optional<Group> group = groupRepository.findById(studentResponseDto.getGroupId());
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty()) {
             throw new NotFoundException("group not found");
         }
         Group group2 = group.get();
-
-        User mapperFromUserEntity = studentMapper.toFromUserEntity(studentResponseDto);
-        mapperFromUserEntity.setGroup(group2);
-        studentRepository.save(mapperFromUserEntity);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, group2);
 
         return ResponseData.successResponse("student succesfuly created to group");
     }
@@ -47,13 +49,13 @@ public class StudentService {
             return ResponseData.successResponse("student not found");
         }
         User user = studentRepositoryById.get();
-        user.setDeleted(false);
+        user.setDeleted(true);
         studentRepository.save(user);
         return ResponseData.successResponse("student soft delete ");
 
     }
 
-    public ResponseData<?> getStudentGroupFilter(int size, int page) {
+    public ResponseData<?> getStudentGroupSorted(int size, int page) {
         Pageable pageable = PageRequest.of(size, page);
         Page<User> userPage = studentRepository.findAll(pageable);
         if (userPage.isEmpty()) {
@@ -74,5 +76,28 @@ public class StudentService {
             return new ResponseData<>("not found user group", false);
         }
         return ResponseData.successResponse(userList);
+    }
+
+    public ResponseData<?> updateStudent(UUID studentId, StudentUpdateDto updateDto) {
+        Optional<User> optionalUser = studentRepository.findById(studentId);
+        if (optionalUser.isEmpty()) {
+            return new ResponseData<>("student not found ", false);
+        }
+        User user = optionalUser.get();
+        if (updateDto.getFirstName() != null) {
+            user.setFirstName(updateDto.getFirstName());
+        }
+        if (updateDto.getLastName() != null) {
+            user.setLastName(updateDto.getLastName());
+        }
+        if (updateDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(updateDto.getPhoneNumber());
+        }
+        if (updateDto.getRole() != null) {
+            user.setRole(roleRepository.findByRoleType(updateDto.getRole().getRoleType()).orElseThrow(()
+                    -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
+        }
+        studentRepository.save(user);
+        return ResponseData.successResponse(user);
     }
 }

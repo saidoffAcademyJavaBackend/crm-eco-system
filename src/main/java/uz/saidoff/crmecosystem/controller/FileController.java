@@ -32,22 +32,6 @@ public class FileController {
 
     private final FileService fileService;
 
-
-//    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<FileUploadResponse> uploadFile(@Validated @RequestParam("file") MultipartFile multipartFile,
-//                                                         @RequestParam("name") String name) throws IOException {
-//
-//        FileUploadRequest fileUploadRequest = new FileUploadRequest(multipartFile, name);
-//
-//        return ResponseEntity.ok(fileService.saveFile(multipartFile));
-//    }
-//
-//    @GetMapping("/download/{fileId}")
-//    public ResponseEntity<FileDownloadResponse> downloadResponseResponseEntity(@PathVariable UUID fileId) {
-//        FileDownloadResponse downloadResponse = fileService.downloadData(fileId);
-//        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(downloadResponse);
-//    }
-
     @CheckPermission("CREATE_USER")
     @PostMapping(value = "/file-upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> attachmentContentResponseEntity(@Validated @RequestParam("file") MultipartFile multipartFile) throws IOException {

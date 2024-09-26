@@ -1,22 +1,26 @@
 package uz.saidoff.crmecosystem.mapper;
 
 
+import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class StudentMapper {
 
-    public User toFromUserEntity(StudentResponseDto studentResponseDto) {
+    public User toFromUserEntity(StudentResponseDto studentResponseDto, Group group) {
 
         User user = new User();
-        user.setLastName(studentResponseDto.getLastName());
+
         user.setFirstName(studentResponseDto.getFirstName());
+        user.setLastName(studentResponseDto.getLastName());
         user.setFatherName(studentResponseDto.getFatherName());
         user.setPhoneNumber(studentResponseDto.getPhoneNumber());
         user.setSecondPhoneNumber(studentResponseDto.getSecundPhoneNumber());
@@ -26,6 +30,13 @@ public class StudentMapper {
         user.setPassportSeries(studentResponseDto.getPassportSeries());
         user.setRole(studentResponseDto.getRole());
         user.setSalary(studentResponseDto.getSalary());
+        user.setGroup(group);
+
+        user.setDeleted(false);
+        user.setCreatedAt(Timestamp.from(Instant.now()));
+        user.setUpdatedAt(Timestamp.from(Instant.now()));
+
+
         return user;
     }
 
