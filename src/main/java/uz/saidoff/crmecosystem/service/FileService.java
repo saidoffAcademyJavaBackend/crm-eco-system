@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,5 +74,16 @@ public class FileService {
             throw new NotFoundException("file not found ");
         }
         return ResponseData.successResponse(optionalAttachmentContent.get());
+    }
+
+    public ResponseData<?> feleteFile(UUID fileId) {
+        Optional<AttachmentContent> optionalAttachmentContent = attachmetContentRepository.findById(fileId);
+        if (optionalAttachmentContent.isEmpty()) {
+            return new ResponseData<>("file not found", false);
+        }
+        AttachmentContent attachmentContent = optionalAttachmentContent.get();
+        attachmentContent.setDeleted(true);
+        attachmetContentRepository.save(attachmentContent);
+        return ResponseData.successResponse("file succesfuly deleted");
     }
 }

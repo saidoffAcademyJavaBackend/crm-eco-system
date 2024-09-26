@@ -51,4 +51,10 @@ public class FileController {
                 .body(new ByteArrayResource(content.getMainContent()));
     }
 
+    @DeleteMapping("/delete-images{fileId}")
+    public ResponseEntity<ResponseData<?>> deleteFile(@PathVariable UUID fileId) {
+        ResponseData<?> responseData = fileService.feleteFile(fileId);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
+    }
+
 }
