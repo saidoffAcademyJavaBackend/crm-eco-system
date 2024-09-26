@@ -2,63 +2,76 @@ package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import uz.saidoff.crmecosystem.entity.file.FileEntity;
+
+import uz.saidoff.crmecosystem.entity.Attachment;
+import uz.saidoff.crmecosystem.entity.AttachmentContent;
+
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
-
 import uz.saidoff.crmecosystem.payload.imageDto.FileDownloadResponse;
-import uz.saidoff.crmecosystem.payload.imageDto.FileUploadResponse;
+import uz.saidoff.crmecosystem.repository.AttachmetContentRepository;
 import uz.saidoff.crmecosystem.repository.FileRepository;
+import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.ImageUtils;
 
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
 public class FileService {
 
     private final FileRepository fileRepository;
-    private final FileMapper mapper;
+    private final AttachmetContentRepository attachmetContentRepository;
+    private FileMapper fileMapper;
+
 
     public boolean isValidFile(MultipartFile multipartFile) {
         String contentType = multipartFile.getContentType();
 
-        return contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("text/plain");
+        return contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("text/plain")
+                || contentType.equals("application/pdf") || contentType.equals("image/gif") || contentType.equals("application/zip") ||
+                contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
-    public FileUploadResponse saveFile(MultipartFile file) throws IOException {
+    @Transactional
+    public ResponseData<String> saved(MultipartFile multipartFile) throws IOException {
+        AttachmentContent attachmentContent = new AttachmentContent();
 
-        FileEntity save = fileRepository.save(FileEntity.builder()
-                .fileName(file.getOriginalFilename())
-                .fileType(file.getContentType())
-                .fileSize(file.getSize())
-                .data(ImageUtils.compresImage(file.getBytes())).build()
-        );
-
-        return mapper.toFileUploadResponse(save);
-    }
-
-
-    public FileDownloadResponse downloadData(UUID fileId) {
-        Optional<FileEntity> optionalFile = fileRepository.findById(fileId);
-        if (optionalFile.isEmpty()) {
-            throw new NotFoundException("not found");
+        if (!isValidFile(multipartFile)) {
+            throw new IllegalArgumentException("file is not compatible");
         }
-        byte[] deCompresImages = ImageUtils.deCompresImages(optionalFile.get().getData());
-        return mapper.toFIleDownloadResp(deCompresImages, optionalFile.get());
+        //byte[] bytes = ImageUtils.compresImage(multipartFile.getBytes());
+
+        Attachment attachment = new Attachment();
+
+        attachment.setName(multipartFile.getName());
+        attachment.setFileOriginalName(multipartFile.getOriginalFilename());
+        attachment.setContentType(multipartFile.getContentType());
+        attachment.setSize(multipartFile.getSize());
+
+        Attachment saved = fileRepository.save(attachment);
+
+        attachmentContent.setMainContent(multipartFile.getBytes());
+        attachmentContent.setAttachment(saved);
+        attachmetContentRepository.save(attachmentContent);
+
+        return ResponseData.successResponse("succesfuly file upload");
+
     }
 
-    public Optional<FileEntity> getFile(UUID id) {
 
-        Optional<FileEntity> optionalFile = fileRepository.findById(id);
-        if (optionalFile.isEmpty()) {
-            throw new NotFoundException("not found");
+    public ResponseData<AttachmentContent> downloadFile(UUID fileId) {
+        Optional<AttachmentContent> optionalAttachmentContent = attachmetContentRepository.findById(fileId);
+        if (optionalAttachmentContent.isEmpty()) {
+            throw new NotFoundException("file not found ");
         }
-        return optionalFile;
+        return ResponseData.successResponse(optionalAttachmentContent.get());
     }
 }
