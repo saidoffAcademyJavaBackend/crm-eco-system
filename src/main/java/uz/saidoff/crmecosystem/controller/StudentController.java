@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
+import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.StudentService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
@@ -17,9 +18,9 @@ public class StudentController {
     private final StudentService studentService;
 
     @CheckPermission("CREATE_USER")
-    @PostMapping("/student-create")
-    public ResponseEntity<ResponseData<?>> createStudent(@RequestBody StudentResponseDto studentResponseDto) {
-        ResponseData<?> responseData = studentService.saved(studentResponseDto);
+    @PostMapping("/student-create/{groupId}")
+    public ResponseEntity<ResponseData<?>> createStudent(@PathVariable UUID groupId, @RequestBody StudentResponseDto studentResponseDto) {
+        ResponseData<?> responseData = studentService.saved(groupId, studentResponseDto);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
@@ -32,9 +33,9 @@ public class StudentController {
 
     @CheckPermission("GET_USER")
     @GetMapping("/get-all-student")
-    public ResponseEntity<ResponseData<?>> getAllStudentFiltr(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
-        ResponseData<?> responseData = studentService.getStudentGroupFilter(page, size);
+    public ResponseEntity<ResponseData<?>> getAllStudentPagebl(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size) {
+        ResponseData<?> responseData = studentService.getStudentGroupSorted(page, size);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
     }
 
@@ -43,6 +44,13 @@ public class StudentController {
     public ResponseEntity<ResponseData<?>> getGroupFiltr(@PathVariable UUID groupId) {
         ResponseData<?> filtr = studentService.getFiltr(groupId);
         return ResponseEntity.status(filtr.isSuccess() ? 200 : 409).body(filtr);
+    }
+
+    @CheckPermission("EDIT_USER")
+    @PatchMapping("/update-student/{studentId}")
+    public ResponseEntity<ResponseData<?>> updateStudent(@PathVariable UUID studentId, @RequestBody StudentUpdateDto updateDto) {
+        ResponseData<?> responseData = studentService.updateStudent(studentId, updateDto);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
 }

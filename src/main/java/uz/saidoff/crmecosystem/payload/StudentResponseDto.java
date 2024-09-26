@@ -16,7 +16,6 @@ import java.util.UUID;
 @Setter
 public class StudentResponseDto {
 
-    private UUID groupId;
     private String firstName;
     private String lastName;
     private String fatherName;
