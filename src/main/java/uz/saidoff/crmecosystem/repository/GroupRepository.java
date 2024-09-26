@@ -12,4 +12,5 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
     Optional<Group> findByIdAndDeletedIsFalse(UUID id);
 
     List<Group> findAllByDeletedIsFalse();
+
 }
