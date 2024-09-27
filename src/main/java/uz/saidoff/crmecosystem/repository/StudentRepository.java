@@ -4,13 +4,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.GroupStage;
 import uz.saidoff.crmecosystem.enums.RoleType;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface StudentRepository extends JpaRepository<User, UUID> {
     List<User> findByGroupIdAndRoleRoleTypeAndDeletedFalse(UUID groupId, RoleType roleType);
-    User findByIdAndRole(UUID userId, Role role);
+    Optional<User> findByIdAndGroupGroupStageAndDeletedFalse(UUID studentId, GroupStage groupStage);
+
+
 }

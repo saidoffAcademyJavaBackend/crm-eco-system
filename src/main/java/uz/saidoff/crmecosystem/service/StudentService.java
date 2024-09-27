@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.GroupStage;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
+import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
 import uz.saidoff.crmecosystem.repository.GroupRepository;
@@ -22,6 +24,8 @@ import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
 import java.util.*;
+
+import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +43,7 @@ public class StudentService {
         }
         Group group2 = group.get();
         User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, group2);
-
+        studentRepository.save(newUserEntity);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
@@ -71,7 +75,7 @@ public class StudentService {
     }
 
     public ResponseData<?> getFiltr(UUID groupId) {
-        List<User> userList = studentRepository.findByGroupIdAndRoleRoleTypeAndDeletedFalse(groupId, RoleType.STUDENT);
+        List<User> userList = studentRepository.findByGroupIdAndRoleRoleTypeAndDeletedFalse(groupId, STUDENT);
         if (userList.isEmpty()) {
             return new ResponseData<>("not found user group", false);
         }
@@ -99,5 +103,26 @@ public class StudentService {
         }
         studentRepository.save(user);
         return ResponseData.successResponse(user);
+    }
+
+    public ResponseData<?> userTransfer(UUID userId) {
+        Optional<User> optionalUser = studentRepository.findByIdAndGroupGroupStageAndDeletedFalse(userId, GroupStage.STUDENT);
+        if (optionalUser.isEmpty()) {
+            return new ResponseData<>("user not found", false);
+        }
+        User user = optionalUser.get();
+        user.getGroup().setGroupStage(GroupStage.INTERN);
+        studentRepository.save(user);
+        return ResponseData.successResponse("student succesfuly intern ");
+    }
+
+    public ResponseData<?> getUserById(UUID userId) {
+        Optional<User> optionalUser = studentRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return new ResponseData<>("student not fouind", false);
+        }
+        User user = optionalUser.get();
+        StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user);
+        return ResponseData.successResponse(responsStudentDo);
     }
 }

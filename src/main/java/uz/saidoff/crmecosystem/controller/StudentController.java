@@ -53,4 +53,18 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
+    @CheckPermission("EDIT_USER")
+    @PostMapping("/edit-user-transfer-intern/{userId}")
+    public ResponseEntity<ResponseData<?>> userTransferToIntern(@PathVariable UUID userId) {
+        ResponseData<?> responseData = studentService.userTransfer(userId);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
+    }
+
+    @CheckPermission("GET_USER")
+    @GetMapping("/get-user/{userId}")
+    public ResponseEntity<ResponseData<?>> getUser(@PathVariable UUID userId) {
+        ResponseData<?> responseData = studentService.getUserById(userId);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
+    }
+
 }
