@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.EmployeeCreatDto;
 import uz.saidoff.crmecosystem.payload.EmployeeDto;
-import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.EmployeeService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
@@ -41,6 +40,12 @@ public class EmployeeController {
     public ResponseData<?> getEmployee(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
         return this.employeeService.getAllUser(page,size);
+    }
+
+    @CheckPermission("DELETE_USER")
+    @DeleteMapping("delete-employee/{employeeId}")
+    public ResponseData<?> deleteEmployee(@PathVariable UUID employeeId) {
+        return this.employeeService.deleteEmployee(employeeId);
     }
 
 }

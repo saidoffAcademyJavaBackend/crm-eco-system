@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.saidoff.crmecosystem.entity.AttachmentContent;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Permissions;
@@ -12,7 +13,6 @@ import uz.saidoff.crmecosystem.enums.Permissions;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 @Builder
 public class User extends AbsEntity implements UserDetails {
 
-
+    @OneToOne
+    private AttachmentContent attachment;
     private String password;
     private String firstName;
     private String lastName;

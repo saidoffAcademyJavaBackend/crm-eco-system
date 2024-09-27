@@ -74,4 +74,14 @@ public class EmployeeService {
         return new ResponseData<>(response, true);
     }
 
+    public ResponseData<?> deleteEmployee(UUID employeeId) {
+        Optional<User> userOptional = this.employeeRepository.findById(employeeId);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Employee not found");
+        }
+        User user = userOptional.get();
+        user.setDeleted(true);
+        this.employeeRepository.save(user);
+        return ResponseData.successResponse("delete success");
+    }
 }
