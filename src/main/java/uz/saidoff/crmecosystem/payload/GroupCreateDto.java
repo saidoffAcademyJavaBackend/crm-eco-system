@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uz.saidoff.crmecosystem.enums.GroupStage;
 import uz.saidoff.crmecosystem.enums.WeekDays;
 import java.sql.Timestamp;
 import java.util.List;

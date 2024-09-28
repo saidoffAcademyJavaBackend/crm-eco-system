@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
-import uz.saidoff.crmecosystem.enums.GroupStage;
 import uz.saidoff.crmecosystem.enums.WeekDays;
-import java.sql.Timestamp;
+
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 @Entity(name = "groups")
@@ -21,20 +22,15 @@ public class Group extends AbsEntity {
 
     private String name;
 
-    private Integer countOfStudents;
-
     @ManyToOne
     private User teacher;
 
     @ManyToMany
     private List<User> students;
 
-    private Timestamp startTime;
+    private Time startTime;
 
-    private Timestamp endTime;
-
-    @Enumerated(EnumType.STRING)
-    private GroupStage groupStage;
+    private Time endTime;
 
     private boolean active = true;
 
@@ -42,6 +38,10 @@ public class Group extends AbsEntity {
 
     @ManyToOne
     private GroupType groupType;
+
+    private Date startedDate;
+
+    private Double paymentAmount;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

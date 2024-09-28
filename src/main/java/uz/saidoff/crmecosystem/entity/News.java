@@ -21,5 +21,6 @@ public class News extends AbsEntity {
     private String content;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-    private UUID attachmentId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Attachment attachment;
 }
