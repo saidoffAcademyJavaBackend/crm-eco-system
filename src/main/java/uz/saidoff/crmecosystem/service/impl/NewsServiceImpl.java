@@ -69,7 +69,11 @@ public class NewsServiceImpl implements NewsService {
         if (roles.isEmpty()) {
             throw new NotFoundException("Role not found");
         }
-        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto, roles);
+        Optional<Attachment> optionalAttachment = fileRepository.findById(newsCreateDto.getAttachmentId());
+        if (optionalAttachment.isEmpty()) {
+            throw new NotFoundException("attachment not found");
+        }
+        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto, roles,optionalAttachment.get());
         newsRepository.save(news);
         return ResponseData.successResponse("News added successfully");
     }

@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
@@ -23,15 +24,15 @@ public class NewsMapper {
         newsGetByUserIdDto.setTitle(news.getTitle());
         newsGetByUserIdDto.setContent(news.getContent());
         newsGetByUserIdDto.setAttachmentId(news.getAttachment().getId());
-        newsGetByUserIdDto.setRoleType(news.getRoles().get(0).getRoleType().toString());
+        newsGetByUserIdDto.setRoleType(news.getRoles().stream().map(Role::getRoleType).toList());
         newsGetByUserIdDto.setCreatedBy(news.getCreatedBy());
         newsGetByUserIdDto.setCreatedDate(news.getCreatedAt());
         return newsGetByUserIdDto;
     }
 
-    public News fromNewsCreateDtoToNews(User optionalUser, NewsCreateDto newsCreateDto, List<Role> roles) {
+    public News fromNewsCreateDtoToNews(User optionalUser, NewsCreateDto newsCreateDto, List<Role> roles, Attachment attachment) {
         News news = new News();
-        news.setAttachmentId(newsCreateDto.getAttachmentId());
+        news.setAttachment(attachment);
         news.setTitle(newsCreateDto.getTitle());
         news.setContent(newsCreateDto.getContent());
         news.setRoles(roles);
