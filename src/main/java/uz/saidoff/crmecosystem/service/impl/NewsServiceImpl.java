@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
@@ -17,6 +18,7 @@ import uz.saidoff.crmecosystem.mapper.NewsMapper;
 import uz.saidoff.crmecosystem.payload.NewsCreateDto;
 import uz.saidoff.crmecosystem.payload.NewsGetByUserIdDto;
 import uz.saidoff.crmecosystem.payload.NewsUpdateDto;
+import uz.saidoff.crmecosystem.repository.FileRepository;
 import uz.saidoff.crmecosystem.repository.NewsRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
@@ -40,6 +42,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final FileRepository fileRepository;
 
     @Override
     public ResponseData<?> getAllNewsByUserRoles(UUID userId, int size, int page) {
@@ -81,12 +84,16 @@ public class NewsServiceImpl implements NewsService {
         if (byId.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
+        Optional<Attachment> optionalAttachment = fileRepository.findById(newsUpdateDto.getAttachmentId());
+        if (optionalAttachment.isEmpty()) {
+            throw new NotFoundException("attachment not found");
+        }
         News news = byId.get();
         news.setUpdatedBy(userId);
         news.setContent(newsUpdateDto.getContent());
         news.setTitle(newsUpdateDto.getTitle());
         news.setUpdatedAt(Timestamp.from(Instant.now()));
-        news.setAttachmentId(newsUpdateDto.getAttachmentId());
+        news.setAttachment(optionalAttachment.get());
         if (newsUpdateDto.getRoleId() != null) {
             List<Role> allById = roleRepository.findAllById(newsUpdateDto.getRoleId());
             if (allById.isEmpty()) {

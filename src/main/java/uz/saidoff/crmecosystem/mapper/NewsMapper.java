@@ -22,7 +22,7 @@ public class NewsMapper {
         newsGetByUserIdDto.setId(news.getId());
         newsGetByUserIdDto.setTitle(news.getTitle());
         newsGetByUserIdDto.setContent(news.getContent());
-        newsGetByUserIdDto.setAttachmentId(news.getAttachmentId());
+        newsGetByUserIdDto.setAttachmentId(news.getAttachment().getId());
         newsGetByUserIdDto.setRoleType(news.getRoles().get(0).getRoleType().toString());
         newsGetByUserIdDto.setCreatedBy(news.getCreatedBy());
         newsGetByUserIdDto.setCreatedDate(news.getCreatedAt());
