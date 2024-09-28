@@ -7,9 +7,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.saidoff.crmecosystem.entity.AttachmentContent;
 import uz.saidoff.crmecosystem.entity.Group;
+import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Permissions;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -32,22 +34,17 @@ public class User extends AbsEntity implements UserDetails {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
-    private Timestamp birthDate;
+    private Date birthDate;
     private String birthPlace;
     private String currentResidence;
-    private String specialty;
+    private Speciality speciality;
     private String passportSeries;
     private Double salary;
     private String addedBy;
-    private Timestamp startWork;
+    private Date startWork;
+    private Date startStudying;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Group group;
-
-    private Double monthlyPayment;
-    private String attachedMentor;
-
-    @ManyToOne(optional = false) //not null
+    @ManyToOne(optional = false)
     private Role role;
 
     private boolean enabled = false;

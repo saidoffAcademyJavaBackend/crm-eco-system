@@ -1,22 +1,14 @@
 package uz.saidoff.crmecosystem.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
-
-@Entity
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class GroupType extends AbsEntity {
-
-    @Column(nullable = false, unique = true)
-    private String specialty;
-
+public class Speciality extends AbsEntity {
+    private String name;
     private String description;
-
-    private Boolean isStudent;
 }
