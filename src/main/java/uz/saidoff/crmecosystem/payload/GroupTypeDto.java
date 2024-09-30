@@ -1,12 +1,11 @@
 package uz.saidoff.crmecosystem.payload;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.UUID;
 
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupTypeDto {

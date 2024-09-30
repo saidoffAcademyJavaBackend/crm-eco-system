@@ -5,30 +5,25 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.UserMapper;
 import uz.saidoff.crmecosystem.payload.AuthenticationRequest;
 import uz.saidoff.crmecosystem.payload.AuthenticationResponse;
-import uz.saidoff.crmecosystem.payload.RegistrationRequest;
-import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.security.JWTProvider;
-import uz.saidoff.crmecosystem.service.IAuthService;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService {
+public class AuthService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JWTProvider jwtProvider;
 
-    @Override
     public ResponseData<AuthenticationResponse> authenticate(AuthenticationRequest request) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(

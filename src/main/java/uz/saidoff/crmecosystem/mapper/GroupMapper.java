@@ -27,16 +27,15 @@ public class GroupMapper {
         Group group = new Group();
         group.setName(createDto.getName());
         group.setActive(createDto.isActive());
-//        group.setStartTime(createDto.getStartTime());
-//        group.setEndTime(createDto.getEndTime());
+        group.setStartTime(createDto.getStartTime());
+        group.setEndTime(createDto.getEndTime());
+        group.setStartedDate(createDto.getStartDate());
         group.setLinkForTelegram(createDto.getLinkOfTelegram());
+        group.setStudent(createDto.isStudent());
+        group.setPaymentAmount(createDto.getPaymentAmount());
         group.setTeacher(userRepository.findById(createDto.getTeacherId()).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND))));
         group.setWeekDays(createDto.getWeekDays());
-        List<User> students = createDto.getStudentsId().stream()
-                .map(id -> userRepository.findById(id).orElseThrow(
-                        () -> new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND)))).toList();
-        group.setStudents(students);
         group.setGroupType(groupTypeRepository.findById(createDto.getGroupTypeId()).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT))));
 
