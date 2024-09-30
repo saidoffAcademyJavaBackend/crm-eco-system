@@ -1,5 +1,6 @@
 package uz.saidoff.crmecosystem.entity.template;
 
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -20,7 +22,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @RequiredArgsConstructor
-
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbsEntity implements Serializable {
     @Id
     @GeneratedValue
