@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.enums.Permissions;
 
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,4 +30,5 @@ public class InternGetDto {
     private UUID addedBy;
     private Date startStudying;
     private String role = "INTERN";
+    private List<Permissions> permissionsList;
 }

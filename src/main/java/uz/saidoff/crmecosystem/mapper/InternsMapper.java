@@ -2,13 +2,14 @@ package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 
-import java.security.Permission;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -37,26 +38,24 @@ public class InternsMapper {
     }
 
 
-    public User toUser(UUID userId, InternGetDto internGetDto) {
+    public User toUser(UUID userId, InternGetDto internGetDto, Speciality speciality, Role role) {
         User user = new User();
         user.setId(internGetDto.getInterId());
-        user.setAddedBy(internGetDto.getAddedBy());
         user.setBirthPlace(internGetDto.getBirthPlace() );
         user.setFirstName(internGetDto.getFirsName());
         user.setLastName(internGetDto.getLastName());
         user.setFatherName(internGetDto.getFatherName());
-        user.setBirthDate(internGetDto.getBirthDate());
+        user.setBirthDate((Date) internGetDto.getBirthDate());
         user.setPassportSeries(internGetDto.getPassportSeries());
         user.setPhoneNumber(internGetDto.getPhoneNumber());
         user.setSecondPhoneNumber(internGetDto.getSecondPhoneNumber());
-        user.setSpecialty(internGetDto.getSpecialty());
+        user.setSpeciality(speciality);
         user.setCurrentResidence(internGetDto.getCurrentResidence());
         user.setSalary(internGetDto.getPaymentAmount());
-        user.setStartWork(internGetDto.getStartStudying());
-        user.setRole(new Role("intern", RoleType.INTERN));
-        user.setPermissions(List.of(Permissions.CREATE_INTERN));
+        user.setStartStudying((Date) internGetDto.getStartStudying());
+        user.setRole(role);
+        user.setPermissions(internGetDto.getPermissionsList());
         user.setCreatedBy(userId);
-        user.setCreatedAt(Timestamp.from(Instant.now()));
         return user;
     }
 }
