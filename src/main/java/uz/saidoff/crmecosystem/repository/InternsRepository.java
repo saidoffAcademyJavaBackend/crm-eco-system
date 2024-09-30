@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 
 import java.util.UUID;
@@ -18,5 +19,7 @@ public interface InternsRepository extends JpaRepository<User, UUID> {
             "       u.passport_series, u.password, u.phone_number, u.second_phone_number, u.specialty\n" +
             "    from users as u\n" +
             "    left join role as r on u.role_id = r.id where r.role_type=?1", nativeQuery = true)
-    Page<User> findAllInternsPageable(String type,Pageable pageable);
+    Page<User> findAllInternsPageable(String type, Pageable pageable);
+
+    Page<User> findAllByRole(Role role, Pageable pageable);
 }
