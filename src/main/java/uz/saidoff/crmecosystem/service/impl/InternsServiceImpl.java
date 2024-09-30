@@ -38,7 +38,7 @@ public class InternsServiceImpl implements InternsService {
         }
 //        Pageable pageable = PageRequest.of(page, size);
 //        Page<User> interns = internsRepository.findAllInternsPageable("INTERN", pageable);
-        Page<User> interns = internsRepository.findAllByRole(optionalRole.get(), PageRequest.of(page, size));
+        Page<User> interns = internsRepository.findAllByRoleAndDeletedFalse(optionalRole.get(), PageRequest.of(page, size));
         if (interns.isEmpty()) {
             throw new NotFoundException("Interns not found");
         }

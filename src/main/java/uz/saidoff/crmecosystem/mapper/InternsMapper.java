@@ -34,6 +34,7 @@ public class InternsMapper {
         internGetDto.setCurrentResidence(user.getCurrentResidence());
         internGetDto.setPaymentAmount(user.getSalary());
         internGetDto.setStartStudying(user.getStartStudying());
+        internGetDto.setPermissionsList(user.getPermissions());
         return internGetDto;
     }
 
@@ -45,14 +46,14 @@ public class InternsMapper {
         user.setFirstName(internGetDto.getFirsName());
         user.setLastName(internGetDto.getLastName());
         user.setFatherName(internGetDto.getFatherName());
-        user.setBirthDate((Date) internGetDto.getBirthDate());
+        user.setBirthDate(new Date(internGetDto.getBirthDate().getTime()));
         user.setPassportSeries(internGetDto.getPassportSeries());
         user.setPhoneNumber(internGetDto.getPhoneNumber());
         user.setSecondPhoneNumber(internGetDto.getSecondPhoneNumber());
         user.setSpeciality(speciality);
         user.setCurrentResidence(internGetDto.getCurrentResidence());
         user.setSalary(internGetDto.getPaymentAmount());
-        user.setStartStudying((Date) internGetDto.getStartStudying());
+        user.setStartStudying(new Date(internGetDto.getStartStudying().getTime()));
         user.setRole(role);
         user.setPermissions(internGetDto.getPermissionsList());
         user.setCreatedBy(userId);
