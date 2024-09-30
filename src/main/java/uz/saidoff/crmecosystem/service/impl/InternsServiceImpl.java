@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
@@ -13,6 +14,7 @@ import uz.saidoff.crmecosystem.mapper.InternsMapper;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 import uz.saidoff.crmecosystem.repository.InternsRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
+import uz.saidoff.crmecosystem.repository.SpecialityRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.InternsService;
@@ -26,6 +28,7 @@ public class InternsServiceImpl implements InternsService {
     private final InternsMapper internsMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SpecialityRepository specialityRepository;
 
     @Override
     public ResponseData<?> getAllInterns(int page, int size) {
@@ -63,7 +66,15 @@ public class InternsServiceImpl implements InternsService {
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        User user = internsMapper.toUser(userId, internGetDto);
+        Optional<Speciality> optionalSpeciality = specialityRepository.findByName(internGetDto.getSpecialty());
+        if (optionalSpeciality.isEmpty()) {
+            throw new NotFoundException("Speciality not found");
+        }
+        Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.INTERN);
+        if (optionalRole.isEmpty()) {
+            throw new NotFoundException("Role not found to set as an Intern");
+        }
+        User user = internsMapper.toUser(userId, internGetDto,optionalSpeciality.get(),optionalRole.get());
         internsRepository.save(user);
         return ResponseData.successResponse("intern added successfully");
     }
