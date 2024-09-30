@@ -12,6 +12,7 @@ import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class EmployeeMapper {
         user.setFatherName(employeeCreatDto.getFatherName());
         user.setPhoneNumber(employeeCreatDto.getPhoneNumber());
         user.setSecondPhoneNumber(employeeCreatDto.getSecondPhoneNumber());
-        user.setBirthDate(employeeCreatDto.getBirthDate());
+        user.setBirthDate(Timestamp.valueOf(employeeCreatDto.getBirthDate()));
         user.setBirthPlace(employeeCreatDto.getBirthPlace());
         user.setCurrentResidence(employeeCreatDto.getCurrentResidence());
         user.setSpecialty(employeeCreatDto.getSpecialty());
         user.setSpecialty(employeeCreatDto.getSpecialty());
         user.setAddedBy(employeeCreatDto.getAddedBy());
-        user.setStartWork(employeeCreatDto.getStartWork());
+        user.setStartWork(Timestamp.valueOf(employeeCreatDto.getStartWork()));
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
 
@@ -87,7 +88,7 @@ public class EmployeeMapper {
             user.setSecondPhoneNumber(employeeCreatDto.getSecondPhoneNumber());
         }
         if (employeeCreatDto.getBirthDate()!=null) {
-            user.setBirthDate(employeeCreatDto.getBirthDate());
+            user.setBirthDate(Timestamp.valueOf(employeeCreatDto.getBirthDate()));
         }
         if (employeeCreatDto.getBirthPlace()!=null) {
             user.setBirthPlace(employeeCreatDto.getBirthPlace());
@@ -105,7 +106,7 @@ public class EmployeeMapper {
             user.setAddedBy(employeeCreatDto.getAddedBy());
         }
         if (employeeCreatDto.getStartWork()!=null) {
-            user.setStartWork(employeeCreatDto.getStartWork());
+            user.setStartWork(Timestamp.valueOf(employeeCreatDto.getStartWork()));
         }
         return user;
     }

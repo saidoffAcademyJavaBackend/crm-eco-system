@@ -21,14 +21,14 @@ public class EmployeeCreatDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
-    private Timestamp birthDate;
+    private String birthDate;
     private String birthPlace;
     private String currentResidence;
     private String specialty;
     private String passportSeries;
     private Double salary;
     private String addedBy;
-    private Timestamp startWork;
+    private String startWork;
 
 //    private List<Permissions> permissions;
 
