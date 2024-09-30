@@ -39,12 +39,12 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
     }
 
-    @CheckPermission("GET_STUDENT")
-    @GetMapping("/get-student-group-filtr/{groupId}")
-    public ResponseEntity<ResponseData<?>> getGroupFiltr(@PathVariable UUID groupId) {
-        ResponseData<?> filtr = studentService.getFiltr(groupId);
-        return ResponseEntity.status(filtr.isSuccess() ? 200 : 409).body(filtr);
-    }
+//    @CheckPermission("GET_STUDENT")
+//    @GetMapping("/get-student-group-filtr/{groupId}")
+//    public ResponseEntity<ResponseData<?>> getGroupFiltr(@PathVariable UUID groupId) {
+//        ResponseData<?> filtr = studentService.getFiltr(groupId);
+//        return ResponseEntity.status(filtr.isSuccess() ? 200 : 409).body(filtr);
+//    }
 
     @CheckPermission("EDIT_STUDENT")
     @PatchMapping("/update-student/{studentId}")

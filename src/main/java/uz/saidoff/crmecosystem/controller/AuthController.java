@@ -17,10 +17,6 @@ public class AuthController {
 
     private final IAuthService authService;
 
-    @PostMapping("sign-up")
-    private ResponseData<UserDto> signUp(@Valid @RequestBody RegistrationRequest request) {
-        return authService.registration(request);
-    }
     @PostMapping("sign-in")
     private ResponseData<AuthenticationResponse> signIn(@Valid @RequestBody AuthenticationRequest request) {
         return authService.authenticate(request);

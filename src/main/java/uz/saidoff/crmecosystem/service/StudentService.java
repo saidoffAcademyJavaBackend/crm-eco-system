@@ -76,13 +76,13 @@ public class StudentService {
 
     }
 
-    public ResponseData<?> getFiltr(UUID groupId) {
-        List<User> userList = studentRepository.findByGroupIdAndRoleRoleTypeAndDeletedFalse(groupId, STUDENT);
-        if (userList.isEmpty()) {
-            return new ResponseData<>("not found user group", false);
-        }
-        return ResponseData.successResponse(userList);
-    }
+//    public ResponseData<?> getFiltr(UUID groupId) {
+//        List<User> userList = studentRepository.findByGroupIdAndRoleRoleTypeAndDeletedFalse(groupId, STUDENT);
+//        if (userList.isEmpty()) {
+//            return new ResponseData<>("not found user group", false);
+//        }
+//        return ResponseData.successResponse(userList);
+//    }
 
     public ResponseData<?> updateStudent(UUID studentId, StudentUpdateDto updateDto) {
         Optional<User> optionalUser = studentRepository.findById(studentId);

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.entity.auth.User;
 
 @Getter
 @Setter
@@ -12,6 +13,6 @@ import lombok.Setter;
 public class AuthenticationResponse {
 
     private String token;
-    private UserDto user;
+    private User user;
 
 }

@@ -29,13 +29,6 @@ public class AuthService implements IAuthService {
     private final JWTProvider jwtProvider;
 
     @Override
-    public ResponseData<UserDto> registration(RegistrationRequest request) {
-        existByPhone(request.getPhoneNumber());
-        User user = userMapper.toEntity(request);
-        user = userRepository.save(user);
-        return ResponseData.successResponse(userMapper.toDto(user));
-    }
-    @Override
     public ResponseData<AuthenticationResponse> authenticate(AuthenticationRequest request) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
@@ -46,14 +39,8 @@ public class AuthService implements IAuthService {
         String token = jwtProvider.generateAccessToken(user);
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setToken(token);
-        authenticationResponse.setUser(userMapper.toDto(user));
+        authenticationResponse.setUser(user);
         return ResponseData.successResponse(authenticationResponse);
-    }
-
-    private void existByPhone(String phone) {
-        if (userRepository.existsByPhoneNumber(phone)) {
-            throw new AlreadyExistException(MessageService.getMessage(MessageKey.PHONE_NUMBER_ALREADY_USED));
-        }
     }
 
 }

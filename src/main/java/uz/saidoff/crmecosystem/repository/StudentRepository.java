@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface StudentRepository extends JpaRepository<User, UUID> {
-    List<User> findByGroupIdAndRoleRoleTypeAndDeletedFalse(UUID groupId, RoleType roleType);
+//    List<User> findByGroupIdAndRoleRoleTypeAndDeletedFalse(UUID groupId, RoleType roleType);
 
     Optional<User> findByIdAndRoleRoleTypeAndDeletedFalse(UUID userId, RoleType roleType);
 

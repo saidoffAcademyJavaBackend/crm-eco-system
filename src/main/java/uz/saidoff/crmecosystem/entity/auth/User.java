@@ -37,7 +37,10 @@ public class User extends AbsEntity implements UserDetails {
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;
+
+    @ManyToOne
     private Speciality speciality;
+
     private String passportSeries;
     private Double salary;
     private Date startWork;

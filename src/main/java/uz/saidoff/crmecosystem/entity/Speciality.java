@@ -8,6 +8,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Speciality extends AbsEntity {
     private String name;
     private String description;

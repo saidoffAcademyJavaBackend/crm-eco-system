@@ -69,7 +69,7 @@ public class StudentMapper {
         studentResponse.setSpecialty(user.getSpeciality());
         studentResponse.setPassportSeries(user.getPassportSeries());
         studentResponse.setRole(user.getRole());
-        studentResponse.setAddedBy(user.getAddedBy());
+//        studentResponse.setAddedBy(user.getAddedBy());
         studentResponse.setPaymentAmount(user.getSalary());
         return studentResponse;
     }
@@ -89,7 +89,7 @@ public class StudentMapper {
         studentResponseDto.setPassportSeries(user.getPassportSeries());
         studentResponseDto.setRole(user.getRole());
 
-        studentResponseDto.setAddedBy(user.getAddedBy());
+//        studentResponseDto.setAddedBy(user.getAddedBy());
 
         studentResponseDto.setPaymentAmount(user.getSalary());
         studentResponseDto.setTeacherId(group.getTeacher().getId());

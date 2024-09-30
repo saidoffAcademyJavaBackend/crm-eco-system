@@ -26,11 +26,9 @@ public class GroupMapper {
     public Group toEntity(GroupCreateDto createDto){
         Group group = new Group();
         group.setName(createDto.getName());
-        group.setGroupStage(createDto.getGroupStage());
-        group.setCountOfStudents(createDto.getCountOfStudents());
         group.setActive(createDto.isActive());
-        group.setStartTime(createDto.getStartTime());
-        group.setEndTime(createDto.getEndTime());
+//        group.setStartTime(createDto.getStartTime());
+//        group.setEndTime(createDto.getEndTime());
         group.setLinkForTelegram(createDto.getLinkOfTelegram());
         group.setTeacher(userRepository.findById(createDto.getTeacherId()).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND))));
@@ -49,17 +47,17 @@ public class GroupMapper {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(group.getId());
         groupDto.setName(group.getName());
-        groupDto.setGroupStage(group.getGroupStage());
-        groupDto.setCountOfStudents(group.getCountOfStudents());
         groupDto.setActive(group.isActive());
-        groupDto.setStartTime(group.getStartTime());
-        groupDto.setEndTime(group.getEndTime());
+//        groupDto.setGroupStage(group.getGroupStage());
+//        groupDto.setCountOfStudents(group.getCountOfStudents());
+//        groupDto.setStartTime(group.getStartTime());
+//        groupDto.setEndTime(group.getEndTime());
         groupDto.setLinkOfTelegram(group.getLinkForTelegram());
         groupDto.setWeekDays(group.getWeekDays());
         List<UUID> studentsId = group.getStudents().stream().map(AbsEntity::getId).toList();
         groupDto.setStudentsId(studentsId);
         groupDto.setTeacherId(group.getTeacher().getId());
-        groupDto.setGroupStage(group.getGroupStage());
+//        groupDto.setGroupStage(group.getGroupStage());
         return groupDto;
     }
 

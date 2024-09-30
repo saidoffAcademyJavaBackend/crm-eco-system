@@ -8,8 +8,6 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 
 public interface IAuthService {
 
-    ResponseData<UserDto> registration(RegistrationRequest request);
-
     ResponseData<AuthenticationResponse> authenticate(AuthenticationRequest request);
 
 }
