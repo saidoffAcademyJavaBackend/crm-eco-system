@@ -68,12 +68,12 @@ public class FileService {
     }
 
 
-    public ResponseData<AttachmentContent> downloadFile(UUID fileId) {
-        Optional<AttachmentContent> optionalAttachmentContent = attachmetContentRepository.findById(fileId);
-        if (optionalAttachmentContent.isEmpty()) {
+    public ResponseData<Attachment> downloadFile(UUID fileId) {
+        Optional<Attachment> optionalAttachment = fileRepository.findById(fileId);
+        if (optionalAttachment.isEmpty()) {
             throw new NotFoundException("file not found ");
         }
-        return ResponseData.successResponse(optionalAttachmentContent.get());
+        return ResponseData.successResponse(optionalAttachment.get());
     }
 
     public ResponseData<?> feleteFile(UUID fileId) {

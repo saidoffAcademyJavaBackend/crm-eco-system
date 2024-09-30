@@ -8,5 +8,10 @@ public enum Permissions {
     GET_INTERN,
     READ_INTERN,
     UPDATE_INTERN,
-    CREATE_INTERN
+    CREATE_INTERN,
+
+    CREATE_STUDENT,
+    GET_STUDENT,
+    EDIT_STUDENT,
+    DELETE_STUDENT
 }

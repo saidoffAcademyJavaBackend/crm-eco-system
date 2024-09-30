@@ -41,14 +41,14 @@ public class FileController {
 
     @GetMapping("/file-download/{fileId}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable UUID fileId) {
-        ResponseData<AttachmentContent> responseData = fileService.downloadFile(fileId);
-        AttachmentContent content = responseData.getData();
-        Attachment attachment = content.getAttachment();
+        ResponseData<Attachment> responseData = fileService.downloadFile(fileId);
+        Attachment content = responseData.getData();
+        AttachmentContent attachmentContent = content.getAttachmentContent();
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(attachment.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileOriginalName() + "\"")
-                .body(new ByteArrayResource(content.getMainContent()));
+                .contentType(MediaType.parseMediaType(content.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + content.getFileOriginalName() + "\"")
+                .body(new ByteArrayResource(attachmentContent.getMainContent()));
     }
 
     @DeleteMapping("/delete-images{fileId}")
