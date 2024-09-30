@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.InternsService;
+import uz.saidoff.crmecosystem.valid.CheckPermission;
 
 import java.util.UUID;
 
@@ -14,19 +15,22 @@ import java.util.UUID;
 public class InternsController {
     private final InternsService internsService;
 
+    @CheckPermission("GET_INTERN")
     @GetMapping("/get-all")
     public ResponseData<?> getAllInterns(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "10") int size) {
         return this.internsService.getAllInterns(page, size);
     }
 
+    @CheckPermission("GET_INTERN")
     @GetMapping("/get-one/{interId}")
     public ResponseData<?> getOneIntern(@PathVariable UUID interId) {
         return this.internsService.getOneById(interId);
     }
 
+    @CheckPermission("CREATE_INTERN")
     @PostMapping("add-intern/{userId}")
-    public ResponseData<?> addIntern(@PathVariable UUID userId, @RequestBody InternGetDto internGetDto){
-        return this.internsService.addIntern(userId,internGetDto);
+    public ResponseData<?> addIntern(@PathVariable UUID userId, @RequestBody InternGetDto internGetDto) {
+        return this.internsService.addIntern(userId, internGetDto);
     }
 }

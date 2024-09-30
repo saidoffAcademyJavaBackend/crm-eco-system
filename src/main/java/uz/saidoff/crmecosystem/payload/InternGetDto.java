@@ -21,6 +21,7 @@ public class InternGetDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
+    private UUID attachmentId;
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;

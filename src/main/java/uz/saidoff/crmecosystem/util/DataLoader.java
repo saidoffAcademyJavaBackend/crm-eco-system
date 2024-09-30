@@ -35,6 +35,10 @@ public class DataLoader implements CommandLineRunner {
             superAdmin.setRoleType(RoleType.SUPER_ADMIN);
             roleRepository.save(superAdmin);
 
+            Role intern = new Role();
+            intern.setName("intern");
+            intern.setRoleType(RoleType.INTERN);
+            roleRepository.save(intern);
             userRepository.save(instance.createUser("admin", "Admin", "123", passwordEncoder.encode("123"), superAdmin, Arrays.stream(Permissions.values()).toList()));
 
 
