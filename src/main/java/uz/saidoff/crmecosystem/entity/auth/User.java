@@ -40,7 +40,6 @@ public class User extends AbsEntity implements UserDetails {
     private Speciality speciality;
     private String passportSeries;
     private Double salary;
-    private String addedBy;
     private Date startWork;
     private Date startStudying;
 

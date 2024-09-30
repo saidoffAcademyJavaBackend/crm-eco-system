@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -19,13 +20,13 @@ public class InternGetDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
-    private Timestamp birthDate;
+    private Date birthDate;
     private String birthPlace;
     private String currentResidence;
     private String specialty;
     private String passportSeries;
     private Double paymentAmount;
-    private String addedBy;
-    private Timestamp startStudying;
+    private UUID addedBy;
+    private Date startStudying;
     private String role = "INTERN";
 }

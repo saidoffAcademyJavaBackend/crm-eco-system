@@ -20,7 +20,7 @@ public class InternsMapper {
     public InternGetDto toInternGetDto(User user) {
         InternGetDto internGetDto = new InternGetDto();
         internGetDto.setInterId((user.getId()));
-        internGetDto.setAddedBy(user.getAddedBy());
+        internGetDto.setAddedBy(user.getCreatedBy());
         internGetDto.setBirthPlace(user.getBirthPlace());
         internGetDto.setFirsName(user.getFirstName());
         internGetDto.setLastName(user.getLastName());
@@ -29,10 +29,10 @@ public class InternsMapper {
         internGetDto.setPassportSeries(user.getPassportSeries());
         internGetDto.setPhoneNumber(user.getPhoneNumber());
         internGetDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
-        internGetDto.setSpecialty(user.getSpecialty());
+        internGetDto.setSpecialty(user.getSpeciality().getName());
         internGetDto.setCurrentResidence(user.getCurrentResidence());
         internGetDto.setPaymentAmount(user.getSalary());
-        internGetDto.setStartStudying(user.getStartWork());
+        internGetDto.setStartStudying(user.getStartStudying());
         return internGetDto;
     }
 
