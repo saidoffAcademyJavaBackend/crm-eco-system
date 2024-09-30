@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.saidoff.crmecosystem.enums.Permissions;
 
-import java.sql.Timestamp;
-import java.util.List;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -21,14 +20,14 @@ public class EmployeeCreatDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
-    private String birthDate;
+    private Date birthDate;
     private String birthPlace;
     private String currentResidence;
     private String specialty;
     private String passportSeries;
     private Double salary;
     private String addedBy;
-    private String startWork;
+    private Date startWork;
 
 //    private List<Permissions> permissions;
 

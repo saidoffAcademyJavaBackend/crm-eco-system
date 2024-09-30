@@ -12,7 +12,7 @@ import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +31,13 @@ public class EmployeeMapper {
         user.setFatherName(employeeCreatDto.getFatherName());
         user.setPhoneNumber(employeeCreatDto.getPhoneNumber());
         user.setSecondPhoneNumber(employeeCreatDto.getSecondPhoneNumber());
-        user.setBirthDate(Timestamp.valueOf(employeeCreatDto.getBirthDate()));
+        user.setBirthDate(employeeCreatDto.getBirthDate());
         user.setBirthPlace(employeeCreatDto.getBirthPlace());
         user.setCurrentResidence(employeeCreatDto.getCurrentResidence());
-        user.setSpecialty(employeeCreatDto.getSpecialty());
-        user.setSpecialty(employeeCreatDto.getSpecialty());
-        user.setAddedBy(employeeCreatDto.getAddedBy());
-        user.setStartWork(Timestamp.valueOf(employeeCreatDto.getStartWork()));
+//        user.setSpecialty(employeeCreatDto.getSpecialty());
+//        user.setSpecialty(employeeCreatDto.getSpecialty());
+//        user.setAddedBy(employeeCreatDto.getAddedBy());
+        user.setStartWork(employeeCreatDto.getStartWork());
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
 
@@ -55,9 +55,9 @@ public class EmployeeMapper {
         employeeDto.setBirthDate(user.getBirthDate());
         employeeDto.setBirthPlace(user.getBirthPlace());
         employeeDto.setCurrentResidence(user.getCurrentResidence());
-        employeeDto.setSpecialty(user.getSpecialty());
-        employeeDto.setSpecialty(user.getSpecialty());
-        employeeDto.setAddedBy(user.getAddedBy());
+//        employeeDto.setSpecialty(user.getSpecialty());
+//        employeeDto.setSpecialty(user.getSpecialty());
+//        employeeDto.setAddedBy(user.getAddedBy());
         employeeDto.setStartWork(user.getStartWork());
         employeeDto.setRoleId(user.getRole().getId());
         return employeeDto;
@@ -88,7 +88,7 @@ public class EmployeeMapper {
             user.setSecondPhoneNumber(employeeCreatDto.getSecondPhoneNumber());
         }
         if (employeeCreatDto.getBirthDate()!=null) {
-            user.setBirthDate(Timestamp.valueOf(employeeCreatDto.getBirthDate()));
+            user.setBirthDate(employeeCreatDto.getBirthDate());
         }
         if (employeeCreatDto.getBirthPlace()!=null) {
             user.setBirthPlace(employeeCreatDto.getBirthPlace());
@@ -96,17 +96,17 @@ public class EmployeeMapper {
         if (employeeCreatDto.getCurrentResidence()!=null) {
             user.setCurrentResidence(employeeCreatDto.getCurrentResidence());
         }
-        if (employeeCreatDto.getSpecialty()!=null) {
-            user.setSpecialty(employeeCreatDto.getSpecialty());
-        }
-        if (employeeCreatDto.getSpecialty()!=null) {
-            user.setSpecialty(employeeCreatDto.getSpecialty());
-        }
-        if (employeeCreatDto.getAddedBy()!=null) {
-            user.setAddedBy(employeeCreatDto.getAddedBy());
-        }
+//        if (employeeCreatDto.getSpecialty()!=null) {
+//            user.setSpecialty(employeeCreatDto.getSpecialty());
+//        }
+//        if (employeeCreatDto.getSpecialty()!=null) {
+//            user.setSpecialty(employeeCreatDto.getSpecialty());
+//        }
+//        if (employeeCreatDto.getAddedBy()!=null) {
+//            user.setAddedBy(employeeCreatDto.getAddedBy());
+//        }
         if (employeeCreatDto.getStartWork()!=null) {
-            user.setStartWork(Timestamp.valueOf(employeeCreatDto.getStartWork()));
+            user.setStartWork(employeeCreatDto.getStartWork());
         }
         return user;
     }
