@@ -3,6 +3,7 @@ package uz.saidoff.crmecosystem.mapper;
 
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.StudentDto;
@@ -24,7 +25,7 @@ public class StudentMapper {
     private StudentRepository studentRepository;
     private RoleRepository roleRepository;
 
-    public User toFromUserEntity(StudentResponseDto studentResponseDto, Group group) {
+    public User toFromUserEntity(StudentResponseDto studentResponseDto) {
 
         User user = new User();
 
@@ -35,19 +36,14 @@ public class StudentMapper {
         user.setSecondPhoneNumber(studentResponseDto.getSecundPhoneNumber());
         user.setBirthDate(studentResponseDto.getDateOfBirth());
         user.setBirthPlace(studentResponseDto.getPlaceOfBirth());
-        user.setSpecialty(studentResponseDto.getSpecialty());
+
+        user.setSpeciality(studentResponseDto.getSpecialty());
         user.setPassportSeries(studentResponseDto.getPassportSeries());
         user.setRole(roleRepository.findByRoleType(RoleType.STUDENT).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))
         ));
         user.setSalary(studentResponseDto.getSalary());
-        user.setGroup(group);
-
-        user.setDeleted(false);
-        user.setCreatedAt(Timestamp.from(Instant.now()));
-        user.setUpdatedAt(Timestamp.from(Instant.now()));
-
-
+        user.setPermissions(List.of(Permissions.CREATE_STUDENT));
         return user;
     }
 
@@ -60,26 +56,25 @@ public class StudentMapper {
     }
 
     public StudentDto toDtos(User user) {
-        StudentDto studentResponseDto = new StudentDto();
 
-        studentResponseDto.setFirstName(user.getFirstName());
-        studentResponseDto.setLastName(user.getLastName());
-        studentResponseDto.setFatherName(user.getFatherName());
-        studentResponseDto.setPhoneNumber(user.getPhoneNumber());
-        studentResponseDto.setSecundPhoneNumber(user.getSecondPhoneNumber());
-        studentResponseDto.setDateOfBirth(user.getBirthDate());
-        studentResponseDto.setPlaceOfBirth(user.getBirthPlace());
-        studentResponseDto.setSpecialty(user.getSpecialty());
-        studentResponseDto.setPassportSeries(user.getPassportSeries());
-        studentResponseDto.setRole(user.getRole());
-        studentResponseDto.setSalary(user.getSalary());
-        studentResponseDto.setAddedBy(user.getAddedBy());
-        studentResponseDto.setGroup(user.getGroup());
-        studentResponseDto.setTeacherId(user.getGroup().getTeacher().getId());
-        return studentResponseDto;
+        StudentDto studentResponse = new StudentDto();
+
+        studentResponse.setFirstName(user.getFirstName());
+        studentResponse.setLastName(user.getLastName());
+        studentResponse.setFatherName(user.getFatherName());
+        studentResponse.setPhoneNumber(user.getPhoneNumber());
+        studentResponse.setSecundPhoneNumber(user.getSecondPhoneNumber());
+        studentResponse.setDateOfBirth(user.getBirthDate());
+        studentResponse.setPlaceOfBirth(user.getBirthPlace());
+        studentResponse.setSpecialty(user.getSpeciality());
+        studentResponse.setPassportSeries(user.getPassportSeries());
+        studentResponse.setRole(user.getRole());
+        studentResponse.setAddedBy(user.getAddedBy());
+        studentResponse.setPaymentAmount(user.getSalary());
+        return studentResponse;
     }
 
-    public StudentDto toResponsStudentDo(User user) {
+    public StudentDto toResponsStudentDo(User user, Group group) {
 
         StudentDto studentResponseDto = new StudentDto();
 
@@ -90,13 +85,16 @@ public class StudentMapper {
         studentResponseDto.setSecundPhoneNumber(user.getSecondPhoneNumber());
         studentResponseDto.setDateOfBirth(user.getBirthDate());
         studentResponseDto.setPlaceOfBirth(user.getBirthPlace());
-        studentResponseDto.setSpecialty(user.getSpecialty());
+        studentResponseDto.setSpecialty(user.getSpeciality());
         studentResponseDto.setPassportSeries(user.getPassportSeries());
         studentResponseDto.setRole(user.getRole());
-        studentResponseDto.setSalary(user.getSalary());
+
         studentResponseDto.setAddedBy(user.getAddedBy());
-        studentResponseDto.setGroup(user.getGroup());
-        studentResponseDto.setTeacherId(user.getGroup().getTeacher().getId());
+
+        studentResponseDto.setPaymentAmount(user.getSalary());
+        studentResponseDto.setTeacherId(group.getTeacher().getId());
+        studentResponseDto.setGroup(group);
+
         return studentResponseDto;
     }
 }

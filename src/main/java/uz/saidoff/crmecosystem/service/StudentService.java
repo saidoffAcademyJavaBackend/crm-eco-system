@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
+import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
 import uz.saidoff.crmecosystem.payload.StudentDto;
@@ -15,6 +17,7 @@ import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
 import uz.saidoff.crmecosystem.repository.GroupRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.StudentRepository;
+import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
@@ -29,6 +32,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private StudentMapper studentMapper;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     public ResponseData<?> saved(UUID groupId, StudentResponseDto studentResponseDto) {
@@ -38,15 +42,17 @@ public class StudentService {
             throw new NotFoundException("group not found");
         }
         Group group2 = group.get();
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, group2);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto);
+        group2.setStudents(List.of(newUserEntity));
         studentRepository.save(newUserEntity);
+        groupRepository.save(group2);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
     public ResponseData<String> removeStudent(UUID studentId) {
         Optional<User> studentRepositoryById = studentRepository.findById(studentId);
         if (studentRepositoryById.isEmpty()) {
-            return ResponseData.successResponse("student not found");
+            return new ResponseData<>("student not found ", false);
         }
         User user = studentRepositoryById.get();
         user.setDeleted(true);
@@ -102,13 +108,13 @@ public class StudentService {
     }
 
     public ResponseData<?> userTransfer(UUID userId) {
-        Optional<User> optionalUser = studentRepository.findByIdAndGroupGroupStageAndDeletedFalse(userId, GroupStage.STUDENT);
+        Optional<User> optionalUser = studentRepository.findByIdAndRoleRoleTypeAndDeletedFalse(userId, STUDENT);
         if (optionalUser.isEmpty()) {
             return new ResponseData<>("user not found", false);
         }
         User user = optionalUser.get();
-        user.getGroup().setGroupStage(GroupStage.INTERN);
-        studentRepository.save(user);
+        user.setRole(new Role("intern", RoleType.INTERN));
+        userRepository.save(user);
         return ResponseData.successResponse("student succesfuly intern ");
     }
 
@@ -118,7 +124,10 @@ public class StudentService {
             return new ResponseData<>("student not fouind", false);
         }
         User user = optionalUser.get();
-        StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user);
+        Optional<Group> optionalGroup = groupRepository.findById(user.getId());
+        Group group = optionalGroup.get();
+
+        StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user, group);
         return ResponseData.successResponse(responsStudentDo);
     }
 }
