@@ -41,7 +41,7 @@ public class InternsMapper {
         User user = new User();
         user.setId(internGetDto.getInterId());
         user.setAddedBy(internGetDto.getAddedBy());
-        user.setBirthPlace(internGetDto.getBirthPlace());
+        user.setBirthPlace(internGetDto.getBirthPlace() );
         user.setFirstName(internGetDto.getFirsName());
         user.setLastName(internGetDto.getLastName());
         user.setFatherName(internGetDto.getFatherName());
