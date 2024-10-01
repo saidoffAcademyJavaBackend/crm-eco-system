@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.saidoff.crmecosystem.entity.Attachment;
+import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Permissions;
@@ -46,6 +47,9 @@ public class User extends AbsEntity implements UserDetails {
 
     @ManyToOne(optional = false)
     private Role role;
+
+    @OneToMany
+    private List<Notification> notifications;
 
     private boolean enabled = false;
     private boolean accountNonExpired = true;
