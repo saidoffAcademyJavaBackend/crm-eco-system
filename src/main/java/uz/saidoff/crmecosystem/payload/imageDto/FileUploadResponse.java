@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 public class FileUploadResponse {
 
-    private UUID uploadid;
+    private UUID uploadId;
 
     private String name;
 

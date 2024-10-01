@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PasswordValidation implements ConstraintValidator<PasswordValidate, String> {
+
     public Pattern pattern;
     public Matcher matcher;
 

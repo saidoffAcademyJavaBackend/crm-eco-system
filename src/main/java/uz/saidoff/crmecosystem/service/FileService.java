@@ -1,7 +1,6 @@
 package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,11 +11,9 @@ import uz.saidoff.crmecosystem.entity.AttachmentContent;
 
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
-import uz.saidoff.crmecosystem.payload.imageDto.FileDownloadResponse;
-import uz.saidoff.crmecosystem.repository.AttachmetContentRepository;
+import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
 import uz.saidoff.crmecosystem.repository.FileRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.util.ImageUtils;
 
 
 import java.io.IOException;
@@ -29,7 +26,7 @@ import java.util.UUID;
 public class FileService {
 
     private final FileRepository fileRepository;
-    private final AttachmetContentRepository attachmetContentRepository;
+    private final AttachmentContentRepository attachmentContentRepository;
     private FileMapper fileMapper;
 
 
@@ -61,7 +58,7 @@ public class FileService {
 
         attachmentContent.setMainContent(multipartFile.getBytes());
         attachmentContent.setAttachment(saved);
-        attachmetContentRepository.save(attachmentContent);
+        attachmentContentRepository.save(attachmentContent);
 
         return ResponseData.successResponse("succesfuly file upload");
 
@@ -77,13 +74,13 @@ public class FileService {
     }
 
     public ResponseData<?> feleteFile(UUID fileId) {
-        Optional<AttachmentContent> optionalAttachmentContent = attachmetContentRepository.findById(fileId);
+        Optional<AttachmentContent> optionalAttachmentContent = attachmentContentRepository.findById(fileId);
         if (optionalAttachmentContent.isEmpty()) {
             return new ResponseData<>("file not found", false);
         }
         AttachmentContent attachmentContent = optionalAttachmentContent.get();
         attachmentContent.setDeleted(true);
-        attachmetContentRepository.save(attachmentContent);
+        attachmentContentRepository.save(attachmentContent);
         return ResponseData.successResponse("file succesfuly deleted");
     }
 }

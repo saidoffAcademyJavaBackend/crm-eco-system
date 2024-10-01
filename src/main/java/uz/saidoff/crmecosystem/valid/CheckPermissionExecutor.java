@@ -13,9 +13,11 @@ import uz.saidoff.crmecosystem.util.MessageService;
 @Component
 @Aspect
 public class CheckPermissionExecutor {
+
     @Before(value = "@annotation(checkPermission)")
     public void beforeCheckPermission(CheckPermission checkPermission) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         boolean exist = false;
         for (GrantedAuthority authority : principal.getAuthorities()) {
             if (authority.getAuthority().equals(checkPermission.value())) {

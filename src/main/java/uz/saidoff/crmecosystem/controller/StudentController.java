@@ -40,10 +40,10 @@ public class StudentController {
     }
 
 //    @CheckPermission("GET_STUDENT")
-//    @GetMapping("/get-student-group-filtr/{groupId}")
-//    public ResponseEntity<ResponseData<?>> getGroupFiltr(@PathVariable UUID groupId) {
-//        ResponseData<?> filtr = studentService.getFiltr(groupId);
-//        return ResponseEntity.status(filtr.isSuccess() ? 200 : 409).body(filtr);
+//    @GetMapping("/get-student-group-filter/{groupId}")
+//    public ResponseEntity<ResponseData<?>> getGroupFilter(@PathVariable UUID groupId) {
+//        ResponseData<?> filter = studentService.getFilter(groupId);
+//        return ResponseEntity.status(filter.isSuccess() ? 200 : 409).body(filter);
 //    }
 
     @CheckPermission("EDIT_STUDENT")
