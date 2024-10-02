@@ -1,9 +1,11 @@
 package uz.saidoff.crmecosystem.payload;
 
 import lombok.*;
+import uz.saidoff.crmecosystem.enums.Permissions;
 
 
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class EmployeeDto {
 
     private UUID employeeId;
+    private UUID attachmentId;
     private String password;
     private String firstName;
     private String lastName;
@@ -22,11 +25,14 @@ public class EmployeeDto {
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;
-    private String specialty;
+    private UUID specialtyId;
     private String passportSeries;
     private Double salary;
     private String addedBy;
     private Date startWork;
     private UUID roleId;
+
+    private List<Permissions> permissions;
+
 
 }

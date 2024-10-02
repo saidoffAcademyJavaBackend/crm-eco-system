@@ -23,7 +23,7 @@ public class StudentResponseDto {
     private String lastName;
     private String fatherName;
     private String phoneNumber;
-    private String secundPhoneNumber;
+    private String secondPhoneNumber;
     private Date dateOfBirth;
     private String placeOfBirth; // tug'ulgan joyi
     private String currentResidence; // hozirgi yashash joyi

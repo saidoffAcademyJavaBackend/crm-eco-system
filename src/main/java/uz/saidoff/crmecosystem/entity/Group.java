@@ -8,7 +8,6 @@ import lombok.Setter;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.WeekDays;
-
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
@@ -46,4 +45,6 @@ public class Group extends AbsEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<WeekDays> weekDays;
+
+    private boolean student;
 }

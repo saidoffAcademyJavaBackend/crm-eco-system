@@ -37,7 +37,7 @@ public class StudentMapper {
         user.setLastName(studentResponseDto.getLastName());
         user.setFatherName(studentResponseDto.getFatherName());
         user.setPhoneNumber(studentResponseDto.getPhoneNumber());
-        user.setSecondPhoneNumber(studentResponseDto.getSecundPhoneNumber());
+        user.setSecondPhoneNumber(studentResponseDto.getSecondPhoneNumber());
         user.setBirthDate(studentResponseDto.getDateOfBirth());
         user.setBirthPlace(studentResponseDto.getPlaceOfBirth());
         user.setSpeciality(speciality);
@@ -64,7 +64,7 @@ public class StudentMapper {
         studentResponse.setLastName(user.getLastName());
         studentResponse.setFatherName(user.getFatherName());
         studentResponse.setPhoneNumber(user.getPhoneNumber());
-        studentResponse.setSecundPhoneNumber(user.getSecondPhoneNumber());
+        studentResponse.setSecondPhoneNumber(user.getSecondPhoneNumber());
         studentResponse.setDateOfBirth(user.getBirthDate());
         studentResponse.setPlaceOfBirth(user.getBirthPlace());
         studentResponse.setSpecialtyId(user.getSpeciality().getId());
@@ -83,7 +83,7 @@ public class StudentMapper {
         studentResponseDto.setLastName(user.getLastName());
         studentResponseDto.setFatherName(user.getFatherName());
         studentResponseDto.setPhoneNumber(user.getPhoneNumber());
-        studentResponseDto.setSecundPhoneNumber(user.getSecondPhoneNumber());
+        studentResponseDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
         studentResponseDto.setDateOfBirth(user.getBirthDate());
         studentResponseDto.setPlaceOfBirth(user.getBirthPlace());
         studentResponseDto.setSpecialtyId(user.getSpeciality().getId());

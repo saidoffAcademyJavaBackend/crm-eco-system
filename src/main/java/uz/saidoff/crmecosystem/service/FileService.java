@@ -12,7 +12,7 @@ import uz.saidoff.crmecosystem.entity.AttachmentContent;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
 import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
-import uz.saidoff.crmecosystem.repository.AttachmentRepository;
+
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 
@@ -25,8 +25,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final AttachmentRepository fileRepository;
-    private final AttachmentContentRepository attachmetContentRepository;
+
+    private final FileRepository fileRepository;
+    private final AttachmentContentRepository attachmentContentRepository;
     private FileMapper fileMapper;
 
 
@@ -58,7 +59,7 @@ public class FileService {
 
         attachmentContent.setMainContent(multipartFile.getBytes());
         attachmentContent.setAttachment(saved);
-        attachmetContentRepository.save(attachmentContent);
+        attachmentContentRepository.save(attachmentContent);
 
         return ResponseData.successResponse("succesfuly file upload");
 

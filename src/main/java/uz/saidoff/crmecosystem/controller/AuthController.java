@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.service.IAuthService;
+import uz.saidoff.crmecosystem.service.impl.AuthService;
 
 @RestController
 @RequestMapping("api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final IAuthService authService;
+    private final AuthService authService;
 
     @PostMapping("sign-in")
     private ResponseData<AuthenticationResponse> signIn(@Valid @RequestBody AuthenticationRequest request) {

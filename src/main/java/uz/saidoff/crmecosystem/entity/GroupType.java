@@ -18,5 +18,4 @@ public class GroupType extends AbsEntity {
 
     private String description;
 
-    private Boolean isStudent;
 }
