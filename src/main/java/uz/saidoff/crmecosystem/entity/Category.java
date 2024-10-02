@@ -19,8 +19,5 @@ public class Category extends AbsEntity {
     private String name;
     private String description;
     private boolean isIncome;
-//
-//    @Enumerated(EnumType.STRING)
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    private List<Permissions> permissions;
+    private List<Permissions> permissions;
 }

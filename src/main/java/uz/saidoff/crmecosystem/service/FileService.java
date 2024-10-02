@@ -13,6 +13,7 @@ import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
 import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
 
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 
@@ -26,7 +27,7 @@ import java.util.UUID;
 public class FileService {
 
 
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
     private final AttachmentContentRepository attachmentContentRepository;
     private FileMapper fileMapper;
 
