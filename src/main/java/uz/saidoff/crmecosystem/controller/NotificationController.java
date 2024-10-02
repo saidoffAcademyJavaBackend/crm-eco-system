@@ -23,17 +23,9 @@ public class NotificationController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseData<List<NotificationDto>> sendNotMessage(@PathVariable("userId") UUID userId){
-        List<NotificationDto> notificationDtos = notificationService.sendMessage(userId);
-        return ResponseData.successResponse(notificationDtos);
+    public ResponseData<NotificationDto> sendNotMessage(@PathVariable("userId") UUID userId){
+        NotificationDto dto = notificationService.sendMessage(userId);
+        return ResponseData.successResponse(dto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseData<?> getNotificationById(@PathVariable UUID id){
-        return this.notificationService.getNotificationById(id);
     }
-
-
-
-
-}
