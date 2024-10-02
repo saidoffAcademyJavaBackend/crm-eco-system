@@ -27,7 +27,7 @@ public class InternsServiceImpl implements InternsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SpecialityRepository specialityRepository;
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
 
     @Override
     public ResponseData<?> getAllInterns(int page, int size) {
@@ -43,7 +43,7 @@ public class InternsServiceImpl implements InternsService {
         }
         List<InternGetDto> list = interns.get().map(internsMapper::toInternGetDto).toList();
         Map<String, Object> result = new HashMap<>();
-        result.put("date", list);
+        result.put("data", list);
         result.put("total", interns.getTotalElements());
         result.put("TotalPages", interns.getTotalPages());
         return ResponseData.successResponse(result);
