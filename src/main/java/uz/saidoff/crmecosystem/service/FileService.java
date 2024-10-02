@@ -70,7 +70,7 @@ public class FileService {
         if (optionalAttachment.isEmpty()) {
             throw new NotFoundException("file not found ");
         }
-        return ResponseData.successResponse(optionalAttachment.get());
+        return ResponseData.successResponse(optionalAttachment.get(), userId);
     }
 
     public ResponseData<?> feleteFile(UUID fileId) {

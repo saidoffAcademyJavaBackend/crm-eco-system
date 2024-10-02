@@ -33,7 +33,7 @@ public class GroupTypeService implements IGroupTypeService {
     public ResponseData<GroupTypeDto> getById(UUID groupTypeId) {
         GroupType groupType = groupTypeRepository.findById(groupTypeId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT)));
-        return ResponseData.successResponse(groupTypeMapper.toDto(groupType));
+        return ResponseData.successResponse(groupTypeMapper.toDto(groupType), userId);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class GroupTypeService implements IGroupTypeService {
         if (groupTypeList.isEmpty())
              throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
-                groupTypeList.stream().map(groupTypeMapper::toDto).toList());
+                groupTypeList.stream().map(groupTypeMapper::toDto).toList(), userId);
     }
 }

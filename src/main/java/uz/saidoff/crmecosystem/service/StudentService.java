@@ -104,7 +104,7 @@ public class StudentService {
                     -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
         }
         studentRepository.save(user);
-        return ResponseData.successResponse(user);
+        return ResponseData.successResponse(user, userId);
     }
 
     public ResponseData<?> userTransfer(UUID userId) {
@@ -128,6 +128,6 @@ public class StudentService {
         Group group = optionalGroup.get();
 
         StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user, group);
-        return ResponseData.successResponse(responsStudentDo);
+        return ResponseData.successResponse(responsStudentDo, userId);
     }
 }

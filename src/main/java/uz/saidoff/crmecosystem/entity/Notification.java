@@ -30,8 +30,7 @@ public class Notification extends AbsEntity {
 
     private Boolean read = false;
 
-
-    private Timestamp receivedTime; // do we really need this?!
+    private LocalDateTime receivedTime;
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;

@@ -34,7 +34,7 @@ public class GroupService implements IGroupService {
     public ResponseData<GroupDto> getById(UUID groupId) {
         Group group =  groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT)));
-        return ResponseData.successResponse(groupMapper.toDto(group));
+        return ResponseData.successResponse(groupMapper.toDto(group), userId);
     }
 
     @Override
@@ -43,6 +43,6 @@ public class GroupService implements IGroupService {
         if (groups.isEmpty())
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
-                groups.stream().map(groupMapper::toDto).toList());
+                groups.stream().map(groupMapper::toDto).toList(), userId);
     }
 }

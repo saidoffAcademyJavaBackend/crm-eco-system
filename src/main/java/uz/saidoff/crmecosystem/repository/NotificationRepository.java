@@ -11,5 +11,8 @@ import java.util.UUID;
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
     List<Notification> findAllByUserIdAndReadIsFalse(UUID userId);
+
     boolean deleteAllByUserIdAndReadIsTrue(UUID userId);
+
+    
 }

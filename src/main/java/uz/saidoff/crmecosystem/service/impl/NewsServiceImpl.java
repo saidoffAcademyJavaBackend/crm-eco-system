@@ -1,18 +1,11 @@
 package uz.saidoff.crmecosystem.service.impl;
 
-import com.sun.net.httpserver.Request;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.NewsMapper;
 import uz.saidoff.crmecosystem.payload.NewsCreateDto;
@@ -22,7 +15,6 @@ import uz.saidoff.crmecosystem.repository.FileRepository;
 import uz.saidoff.crmecosystem.repository.NewsRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
-import uz.saidoff.crmecosystem.response.ErrorData;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.NewsService;
 import uz.saidoff.crmecosystem.util.MessageKey;
@@ -30,7 +22,6 @@ import uz.saidoff.crmecosystem.util.MessageService;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,7 +47,7 @@ public class NewsServiceImpl implements NewsService {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
         List<NewsGetByUserIdDto> list = news.stream().map(newsMapper::toNewsGetByUserId).toList();
-        return ResponseData.successResponse(list);
+        return ResponseData.successResponse(list, userId);
     }
 
     @Override
@@ -115,6 +106,6 @@ public class NewsServiceImpl implements NewsService {
         if (optionalNews.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
-        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()));
+        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()), userId);
     }
 }

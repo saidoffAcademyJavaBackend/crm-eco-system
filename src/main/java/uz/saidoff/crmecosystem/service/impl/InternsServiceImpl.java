@@ -3,7 +3,6 @@ package uz.saidoff.crmecosystem.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
@@ -47,7 +46,7 @@ public class InternsServiceImpl implements InternsService {
         result.put("date", list);
         result.put("total", interns.getTotalElements());
         result.put("TotalPages", interns.getTotalPages());
-        return ResponseData.successResponse(result);
+        return ResponseData.successResponse(result, userId);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class InternsServiceImpl implements InternsService {
             throw new NotFoundException("User not found");
         }
         InternGetDto internGetDto = internsMapper.toInternGetDto(optionalUser.get());
-        return ResponseData.successResponse(internGetDto);
+        return ResponseData.successResponse(internGetDto, userId);
     }
 
     @Override

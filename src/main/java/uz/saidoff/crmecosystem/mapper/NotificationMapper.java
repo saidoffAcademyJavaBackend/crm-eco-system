@@ -3,23 +3,20 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
-
-@Data
-@AllArgsConstructor
+@Component
 @RequiredArgsConstructor
 public class NotificationMapper {
-
-    private final Notification notification;
 
     public NotificationDto toNotDto(Notification notification){
         NotificationDto dto = new NotificationDto();
         dto.setId(notification.getId());
         dto.setTitle(notification.getTitle());
         dto.setDescription(notification.getDescription());
-        dto.setTimestamp(notification.getReceivedTime());
+        dto.setReceivedTime(notification.getReceivedTime());
         dto.setObject(notification.getObjectId());
         dto.setUserId(notification.getUser().getId());//?
         dto.setIsRead(notification.getRead());
@@ -32,7 +29,7 @@ public class NotificationMapper {
         notification.setId(dto.getId());
         notification.setTitle(dto.getTitle());
         notification.setDescription(dto.getDescription());
-        notification.setReceivedTime(dto.getTimestamp());
+        notification.setReceivedTime(dto.getReceivedTime());
         notification.setObjectId(dto.getObject());
         notification.setUser(user);
         notification.setRead(dto.getIsRead());
