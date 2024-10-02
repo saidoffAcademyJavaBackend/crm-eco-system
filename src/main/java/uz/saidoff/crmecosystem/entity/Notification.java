@@ -6,13 +6,17 @@ import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.NotificationType;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity(name = "notification")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
+@ToString
 public class Notification extends AbsEntity {
 
     private String title;
@@ -25,6 +29,9 @@ public class Notification extends AbsEntity {
     private User user;
 
     private Boolean read = false;
+
+
+    private Timestamp receivedTime; // do we really need this?!
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;
