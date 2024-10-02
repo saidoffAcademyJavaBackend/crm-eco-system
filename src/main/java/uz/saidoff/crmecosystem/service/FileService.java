@@ -72,7 +72,7 @@ public class FileService {
         if (optionalAttachment.isEmpty()) {
             throw new NotFoundException("file not found ");
         }
-        return ResponseData.successResponse(optionalAttachment.get(), userId);
+        return ResponseData.successResponse(optionalAttachment.get());
     }
 
     public ResponseData<?> deleteFile(UUID fileId) {

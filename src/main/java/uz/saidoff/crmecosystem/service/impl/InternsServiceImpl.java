@@ -45,7 +45,7 @@ public class InternsServiceImpl implements InternsService {
         result.put("data", list);
         result.put("total", interns.getTotalElements());
         result.put("TotalPages", interns.getTotalPages());
-        return ResponseData.successResponse(result, userId);
+        return ResponseData.successResponse(result);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class InternsServiceImpl implements InternsService {
             throw new NotFoundException("User not found");
         }
         InternGetDto internGetDto = internsMapper.toInternGetDto(optionalUser.get());
-        return ResponseData.successResponse(internGetDto, userId);
+        return ResponseData.successResponse(internGetDto);
     }
 
     @Override

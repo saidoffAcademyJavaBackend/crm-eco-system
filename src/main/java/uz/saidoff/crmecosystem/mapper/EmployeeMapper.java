@@ -8,7 +8,7 @@ import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.EmployeeCreatDto;
 import uz.saidoff.crmecosystem.payload.EmployeeDto;
-import uz.saidoff.crmecosystem.repository.FileRepository;
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.SpecialityRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
@@ -25,7 +25,7 @@ public class EmployeeMapper {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final SpecialityRepository specialityRepository;
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
 
     public User toEntity(EmployeeCreatDto employeeCreatDto) {
         User user = new User();
