@@ -23,5 +23,4 @@ public class CategoryResponceDto {
     private boolean isIncome;
     private Timestamp createdAt;
     private boolean deleted;
-    private List<Permissions> permissions;
 }
