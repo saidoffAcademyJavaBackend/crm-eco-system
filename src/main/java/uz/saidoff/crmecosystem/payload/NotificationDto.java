@@ -15,7 +15,6 @@ public class NotificationDto {
     private UUID id;
     private String title;
     private String description;
-    private LocalDateTime receivedTime;
     private UUID object;
     private UUID userId;
     private Boolean isRead;

@@ -18,14 +18,9 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    private final StudentService studentService;
-
-    private final UserService userService;
-
     @GetMapping("/{userId}")
     public ResponseData<?> getNotification(@PathVariable("userId") UUID userId) {
-        List<NotificationDto> dtos = notificationService.getNotification(userId);
-        return ResponseData.successResponse(dtos);
+        return ResponseData.successResponse(notificationService.getNotification(userId));
     }
 
     @DeleteMapping("/{userId}")
