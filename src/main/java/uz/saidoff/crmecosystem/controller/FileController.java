@@ -53,7 +53,7 @@ public class FileController {
 
     @DeleteMapping("/delete-images{fileId}")
     public ResponseEntity<ResponseData<?>> deleteFile(@PathVariable UUID fileId) {
-        ResponseData<?> responseData = fileService.feleteFile(fileId);
+        ResponseData<?> responseData = fileService.deleteFile(fileId);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 

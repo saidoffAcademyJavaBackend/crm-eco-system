@@ -7,5 +7,6 @@ import uz.saidoff.crmecosystem.entity.AttachmentContent;
 import java.util.UUID;
 
 @Repository
-public interface AttachmetContentRepository extends JpaRepository<AttachmentContent, UUID> {
+public interface AttachmentContentRepository extends JpaRepository<AttachmentContent, UUID> {
+
 }

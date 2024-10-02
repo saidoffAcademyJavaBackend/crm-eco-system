@@ -1,7 +1,6 @@
 package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,11 +11,9 @@ import uz.saidoff.crmecosystem.entity.AttachmentContent;
 
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
-import uz.saidoff.crmecosystem.payload.imageDto.FileDownloadResponse;
-import uz.saidoff.crmecosystem.repository.AttachmetContentRepository;
-import uz.saidoff.crmecosystem.repository.FileRepository;
+import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.util.ImageUtils;
 
 
 import java.io.IOException;
@@ -28,8 +25,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final FileRepository fileRepository;
-    private final AttachmetContentRepository attachmetContentRepository;
+    private final AttachmentRepository fileRepository;
+    private final AttachmentContentRepository attachmetContentRepository;
     private FileMapper fileMapper;
 
 
@@ -76,14 +73,14 @@ public class FileService {
         return ResponseData.successResponse(optionalAttachment.get());
     }
 
-    public ResponseData<?> feleteFile(UUID fileId) {
-        Optional<AttachmentContent> optionalAttachmentContent = attachmetContentRepository.findById(fileId);
-        if (optionalAttachmentContent.isEmpty()) {
+    public ResponseData<?> deleteFile(UUID fileId) {
+        Optional<Attachment> optionalAttachment = fileRepository.findById(fileId);
+        if (optionalAttachment.isEmpty()) {
             return new ResponseData<>("file not found", false);
         }
-        AttachmentContent attachmentContent = optionalAttachmentContent.get();
-        attachmentContent.setDeleted(true);
-        attachmetContentRepository.save(attachmentContent);
+        Attachment attachment = optionalAttachment.get();
+        fileRepository.deleteById(attachment.getId());
+
         return ResponseData.successResponse("file succesfuly deleted");
     }
 }

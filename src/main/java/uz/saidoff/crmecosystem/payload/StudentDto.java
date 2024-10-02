@@ -26,12 +26,12 @@ public class StudentDto {
     private Date dateOfBirth;
     private String placeOfBirth; // tug'ulgan joyi
     private String currentResidence; // hozirgi yashash joyi
-    private Speciality specialty; // mutahasisligi
+    private UUID specialtyId; // mutahasisligi
     private String passportSeries; // pasport seriasi
 
-    private Role role;
+    private UUID roleId;
     private Double paymentAmount;
-    private String addedBy;
+    private UUID addedBy;
     private Date startWork;
-    private Group group;
+    private UUID groupId;
 }

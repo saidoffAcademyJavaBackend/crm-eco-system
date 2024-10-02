@@ -7,9 +7,9 @@ import lombok.Setter;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
+import uz.saidoff.crmecosystem.enums.RoleType;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -18,6 +18,7 @@ import java.util.UUID;
 @Setter
 public class StudentResponseDto {
 
+    private UUID groupId;
     private String firstName;
     private String lastName;
     private String fatherName;
@@ -26,13 +27,13 @@ public class StudentResponseDto {
     private Date dateOfBirth;
     private String placeOfBirth; // tug'ulgan joyi
     private String currentResidence; // hozirgi yashash joyi
-    private Speciality specialty; // mutahasisligi
+    private String specialty; // mutahasisligi
     private String passportSeries; // pasport seriasi
 
-    private Role role;
+    private String role ;
     private Double salary;
     private String addedBy;
-    private java.sql.Date startWork;
+    private Date startWork;
 
 
 

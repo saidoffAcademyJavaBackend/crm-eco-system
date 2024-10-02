@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
+import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
@@ -14,10 +15,7 @@ import uz.saidoff.crmecosystem.mapper.StudentMapper;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
-import uz.saidoff.crmecosystem.repository.GroupRepository;
-import uz.saidoff.crmecosystem.repository.RoleRepository;
-import uz.saidoff.crmecosystem.repository.StudentRepository;
-import uz.saidoff.crmecosystem.repository.UserRepository;
+import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
@@ -34,15 +32,26 @@ public class StudentService {
     private StudentMapper studentMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SpecialityRepository specialityRepository;
 
-    public ResponseData<?> saved(UUID groupId, StudentResponseDto studentResponseDto) {
+    public ResponseData<?> saved(StudentResponseDto studentResponseDto) {
 
-        Optional<Group> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(studentResponseDto.getGroupId());
         if (group.isEmpty()) {
             throw new NotFoundException("group not found");
         }
+
+        Optional<Speciality> byName = specialityRepository.findByName(studentResponseDto.getSpecialty());
+        if (byName.isEmpty()) {
+            throw new NotFoundException("speciality not found");
+        }
+        Optional<Role> byRoleType = roleRepository.findByRoleType(STUDENT);
+        if (byRoleType.isEmpty()) {
+            throw new NotFoundException("rot type not found");
+        }
+
         Group group2 = group.get();
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
         group2.setStudents(List.of(newUserEntity));
         studentRepository.save(newUserEntity);
         groupRepository.save(group2);
