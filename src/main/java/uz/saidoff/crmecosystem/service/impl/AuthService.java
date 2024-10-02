@@ -35,7 +35,7 @@ public class AuthService {
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setToken(token);
         authenticationResponse.setUser(user);
-        return ResponseData.successResponse(authenticationResponse, userId);
+        return ResponseData.successResponse(authenticationResponse);
     }
 
 }

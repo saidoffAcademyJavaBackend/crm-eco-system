@@ -47,7 +47,7 @@ public class NewsServiceImpl implements NewsService {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
         List<NewsGetByUserIdDto> list = news.stream().map(newsMapper::toNewsGetByUserId).toList();
-        return ResponseData.successResponse(list, userId);
+        return ResponseData.successResponse(list);
     }
 
     @Override
@@ -106,6 +106,6 @@ public class NewsServiceImpl implements NewsService {
         if (optionalNews.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
-        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()), userId);
+        return ResponseData.successResponse(newsMapper.toNewsGetByUserId(optionalNews.get()));
     }
 }
