@@ -1,6 +1,5 @@
 package uz.saidoff.crmecosystem.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +19,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TransactionIncomeService {
     private final TransactionRepository transactionRepository;
     private final TransactionIncomeMapper transactionIncomeMapper;
@@ -52,11 +50,14 @@ public class TransactionIncomeService {
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found");
         }
+        Balance balance = balanceRepository.findAll().getFirst();
+        balance.setAmount(balance.getAmount() + transactionIncomeAddDto.getAmount() - optionalTransaction.get().getAmount());
         Transaction transaction = optionalTransaction.get();
         transaction.setCategory(optionalCategory.get());
         transaction.setAmount(transactionIncomeAddDto.getAmount());
         transaction.setDescription(transactionIncomeAddDto.getDescription());
         transactionRepository.save(transaction);
+        balanceRepository.save(balance);
         return ResponseData.successResponse("Transaction updated successfully");
     }
 
