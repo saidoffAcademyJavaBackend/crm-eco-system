@@ -1,10 +1,11 @@
 package uz.saidoff.crmecosystem.payload;
 
+import lombok.Data;
 import uz.saidoff.crmecosystem.enums.NotificationType;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-
+@Data
 public class NotificationDto {
 
     private UUID id;

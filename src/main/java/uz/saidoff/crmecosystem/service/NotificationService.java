@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.mapper.NotificationMapper;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.repository.NotificationRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
@@ -18,8 +19,9 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
 
-    public NotificationService(NotificationRepository notificationRepository) {
+    public NotificationService(NotificationRepository notificationRepository, NotificationMapper notificationMapper) {
         this.notificationRepository = notificationRepository;
+        this.notificationMapper = notificationMapper;
     }
 
     public ResponseData<NotificationDto> getId(UUID id) {
