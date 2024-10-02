@@ -1,7 +1,5 @@
 package uz.saidoff.crmecosystem.mapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Notification;
@@ -11,7 +9,7 @@ import uz.saidoff.crmecosystem.payload.NotificationDto;
 @RequiredArgsConstructor
 public class NotificationMapper {
 
-    public NotificationDto toNotDto(Notification notification){
+    public NotificationDto toDto(Notification notification){
         NotificationDto dto = new NotificationDto();
         dto.setId(notification.getId());
         dto.setTitle(notification.getTitle());
@@ -24,7 +22,7 @@ public class NotificationMapper {
         return dto;
     }
 
-    public Notification toNotEntity(User user, NotificationDto dto){
+    public Notification toEntity(User user, NotificationDto dto){
         Notification notification = new Notification();
         notification.setId(dto.getId());
         notification.setTitle(dto.getTitle());
