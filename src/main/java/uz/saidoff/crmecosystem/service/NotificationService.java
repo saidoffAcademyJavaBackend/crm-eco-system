@@ -24,7 +24,7 @@ public class NotificationService {
 
 
     public List<NotificationDto> getNotification(UUID userId) {
-        List<Notification> notifications = notificationRepository.findAllByUserIdAndReadIsFalse(userId);
+        List<Notification> notifications = notificationRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
         if (notifications.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NOTIFICATION_NOT_FOUND));
         }
@@ -35,7 +35,7 @@ public class NotificationService {
        return list;
     }
 
+    public void deleteAllReadIsTrueNotifications(UUID userId) {
+        notificationRepository.deleteAllByUserIdAndReadIsTrue(userId);
+    }
 }
-
-
-

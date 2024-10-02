@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
+
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
     List<Notification> findAllByUserIdAndReadIsFalse(UUID userId);
 
-    boolean deleteAllByUserIdAndReadIsTrue(UUID userId);
+    List<Notification> findAllByUserIdOrderByCreatedAtDesc(UUID user_id);
+
+    void deleteAllByUserIdAndReadIsTrue(UUID userId);
 
     Optional<Notification> findUserByUserId(UUID userId);
 

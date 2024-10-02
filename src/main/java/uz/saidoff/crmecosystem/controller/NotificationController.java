@@ -28,4 +28,10 @@ public class NotificationController {
         return ResponseData.successResponse(dtos);
     }
 
+    @DeleteMapping("/{userId}")
+    public ResponseData<?> deleteNotification(@PathVariable("userId") UUID userId) {
+        notificationService.deleteAllReadIsTrueNotifications(userId);
+        return new ResponseData<>(true);
+    }
+
 }
