@@ -22,9 +22,9 @@ public class NotificationController {
 
     private final UserService userService;
 
-    @GetMapping
-    public ResponseData<List<NotificationDto>> sendNotMessage(@RequestBody NotificationDto dto, UUID userId){
-        List<NotificationDto> notificationDtos = notificationService.sendMessage(dto, userId);
+    @GetMapping("/{userId}")
+    public ResponseData<List<NotificationDto>> sendNotMessage(@PathVariable("userId") UUID userId){
+        List<NotificationDto> notificationDtos = notificationService.sendMessage(userId);
         return ResponseData.successResponse(notificationDtos);
     }
 

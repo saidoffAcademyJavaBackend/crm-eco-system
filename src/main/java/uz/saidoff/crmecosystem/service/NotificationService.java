@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.enums.NotificationType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.NotificationMapper;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
@@ -14,8 +13,6 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -55,18 +52,21 @@ public class NotificationService {
 
     List<NotificationDto> notificationDtoList = new ArrayList<>();
 
-    public List<NotificationDto> sendMessage(NotificationDto dto, UUID userId) {
+    public List<NotificationDto> sendMessage(UUID userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NOTIFICATION_NOT_FOUND));
+        }
         Role role = optionalUser.get().getRole();
         List<User> byRoleName = userRepository.findByRole_Name(role.getName());
         for (User user : byRoleName) {
             Notification notification = new Notification();
-            notification.setTitle(dto.getTitle());
-            notification.setDescription(dto.getDescription());
+            notification.setTitle(notification.getTitle());
+            notification.setDescription(notification.getDescription());
             notification.setUser(user);
             notification.setRead(false);
             notification.setReceivedTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
-            notification.setType(dto.getType());
+            notification.setType(notification.getType());
             Notification savedNotification = notificationRepository.save(notification);
             NotificationDto notDto = notificationMapper.toNotDto(savedNotification);
             notificationDtoList.add(notDto);
