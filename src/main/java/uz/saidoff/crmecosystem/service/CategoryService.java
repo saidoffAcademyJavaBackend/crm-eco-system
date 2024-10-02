@@ -25,6 +25,7 @@ public class CategoryService {
         Category category = new Category();
         category.setName(categoryRequestDto.getName());
         category.setDescription(categoryRequestDto.getDescription());
+        category.setIncome(categoryRequestDto.isIncome());
         category.setCreatedBy(categoryRequestDto.getUserId());
         category.setUpdatedBy(category.getCreatedBy());
         categoryRepository.save(category);
