@@ -19,5 +19,5 @@ public class Category extends AbsEntity {
     private String name;
     private String description;
     private boolean isIncome;
-    private List<Permissions> permissions;
+
 }
