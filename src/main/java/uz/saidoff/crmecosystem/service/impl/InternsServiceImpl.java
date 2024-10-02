@@ -27,7 +27,7 @@ public class InternsServiceImpl implements InternsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SpecialityRepository specialityRepository;
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
 
     @Override
     public ResponseData<?> getAllInterns(int page, int size) {

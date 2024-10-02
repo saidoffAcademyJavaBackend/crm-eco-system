@@ -27,6 +27,7 @@ public class CategoryService {
         category.setDescription(categoryRequestDto.getDescription());
         category.setCreatedBy(categoryRequestDto.getUserId());
         category.setUpdatedBy(category.getCreatedBy());
+        category.setPermissions(categoryRequestDto.getPermissions());
         categoryRepository.save(category);
         return ResponseData.successResponse("category saved");
     }

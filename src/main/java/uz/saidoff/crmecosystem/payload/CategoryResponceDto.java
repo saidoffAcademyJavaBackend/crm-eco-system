@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.enums.Permissions;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -21,5 +23,5 @@ public class CategoryResponceDto {
     private boolean isIncome;
     private Timestamp createdAt;
     private boolean deleted;
-
+    private List<Permissions> permissions;
 }
