@@ -60,7 +60,7 @@ public class CategoryService {
             return ResponseData.errorResponse("problema : -> not found category failed ", "/get-all-category", 403);
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("data", categoryPage.stream().toList());
+        response.put("data", categoryPage.get());
         response.put("total", categoryPage.getTotalElements());
         response.put("totalPages", categoryPage.getTotalPages());
         return new ResponseData<>(response, true);
