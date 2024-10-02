@@ -34,7 +34,7 @@ public class InternsController {
         return this.internsService.addIntern(userId, internGetDto);
     }
 
-    @CheckPermission("INTERN_UPDATE")
+    @CheckPermission("UPDATE_INTERN")
     @PutMapping("update-intern")
     public ResponseData<?> updateIntern(@RequestBody InternGetDto internGetDto) {
         return this.internsService.update(internGetDto);
