@@ -12,7 +12,8 @@ import uz.saidoff.crmecosystem.entity.AttachmentContent;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.FileMapper;
 import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
-import uz.saidoff.crmecosystem.repository.FileRepository;
+
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 
@@ -25,7 +26,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final FileRepository fileRepository;
+
+    private final AttachmentRepository fileRepository;
     private final AttachmentContentRepository attachmentContentRepository;
     private FileMapper fileMapper;
 
@@ -73,14 +75,14 @@ public class FileService {
         return ResponseData.successResponse(optionalAttachment.get(), userId);
     }
 
-    public ResponseData<?> feleteFile(UUID fileId) {
-        Optional<AttachmentContent> optionalAttachmentContent = attachmentContentRepository.findById(fileId);
-        if (optionalAttachmentContent.isEmpty()) {
+    public ResponseData<?> deleteFile(UUID fileId) {
+        Optional<Attachment> optionalAttachment = fileRepository.findById(fileId);
+        if (optionalAttachment.isEmpty()) {
             return new ResponseData<>("file not found", false);
         }
-        AttachmentContent attachmentContent = optionalAttachmentContent.get();
-        attachmentContent.setDeleted(true);
-        attachmentContentRepository.save(attachmentContent);
+        Attachment attachment = optionalAttachment.get();
+        fileRepository.deleteById(attachment.getId());
+
         return ResponseData.successResponse("file succesfuly deleted");
     }
 }

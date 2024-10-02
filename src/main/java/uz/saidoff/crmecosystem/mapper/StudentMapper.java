@@ -1,7 +1,11 @@
 package uz.saidoff.crmecosystem.mapper;
 
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Group;
+import uz.saidoff.crmecosystem.entity.Speciality;
+import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
@@ -14,18 +18,18 @@ import uz.saidoff.crmecosystem.repository.StudentRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
-import java.sql.Timestamp;
-import java.time.Instant;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
+@RequiredArgsConstructor
 public class StudentMapper {
 
     private StudentRepository studentRepository;
     private RoleRepository roleRepository;
 
-    public User toFromUserEntity(StudentResponseDto studentResponseDto) {
+    public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role) {
 
         User user = new User();
 
@@ -36,12 +40,9 @@ public class StudentMapper {
         user.setSecondPhoneNumber(studentResponseDto.getSecondPhoneNumber());
         user.setBirthDate(studentResponseDto.getDateOfBirth());
         user.setBirthPlace(studentResponseDto.getPlaceOfBirth());
-
-        user.setSpeciality(studentResponseDto.getSpecialty());
+        user.setSpeciality(speciality);
         user.setPassportSeries(studentResponseDto.getPassportSeries());
-        user.setRole(roleRepository.findByRoleType(RoleType.STUDENT).orElseThrow(
-                () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))
-        ));
+        user.setRole(role);
         user.setSalary(studentResponseDto.getSalary());
         user.setPermissions(List.of(Permissions.CREATE_STUDENT));
         return user;
@@ -66,10 +67,10 @@ public class StudentMapper {
         studentResponse.setSecondPhoneNumber(user.getSecondPhoneNumber());
         studentResponse.setDateOfBirth(user.getBirthDate());
         studentResponse.setPlaceOfBirth(user.getBirthPlace());
-        studentResponse.setSpecialty(user.getSpeciality());
+        studentResponse.setSpecialtyId(user.getSpeciality().getId());
         studentResponse.setPassportSeries(user.getPassportSeries());
-        studentResponse.setRole(user.getRole());
-//        studentResponse.setAddedBy(user.getAddedBy());
+        studentResponse.setRoleId(user.getRole().getId());
+        studentResponse.setAddedBy(user.getCreatedBy());
         studentResponse.setPaymentAmount(user.getSalary());
         return studentResponse;
     }
@@ -85,15 +86,15 @@ public class StudentMapper {
         studentResponseDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
         studentResponseDto.setDateOfBirth(user.getBirthDate());
         studentResponseDto.setPlaceOfBirth(user.getBirthPlace());
-        studentResponseDto.setSpecialty(user.getSpeciality());
+        studentResponseDto.setSpecialtyId(user.getSpeciality().getId());
         studentResponseDto.setPassportSeries(user.getPassportSeries());
-        studentResponseDto.setRole(user.getRole());
+        studentResponseDto.setRoleId(user.getRole().getId());
 
-//        studentResponseDto.setAddedBy(user.getAddedBy());
+        studentResponseDto.setAddedBy(user.getCreatedBy());
 
         studentResponseDto.setPaymentAmount(user.getSalary());
         studentResponseDto.setTeacherId(group.getTeacher().getId());
-        studentResponseDto.setGroup(group);
+        studentResponseDto.setGroupId(group.getId());
 
         return studentResponseDto;
     }

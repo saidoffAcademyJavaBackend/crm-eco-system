@@ -33,4 +33,16 @@ public class InternsController {
     public ResponseData<?> addIntern(@PathVariable UUID userId, @RequestBody InternGetDto internGetDto) {
         return this.internsService.addIntern(userId, internGetDto);
     }
+
+    @CheckPermission("UPDATE_INTERN")
+    @PutMapping("update-intern")
+    public ResponseData<?> updateIntern(@RequestBody InternGetDto internGetDto) {
+        return this.internsService.update(internGetDto);
+    }
+
+    @CheckPermission("DELETE_INTERN")
+    @DeleteMapping("delete-intern-by-id/{internId}")
+    public ResponseData<?> deleteInternById(@PathVariable UUID internId) {
+        return  this.internsService.deleteById(internId);
+    }
 }

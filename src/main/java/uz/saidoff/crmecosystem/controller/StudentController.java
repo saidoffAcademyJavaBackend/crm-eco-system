@@ -18,9 +18,9 @@ public class StudentController {
     private final StudentService studentService;
 
     @CheckPermission("CREATE_STUDENT")
-    @PostMapping("/student-create/{groupId}")
-    public ResponseEntity<ResponseData<?>> createStudent(@PathVariable UUID groupId, @RequestBody StudentResponseDto studentResponseDto) {
-        ResponseData<?> responseData = studentService.saved(groupId, studentResponseDto);
+    @PostMapping("/student-create")
+    public ResponseEntity<ResponseData<?>> createStudent( @RequestBody StudentResponseDto studentResponseDto) {
+        ResponseData<?> responseData = studentService.saved( studentResponseDto);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 

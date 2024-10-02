@@ -28,8 +28,6 @@ public class InternGetDto {
     private String specialty;
     private String passportSeries;
     private Double paymentAmount;
-    private UUID addedBy;
     private Date startStudying;
-    private String role = "INTERN";
     private List<Permissions> permissionsList;
 }

@@ -11,7 +11,7 @@ import uz.saidoff.crmecosystem.mapper.NewsMapper;
 import uz.saidoff.crmecosystem.payload.NewsCreateDto;
 import uz.saidoff.crmecosystem.payload.NewsGetByUserIdDto;
 import uz.saidoff.crmecosystem.payload.NewsUpdateDto;
-import uz.saidoff.crmecosystem.repository.FileRepository;
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.repository.NewsRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
@@ -33,7 +33,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final FileRepository fileRepository;
+    private final AttachmentRepository fileRepository;
 
     @Override
     public ResponseData<?> getAllNewsByUserRoles(UUID userId, int size, int page) {
