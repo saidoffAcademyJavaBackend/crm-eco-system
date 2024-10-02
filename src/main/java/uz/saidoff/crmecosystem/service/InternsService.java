@@ -11,4 +11,8 @@ public interface InternsService {
     ResponseData<?> getOneById(UUID interId);
 
     ResponseData<?> addIntern(UUID userId, InternGetDto internGetDto);
+
+    ResponseData<?> deleteById(UUID internId);
+
+    ResponseData<?> update(InternGetDto internGetDto);
 }
