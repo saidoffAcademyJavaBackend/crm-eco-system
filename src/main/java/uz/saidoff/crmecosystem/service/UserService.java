@@ -69,7 +69,6 @@ public class UserService {
             throw new NotFoundException("Users not found!");
         }
 
-
         Map<String, Object> response = new HashMap<>();
         response.put("data", userMapper.toDto(users.toList()));
         response.put("total", users.getTotalElements());
