@@ -25,6 +25,7 @@ public class CategoryService {
         Category category = new Category();
         category.setName(categoryRequestDto.getName());
         category.setDescription(categoryRequestDto.getDescription());
+        category.setIncome(categoryRequestDto.isIncome());
         category.setCreatedBy(categoryRequestDto.getUserId());
         category.setUpdatedBy(category.getCreatedBy());
         categoryRepository.save(category);
@@ -59,7 +60,7 @@ public class CategoryService {
             return ResponseData.errorResponse("problema : -> not found category failed ", "/get-all-category", 403);
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("data", categoryPage.stream().toList());
+        response.put("data", categoryPage.get());
         response.put("total", categoryPage.getTotalElements());
         response.put("totalPages", categoryPage.getTotalPages());
         return new ResponseData<>(response, true);

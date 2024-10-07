@@ -30,8 +30,6 @@ public class Notification extends AbsEntity {
 
     private Boolean read = false;
 
-    private LocalDateTime receivedTime;
-
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 

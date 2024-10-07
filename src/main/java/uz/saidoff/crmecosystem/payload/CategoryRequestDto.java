@@ -17,5 +17,6 @@ public class CategoryRequestDto {
     private UUID userId;
     private String name;
     private String description;
+    private boolean isIncome;
 
 }

@@ -12,7 +12,7 @@ import uz.saidoff.crmecosystem.valid.CheckPermission;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/v1/category")
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;

@@ -18,22 +18,15 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    private final StudentService studentService;
-
-    private final UserService userService;
-
-    @GetMapping
-    public ResponseData<List<NotificationDto>> sendNotMessage(@RequestBody NotificationDto dto, UUID userId){
-        List<NotificationDto> notificationDtos = notificationService.sendMessage(dto, userId);
-        return ResponseData.successResponse(notificationDtos);
+    @GetMapping("/{userId}")
+    public ResponseData<?> getNotification(@PathVariable("userId") UUID userId) {
+        return ResponseData.successResponse(notificationService.getNotification(userId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseData<?> getNotificationById(@PathVariable UUID id){
-        return this.notificationService.getNotificationById(id);
+    @DeleteMapping("/{userId}")
+    public ResponseData<?> deleteNotification(@PathVariable("userId") UUID userId) {
+        notificationService.deleteAllReadIsTrueNotifications(userId);
+        return new ResponseData<>(true);
     }
-
-
-
 
 }
