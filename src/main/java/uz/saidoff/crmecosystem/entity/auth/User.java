@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Entity(name = "users")
 @Builder
 public class User extends AbsEntity implements UserDetails {
-
     @OneToOne
     private Attachment attachment;
     private String password;
