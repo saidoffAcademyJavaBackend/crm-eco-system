@@ -46,5 +46,11 @@ public class InternsController {
         return  this.internsService.deleteById(internId);
     }
 
+    @CheckPermission("UPDATE_INTERN")
+    @PutMapping("intern-to-employee/{internId}")
+    public ResponseData<?> internToEmployee(@PathVariable UUID internId) {
+        return this.internsService.internToEmployee(internId);
+    }
+
 
 }

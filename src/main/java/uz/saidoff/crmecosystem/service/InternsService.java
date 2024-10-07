@@ -15,4 +15,6 @@ public interface InternsService {
     ResponseData<?> deleteById(UUID internId);
 
     ResponseData<?> update(InternGetDto internGetDto);
+
+    ResponseData<?> internToEmployee(UUID internId);
 }

@@ -9,6 +9,7 @@ import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.InternsMapper;
@@ -125,5 +126,24 @@ public class InternsServiceImpl implements InternsService {
         intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get());
         internsRepository.save(intern);
         return ResponseData.successResponse("intern updated successfully");
+    }
+
+    @Override
+    public ResponseData<?> internToEmployee(UUID internId) {
+        Optional<User> optionalIntern = internsRepository.findById(internId);
+        if (optionalIntern.isEmpty()) {
+            throw new NotFoundException("Intern not found");
+        }
+        Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.EMPLOYEE);
+        if (optionalRole.isEmpty()) {
+            throw new NotFoundException("Role not found to set as an Employee");
+        }
+
+        User intern = optionalIntern.get();
+
+        intern.setRole(optionalRole.get());
+        intern.setPermissions(Collections.singletonList(Permissions.valueOf("READ_EMPLOYEE")));
+        internsRepository.save(intern);
+        return null;
     }
 }
