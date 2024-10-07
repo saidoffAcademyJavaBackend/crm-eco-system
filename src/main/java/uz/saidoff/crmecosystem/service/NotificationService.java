@@ -38,4 +38,17 @@ public class NotificationService {
     public void deleteAllReadIsTrueNotifications(UUID userId) {
         notificationRepository.deleteAllByUserIdAndReadIsTrue(userId);
     }
+
+    public List<NotificationDto> getNotificationByUserId(UUID userId) {
+        List<Notification> allByUserIdAndReadIsFalse = notificationRepository.findAllByUserIdAndReadIsFalse(userId);
+        for (Notification notification : allByUserIdAndReadIsFalse) {
+            notification.setRead(true);
+        }
+        notificationRepository.saveAll(allByUserIdAndReadIsFalse);
+        List<NotificationDto> list = allByUserIdAndReadIsFalse
+                .stream()
+                .map(notificationMapper::toDto)
+                .toList();
+        return list;
+    }
 }

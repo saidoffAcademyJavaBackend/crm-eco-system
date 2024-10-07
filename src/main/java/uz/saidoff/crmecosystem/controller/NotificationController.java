@@ -22,6 +22,10 @@ public class NotificationController {
     public ResponseData<?> getNotification(@PathVariable("userId") UUID userId) {
         return ResponseData.successResponse(notificationService.getNotification(userId));
     }
+    @GetMapping("/{userId}")
+    public ResponseData<?> getNotificationByUserId(@PathVariable("userId") UUID userId) {
+        return ResponseData.successResponse(notificationService.getNotificationByUserId(userId));
+    }
 
     @DeleteMapping("/{userId}")
     public ResponseData<?> deleteNotification(@PathVariable("userId") UUID userId) {
