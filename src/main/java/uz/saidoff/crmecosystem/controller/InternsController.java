@@ -45,4 +45,6 @@ public class InternsController {
     public ResponseData<?> deleteInternById(@PathVariable UUID internId) {
         return  this.internsService.deleteById(internId);
     }
+
+
 }

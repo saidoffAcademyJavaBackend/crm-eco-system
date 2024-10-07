@@ -1,5 +1,6 @@
 package uz.saidoff.crmecosystem.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InternsServiceImpl implements InternsService {
     private final InternsRepository internsRepository;
     private final InternsMapper internsMapper;

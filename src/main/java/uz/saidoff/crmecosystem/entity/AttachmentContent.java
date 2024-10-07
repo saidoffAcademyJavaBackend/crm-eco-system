@@ -16,7 +16,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @Entity
 public class AttachmentContent extends AbsEntity {
 
-    @Lob
+    @Lob()
     private byte[] mainContent;
 
     @OneToOne
