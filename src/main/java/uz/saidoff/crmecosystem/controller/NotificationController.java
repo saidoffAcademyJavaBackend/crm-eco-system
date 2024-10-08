@@ -23,8 +23,8 @@ public class NotificationController {
         return ResponseData.successResponse(notificationService.getNotification(userId));
     }
     @GetMapping("/{userId}")
-    public ResponseData<?> getNotificationByUserId(@PathVariable("userId") UUID userId) {
-        return ResponseData.successResponse(notificationService.getNotificationByUserId(userId));
+    public ResponseData<?> getNotificationByUserIdAndRead(@PathVariable("userId") UUID userId) {
+        return ResponseData.successResponse(notificationService.getAllNotificationByUserIdAndReadIsTrue(userId));
     }
 
     @DeleteMapping("/{userId}")

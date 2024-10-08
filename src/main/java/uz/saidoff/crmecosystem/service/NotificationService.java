@@ -39,7 +39,7 @@ public class NotificationService {
         notificationRepository.deleteAllByUserIdAndReadIsTrue(userId);
     }
 
-    public List<NotificationDto> getNotificationByUserId(UUID userId) {
+    public List<NotificationDto> getAllNotificationByUserIdAndReadIsTrue(UUID userId) {
         List<Notification> allByUserIdAndReadIsFalse = notificationRepository.findAllByUserIdAndReadIsFalse(userId);
         for (Notification notification : allByUserIdAndReadIsFalse) {
             notification.setRead(true);
