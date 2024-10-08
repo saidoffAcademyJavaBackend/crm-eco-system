@@ -18,7 +18,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbsEntity implements Serializable {
     @Id
@@ -37,7 +36,7 @@ public abstract class AbsEntity implements Serializable {
     @LastModifiedBy
     private UUID updatedBy;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
     @Override
     public final boolean equals(Object o) {
