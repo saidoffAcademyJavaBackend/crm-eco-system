@@ -17,23 +17,23 @@ import java.util.UUID;
 public class NewsController {
     private final NewsService newsService;
 
-    @GetMapping("get-allNews-by-userId/{userId}")
-    public ResponseData<?> getAllNews(@PathVariable UUID userId,@RequestParam int page,@RequestParam int size) {
-        return this.newsService.getAllNewsByUserRoles(userId,size,page);
+    @GetMapping("get-allNews-by-user")
+    public ResponseData<?> getAllNews(@RequestParam int page, @RequestParam int size) {
+        return this.newsService.getAllNewsByUserRoles(size, page);
     }
 
-    @GetMapping("get-by-newsId")
-    public ResponseData<?> getNewsById(@RequestParam UUID newsId) {
+    @GetMapping("get-by-newsId/{newsId}")
+    public ResponseData<?> getNewsById(@PathVariable UUID newsId) {
         return this.newsService.getByNewsId(newsId);
     }
 
-    @PostMapping("add-news/{userId}")
-    public ResponseData<?> addNews(@PathVariable UUID userId, @RequestBody NewsCreateDto news) {
-        return this.newsService.addNews(userId,news);
+    @PostMapping("add-news")
+    public ResponseData<?> addNews(@RequestBody NewsCreateDto news) {
+        return this.newsService.addNews(news);
     }
 
-    @PutMapping("update-one-by-id/{userId}")
-    public ResponseData<?> updateOneById(@RequestBody NewsUpdateDto newsUpdateDto, @PathVariable UUID userId) {
-        return this.newsService.updateNews(newsUpdateDto,userId);
+    @PutMapping("update-one-by-id")
+    public ResponseData<?> updateOneById(@RequestBody NewsUpdateDto newsUpdateDto) {
+        return this.newsService.updateNews(newsUpdateDto);
     }
 }
