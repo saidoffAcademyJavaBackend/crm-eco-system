@@ -12,6 +12,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @NoArgsConstructor
 @Entity
 public class CommentTask extends AbsEntity {
+
     private String comment;
 
     @ManyToOne(optional = false)
@@ -19,4 +20,7 @@ public class CommentTask extends AbsEntity {
 
     @ManyToOne(optional = false)
     private User user;
+
+    @ManyToOne
+    private CommentTask replyComment;
 }
