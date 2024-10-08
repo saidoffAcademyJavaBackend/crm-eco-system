@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import uz.saidoff.crmecosystem.entity.auth.User;
@@ -12,9 +13,9 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @NoArgsConstructor
 @Entity
 public class ProjectUser extends AbsEntity {
-    @OneToOne
+    @ManyToOne(optional = false)
     private User user;
 
-    @OneToOne
+    @ManyToOne(optional = false)
     private Project project;
 }
