@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.News;
@@ -36,12 +37,9 @@ public class NewsServiceImpl implements NewsService {
     private final AttachmentRepository fileRepository;
 
     @Override
-    public ResponseData<?> getAllNewsByUserRoles(UUID userId, int size, int page) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
-        }
-        Role role = optionalUser.get().getRole();
+    public ResponseData<?> getAllNewsByUserRoles(int size, int page) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Role role = user.getRole();
         List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(), size, page * size);
         if (news.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
@@ -51,11 +49,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public ResponseData<?> addNews(UUID userId, NewsCreateDto newsCreateDto) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
-        }
+    public ResponseData<?> addNews(NewsCreateDto newsCreateDto) {
         List<Role> roles = roleRepository.findAllById(newsCreateDto.getRoleId());
         if (roles.isEmpty()) {
             throw new NotFoundException("Role not found");
@@ -64,17 +58,14 @@ public class NewsServiceImpl implements NewsService {
         if (optionalAttachment.isEmpty()) {
             throw new NotFoundException("attachment not found");
         }
-        News news = newsMapper.fromNewsCreateDtoToNews(optionalUser.get(), newsCreateDto, roles,optionalAttachment.get());
+        News news = newsMapper.fromNewsCreateDtoToNews(newsCreateDto, roles, optionalAttachment.get());
         newsRepository.save(news);
         return ResponseData.successResponse("News added successfully");
     }
 
     @Override
-    public ResponseData<?> updateNews(NewsUpdateDto newsUpdateDto, UUID userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND));
-        }
+    public ResponseData<?> updateNews(NewsUpdateDto newsUpdateDto) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<News> byId = newsRepository.findById(newsUpdateDto.getNewsId());
         if (byId.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
@@ -84,7 +75,7 @@ public class NewsServiceImpl implements NewsService {
             throw new NotFoundException("attachment not found");
         }
         News news = byId.get();
-        news.setUpdatedBy(userId);
+        news.setUpdatedBy(user.getId());
         news.setContent(newsUpdateDto.getContent());
         news.setTitle(newsUpdateDto.getTitle());
         news.setUpdatedAt(Timestamp.from(Instant.now()));
