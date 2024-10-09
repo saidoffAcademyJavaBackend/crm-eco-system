@@ -30,17 +30,13 @@ public class NewsMapper {
         return newsGetByUserIdDto;
     }
 
-    public News fromNewsCreateDtoToNews(User optionalUser, NewsCreateDto newsCreateDto, List<Role> roles, Attachment attachment) {
+    public News fromNewsCreateDtoToNews(NewsCreateDto newsCreateDto, List<Role> roles, Attachment attachment) {
         News news = new News();
         news.setAttachment(attachment);
         news.setTitle(newsCreateDto.getTitle());
         news.setContent(newsCreateDto.getContent());
         news.setRoles(roles);
-        news.setCreatedBy(optionalUser.getId());
         news.setDeleted(false);
-        news.setCreatedAt(Timestamp.from(Instant.now()));
-        news.setUpdatedAt(Timestamp.from(Instant.now()));
-        news.setUpdatedBy(optionalUser.getId());
         return news;
     }
 }

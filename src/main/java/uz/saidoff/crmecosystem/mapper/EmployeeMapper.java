@@ -29,7 +29,11 @@ public class EmployeeMapper {
 
     public User toEntity(EmployeeCreatDto employeeCreatDto) {
         User user = new User();
-        user.setAttachment(fileRepository.findById(employeeCreatDto.getAttachmentId()).orElse(null));
+
+        if (employeeCreatDto.getAttachmentId() != null) {
+            user.setAttachment(fileRepository.findById(employeeCreatDto.getAttachmentId()).orElse(null));
+        }
+
         user.setPassword(passwordEncoder.encode(employeeCreatDto.getPassword()));
         user.setFirstName(employeeCreatDto.getFirstName());
         user.setLastName(employeeCreatDto.getLastName());
@@ -39,7 +43,8 @@ public class EmployeeMapper {
         user.setBirthDate(employeeCreatDto.getBirthDate());
         user.setBirthPlace(employeeCreatDto.getBirthPlace());
         user.setCurrentResidence(employeeCreatDto.getCurrentResidence());
-        user.setSpeciality(specialityRepository.findById(employeeCreatDto.getSpecialtyId()).orElse(null));
+        if (employeeCreatDto.getSpecialtyId() != null)
+            user.setSpeciality(specialityRepository.findById(employeeCreatDto.getSpecialtyId()).orElse(null));
         user.setStartWork(employeeCreatDto.getStartWork());
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
@@ -49,7 +54,9 @@ public class EmployeeMapper {
 
     public EmployeeDto toDto(User user) {
         EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setAttachmentId(user.getAttachment().getId());
+        if (user.getAttachment() != null) {
+            employeeDto.setAttachmentId(user.getAttachment().getId());
+        }
         employeeDto.setEmployeeId(user.getId());
         employeeDto.setFirstName(user.getFirstName());
         employeeDto.setLastName(user.getLastName());
@@ -59,9 +66,11 @@ public class EmployeeMapper {
         employeeDto.setBirthDate(user.getBirthDate());
         employeeDto.setBirthPlace(user.getBirthPlace());
         employeeDto.setCurrentResidence(user.getCurrentResidence());
-        employeeDto.setSpecialtyId(user.getSpeciality().getId());
+        if (user.getSpeciality() != null)
+            employeeDto.setSpecialtyId(user.getSpeciality().getId());
         employeeDto.setStartWork(user.getStartWork());
         employeeDto.setRoleId(user.getRole().getId());
+        employeeDto.setPermissions(user.getPermissions());
         return employeeDto;
     }
 
@@ -77,34 +86,34 @@ public class EmployeeMapper {
         if (employeeCreatDto.getAttachmentId() != null) {
             user.setAttachment(fileRepository.findById(employeeCreatDto.getAttachmentId()).orElse(null));
         }
-        if (employeeCreatDto.getFirstName()!=null) {
+        if (employeeCreatDto.getFirstName() != null) {
             user.setFirstName(employeeCreatDto.getFirstName());
         }
-        if (employeeCreatDto.getLastName()!=null) {
+        if (employeeCreatDto.getLastName() != null) {
             user.setLastName(employeeCreatDto.getLastName());
         }
-        if (employeeCreatDto.getFatherName()!=null) {
+        if (employeeCreatDto.getFatherName() != null) {
             user.setFatherName(employeeCreatDto.getFatherName());
         }
-        if (employeeCreatDto.getPhoneNumber()!=null) {
+        if (employeeCreatDto.getPhoneNumber() != null) {
             user.setPhoneNumber(employeeCreatDto.getPhoneNumber());
         }
-        if (employeeCreatDto.getSecondPhoneNumber()!=null) {
+        if (employeeCreatDto.getSecondPhoneNumber() != null) {
             user.setSecondPhoneNumber(employeeCreatDto.getSecondPhoneNumber());
         }
-        if (employeeCreatDto.getBirthDate()!=null) {
+        if (employeeCreatDto.getBirthDate() != null) {
             user.setBirthDate(employeeCreatDto.getBirthDate());
         }
-        if (employeeCreatDto.getBirthPlace()!=null) {
+        if (employeeCreatDto.getBirthPlace() != null) {
             user.setBirthPlace(employeeCreatDto.getBirthPlace());
         }
-        if (employeeCreatDto.getCurrentResidence()!=null) {
+        if (employeeCreatDto.getCurrentResidence() != null) {
             user.setCurrentResidence(employeeCreatDto.getCurrentResidence());
         }
-        if (employeeCreatDto.getSpecialtyId()!=null) {
+        if (employeeCreatDto.getSpecialtyId() != null) {
             user.setSpeciality(specialityRepository.findById(employeeCreatDto.getSpecialtyId()).orElse(null));
         }
-        if (employeeCreatDto.getStartWork()!=null) {
+        if (employeeCreatDto.getStartWork() != null) {
             user.setStartWork(employeeCreatDto.getStartWork());
         }
         return user;

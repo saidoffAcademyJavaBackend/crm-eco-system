@@ -35,6 +35,8 @@ public class User extends AbsEntity implements UserDetails {
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;
+    private String numberOfChildren;
+    private Boolean gender;
 
     @ManyToOne
     private Speciality speciality;
