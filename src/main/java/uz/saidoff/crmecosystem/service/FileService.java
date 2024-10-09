@@ -10,7 +10,6 @@ import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.AttachmentContent;
 
 import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.mapper.FileMapper;
 import uz.saidoff.crmecosystem.repository.AttachmentContentRepository;
 
 import uz.saidoff.crmecosystem.repository.AttachmentRepository;
@@ -29,7 +28,6 @@ public class FileService {
 
     private final AttachmentRepository fileRepository;
     private final AttachmentContentRepository attachmentContentRepository;
-    private FileMapper fileMapper;
 
 
     public boolean isValidFile(MultipartFile multipartFile) {
@@ -37,7 +35,9 @@ public class FileService {
 
         return contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("text/plain")
                 || contentType.equals("application/pdf") || contentType.equals("image/gif") || contentType.equals("application/zip") ||
-                contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                || contentType.equals("video/mp4")||contentType.equals("video/ogg") || contentType.equals("audio/mpeg") || contentType.equals("audio/ogg")
+        || contentType.equals("audio/mp3")|| contentType.equals("audio/m4a");
     }
 
     @Transactional
