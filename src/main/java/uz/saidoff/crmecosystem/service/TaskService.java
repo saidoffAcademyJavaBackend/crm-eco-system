@@ -46,7 +46,7 @@ public class TaskService {
     }
 
     public ResponseData<?> getAllByProjectId(UUID projectId) {
-        // project id bo'yicha hamma stagelarni topib olib keilsh va shularning listi bo'yich hamma tasklarni olib kelish
+        // project id bo'yicha hamma stagelarni topib olib keilsh  va shularning listi bo'yich hamma tasklarni olib kelish
         List<Stage> stages = new LinkedList<>();
         List<Task> allTasks = taskRepository.findAllByStageIn(stages);
         if (allTasks.isEmpty()) {
@@ -56,7 +56,7 @@ public class TaskService {
         for (int i = 0; i < allTasks.size(); i++) {
             List<User> usersByTaskId = taskUserRepository.findAllByTask(allTasks.get(i));
             if (!usersByTaskId.isEmpty()) {
-                data.add(taskMapper.toGetTaskDto(allTasks.get(i),usersByTaskId));
+                data.add(taskMapper.toGetTaskDto(allTasks.get(i), usersByTaskId));
             } else {
                 GetTaskDto getTaskDto = new GetTaskDto();
                 getTaskDto.setTask(allTasks.get(i));
