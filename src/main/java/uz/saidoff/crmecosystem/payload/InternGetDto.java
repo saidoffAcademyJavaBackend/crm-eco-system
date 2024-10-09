@@ -15,6 +15,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InternGetDto {
+    /* parol qoshih kk
+    gender
+    gurugha shotta biriktirish kk
+     */
+
     private UUID interId;
     private String firsName;
     private String lastName;
