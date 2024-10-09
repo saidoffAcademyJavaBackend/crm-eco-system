@@ -13,7 +13,6 @@ import uz.saidoff.crmecosystem.repository.UserRepository;
 @RequiredArgsConstructor
 public class NotificationMapper {
 
-    private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
     public NotificationDto toDto(Notification notification) {
