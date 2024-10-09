@@ -30,6 +30,7 @@ public class DataLoader implements CommandLineRunner {
         if (initMode.equals("always")) {
             UserFactorySingleton instance = UserFactorySingleton.getInstance();
 
+
             Role superAdmin = new Role();
             superAdmin.setName("super-admin");
             superAdmin.setRoleType(RoleType.SUPER_ADMIN);
@@ -39,12 +40,26 @@ public class DataLoader implements CommandLineRunner {
             intern.setName("intern");
             intern.setRoleType(RoleType.INTERN);
             roleRepository.save(intern);
+
             userRepository.save(instance.createUser(
                     "admin",
                     "Admin",
                     "123",
                     passwordEncoder.encode("123"),
                     superAdmin,
+                    Arrays.stream(Permissions.values()).toList()));
+
+            Role owner = new Role();
+            superAdmin.setName("owner");
+            superAdmin.setRoleType(RoleType.OWNER);
+            roleRepository.save(owner);
+
+            userRepository.save(instance.createUser(
+                    "Owner",
+                    "Owner",
+                    "321",
+                    passwordEncoder.encode("321"),
+                    owner,
                     Arrays.stream(Permissions.values()).toList()));
 
         }

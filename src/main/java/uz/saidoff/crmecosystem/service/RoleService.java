@@ -1,10 +1,14 @@
 package uz.saidoff.crmecosystem.service;
 
+import jdk.jfr.Registered;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.mapper.RoleMapper;
 import uz.saidoff.crmecosystem.payload.RoleDto;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
@@ -16,16 +20,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     public Role getRole(UUID roleId) {
         return getRoleById(roleId);
+
+
     }
 
 
