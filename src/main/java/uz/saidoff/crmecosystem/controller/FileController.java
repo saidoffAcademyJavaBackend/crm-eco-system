@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.AttachmentContent;
-import uz.saidoff.crmecosystem.payload.imageDto.FileDownloadResponse;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.FileService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
