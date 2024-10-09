@@ -6,9 +6,11 @@ import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 
 import java.sql.Date;
+import java.util.Collections;
 import java.util.UUID;
 
 @Component
@@ -50,7 +52,9 @@ public class InternsMapper {
         user.setCurrentResidence(internGetDto.getCurrentResidence());
         user.setStartStudying(new Date(internGetDto.getStartStudying().getTime()));
         user.setRole(role);
-        user.setPermissions(internGetDto.getPermissionsList());
+        user.setPermissions(internGetDto.getPermissionsList()==null?
+                Collections.singletonList(Permissions.GET_INTERN)
+                :internGetDto.getPermissionsList());
         user.setCreatedBy(userId);
         if (attachment != null) {
             user.setAttachment(attachment);
