@@ -12,7 +12,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @Entity
 public class Stage extends AbsEntity {
     private String name;
-    private int order;
+    private Integer positionOrder;
     private boolean is_done;
 
     @ManyToOne
