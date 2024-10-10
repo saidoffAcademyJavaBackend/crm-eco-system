@@ -15,7 +15,7 @@ public class TaskMapper {
     public Task addDtoToTask(TaskAddDto taskAddDto) {
         Task task = new Task();
         task.setTitle(taskAddDto.getTitle());
-        task.setOrder(task.getOrder());
+        task.setPositionOrder(task.getPositionOrder());
 
 //        task.setStage(taskAddDto.getStageId());
 

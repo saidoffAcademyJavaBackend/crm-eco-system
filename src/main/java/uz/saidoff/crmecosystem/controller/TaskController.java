@@ -26,9 +26,16 @@ public class TaskController {
     public ResponseData<?> getAllTaskByProjectId(@PathVariable("projectId") UUID projectId) {
         return this.taskService.getAllByProjectId(projectId);
     }
+
     @CheckPermission("GET_TASK")
     @GetMapping("/get-one-by-id/{taskId}")
     public ResponseData<?> getOneTaskById(@PathVariable("taskId") UUID taskId) {
         return this.taskService.gorOneById(taskId);
+    }
+
+    @CheckPermission("UPDATE_TASK")
+    @PutMapping("/update-by-id/{taskId}")
+    public ResponseData<?> updateById (@PathVariable UUID taskId,@RequestBody TaskAddDto taskAddDto){
+        return this.taskService.updateById(taskId,taskAddDto);
     }
 }
