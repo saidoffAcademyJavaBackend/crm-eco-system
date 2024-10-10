@@ -50,11 +50,8 @@ public class StudentService {
             throw new NotFoundException("rot type not found");
         }
 
-        Group group2 = group.get();
         User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
-        group2.setStudents(List.of(newUserEntity));
         studentRepository.save(newUserEntity);
-        groupRepository.save(group2);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 

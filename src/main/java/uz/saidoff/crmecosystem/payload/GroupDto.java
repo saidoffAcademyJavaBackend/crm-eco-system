@@ -25,8 +25,8 @@ public class GroupDto {
     private String linkOfTelegram;
     private UUID groupTypeId;
     private List<WeekDays> weekDays;
-    private List<UUID> studentsId;
     private boolean active;
     private boolean student;
     private Double paymentAmount;
+    private String room;
 }

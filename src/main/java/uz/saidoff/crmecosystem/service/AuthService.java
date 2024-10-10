@@ -1,4 +1,4 @@
-package uz.saidoff.crmecosystem.service.impl;
+package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
