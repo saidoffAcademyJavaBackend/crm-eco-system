@@ -24,6 +24,7 @@ public class SpecialityMapper {
         SpecialityDto specialityDto = new SpecialityDto();
         specialityDto.setName(speciality.getName());
         specialityDto.setDescription(speciality.getDescription());
+        specialityDto.setId(speciality.getId());
         return specialityDto;
     }
 
