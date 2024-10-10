@@ -37,8 +37,8 @@ public class EmployeeController {
 
     @CheckPermission("GET_USER")
     @GetMapping("/get-all-employee")
-    public ResponseData<?> getEmployee(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size) {
+    public ResponseData<?> getAllEmployee(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size) {
         return this.employeeService.getAllUser(page,size);
     }
 
