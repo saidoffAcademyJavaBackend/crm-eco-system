@@ -53,20 +53,9 @@ public class StudentService {
         if (byRoleType.isEmpty()) {
             throw new NotFoundException("rot type not found");
         }
-        Optional<Attachment> optionalAttachment = attachmentRepository.findById(studentResponseDto.getAttachmentId());
-        if (optionalAttachment.isEmpty()) {
-            throw new NotFoundException("attachment not found");
-        }
-        Attachment attachment = optionalAttachment.get();
-        Group group2 = group.get();
 
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), attachment);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
         studentRepository.save(newUserEntity);
-
-
-        group2.setStudents(List.of(newUserEntity));
-
-        groupRepository.save(group2);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 

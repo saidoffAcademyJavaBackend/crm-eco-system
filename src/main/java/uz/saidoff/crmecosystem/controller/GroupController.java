@@ -1,11 +1,13 @@
 package uz.saidoff.crmecosystem.controller;
 
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.GroupCreateDto;
 import uz.saidoff.crmecosystem.payload.GroupDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.service.IGroupService;
+import uz.saidoff.crmecosystem.service.GroupService;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -14,11 +16,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GroupController {
 
-    private final IGroupService groupService;
+    private final GroupService groupService;
 
     @PostMapping("create-group")
     private ResponseData<?> createGroup(@RequestBody GroupCreateDto createDto){
         return groupService.create(createDto);
+    }
+
+    @PostMapping("attach-student")
+    private ResponseData<?> attachStudent(@PathParam("groupId") UUID groupId, @PathParam("studentId") UUID studentId){
+        return groupService.attachStudentGroup(studentId, groupId);
     }
 
     @GetMapping("get-group-by-id/{group-id}")

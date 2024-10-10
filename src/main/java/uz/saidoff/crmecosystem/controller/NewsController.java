@@ -2,7 +2,6 @@ package uz.saidoff.crmecosystem.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.payload.NewsCreateDto;
 import uz.saidoff.crmecosystem.payload.NewsUpdateDto;
 import uz.saidoff.crmecosystem.response.ResponseData;

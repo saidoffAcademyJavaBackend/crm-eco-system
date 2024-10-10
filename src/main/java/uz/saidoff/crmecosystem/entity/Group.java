@@ -24,9 +24,6 @@ public class Group extends AbsEntity {
     @ManyToOne
     private User teacher;
 
-    @ManyToMany
-    private List<User> students;
-
     private Time startTime;
 
     private Time endTime;
@@ -47,4 +44,6 @@ public class Group extends AbsEntity {
     private List<WeekDays> weekDays;
 
     private boolean student;
+
+    private String room;
 }

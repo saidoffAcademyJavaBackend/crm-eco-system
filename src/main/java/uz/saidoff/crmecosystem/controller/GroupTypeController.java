@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.GroupTypeCreateDto;
 import uz.saidoff.crmecosystem.payload.GroupTypeDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.service.IGroupTypeService;
+import uz.saidoff.crmecosystem.service.GroupTypeService;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GroupTypeController {
 
-    private final IGroupTypeService groupTypeService;
+    private final GroupTypeService groupTypeService;
 
     @PostMapping("create")
     private ResponseData<?> create(@RequestBody GroupTypeCreateDto createDto){

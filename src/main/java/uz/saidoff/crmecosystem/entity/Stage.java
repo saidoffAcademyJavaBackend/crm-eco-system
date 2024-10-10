@@ -12,8 +12,10 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @Entity
 public class Stage extends AbsEntity {
     private String name;
-    private Integer positionOrder;
-    private boolean is_done;
+
+    private Integer stageOrder;
+    private boolean done;
+
 
     @ManyToOne
     private Project project;

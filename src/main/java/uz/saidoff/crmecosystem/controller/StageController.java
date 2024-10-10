@@ -1,24 +1,24 @@
 package uz.saidoff.crmecosystem.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uz.saidoff.crmecosystem.payload.*;
+import uz.saidoff.crmecosystem.payload.StageCreateDto;
+import uz.saidoff.crmecosystem.payload.StageDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.service.AuthService;
+import uz.saidoff.crmecosystem.service.StageService;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("api/stage")
 @RequiredArgsConstructor
-public class AuthController {
+public class StageController {
 
-    private final AuthService authService;
+    private final StageService stageService;
 
-    @PostMapping("sign-in")
-    private ResponseData<AuthenticationResponse> signIn(@Valid @RequestBody AuthenticationRequest request) {
-        return authService.authenticate(request);
+    @PostMapping("create-stage")
+    private ResponseData<StageDto> createStage(@RequestBody StageCreateDto createDto) {
+        return stageService.createStage(createDto);
     }
 }
