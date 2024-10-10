@@ -73,7 +73,7 @@ public class TaskCommentService {
 
     public ResponseData<?> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TaskComment> taskComments = this.taskCommentRepository.findAllAndDeletedFalse(pageable);
+        Page<TaskComment> taskComments = this.taskCommentRepository.findAllDeletedFalse(pageable);
         if (taskComments.isEmpty()) {
             throw new NotFoundException("Task comment not found");
         }

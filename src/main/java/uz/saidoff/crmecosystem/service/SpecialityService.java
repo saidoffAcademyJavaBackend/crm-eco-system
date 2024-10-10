@@ -56,7 +56,7 @@ public class SpecialityService {
 
     public ResponseData<?> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Speciality> specialityPage = specialityRepository.findAllAndDeletedFalse(pageable);
+        Page<Speciality> specialityPage = specialityRepository.findAllDeletedFalse(pageable);
         if (specialityPage.isEmpty()){
             throw new NotFoundException("Special not found");
         }

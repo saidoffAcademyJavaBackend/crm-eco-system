@@ -10,5 +10,5 @@ import java.util.UUID;
 
 public interface TaskCommentRepository extends JpaRepository<TaskComment, UUID> {
     Optional<TaskComment> findByTaskIdAndDeletedFalse(UUID taskId);
-    Page<TaskComment> findAllAndDeletedFalse(Pageable pageable);
+    Page<TaskComment> findAllDeletedFalse(Pageable pageable);
 }
