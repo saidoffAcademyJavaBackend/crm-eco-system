@@ -26,8 +26,6 @@ public enum Permissions {
     GET_TRANSACTION,
 
     GET_ROLE,
-    GET_ALL_ROLES,
-    GET_ALL_DELETED_ROLES,
     ADD_ROLE,
     UPDATE_ROLE,
     DELETE_ROLE,

@@ -19,7 +19,6 @@ public class RoleMapper {
 
     public Role toEntity(RoleDto dto){
         Role role = new Role();
-        role.setId(dto.getRoleId());
         role.setName(dto.getName());
         role.setRoleType(dto.getRoleType());
         return role;
