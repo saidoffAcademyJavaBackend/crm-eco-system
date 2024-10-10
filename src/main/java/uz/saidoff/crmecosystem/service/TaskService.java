@@ -82,4 +82,27 @@ public class TaskService {
         }
         return ResponseData.successResponse(data);
     }
+
+    public ResponseData<?> updateById(UUID taskId, TaskAddDto taskAddDto) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            return ResponseData.successResponse("Task not found");
+        }
+        Task task = optionalTask.get();
+        int previousPositionOrder = task.getPositionOrder();
+        int newPositionOrder = taskAddDto.getOrder();
+        if (previousPositionOrder < newPositionOrder)
+            taskRepository.movingUp(newPositionOrder, previousPositionOrder, task.getStage().getId());
+        if (previousPositionOrder > newPositionOrder)
+            taskRepository.movingDown(newPositionOrder,previousPositionOrder, task.getStage().getId());
+        task.setTitle(taskAddDto.getTitle());
+        task.setDescription(taskAddDto.getDescription());
+        task.setDeadline(taskAddDto.getDeadline());
+        task.setPositionOrder(taskAddDto.getOrder());
+
+        //stage ni topib olib kelish
+//        task.setStage();
+        taskRepository.save(task);
+        return null;
+    }
 }

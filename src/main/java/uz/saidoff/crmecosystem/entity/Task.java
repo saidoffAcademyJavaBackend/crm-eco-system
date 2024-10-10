@@ -21,5 +21,5 @@ public class Task extends AbsEntity {
     @ManyToOne
     private Stage stage;
 
-    private int order;
+    private Integer positionOrder;
 }
