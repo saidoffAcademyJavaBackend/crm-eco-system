@@ -1,10 +1,12 @@
 package uz.saidoff.crmecosystem.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
@@ -26,6 +28,7 @@ import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
@@ -33,6 +36,7 @@ public class StudentService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SpecialityRepository specialityRepository;
+    private final AttachmentRepository attachmentRepository;
 
     public ResponseData<?> saved(StudentResponseDto studentResponseDto) {
 
@@ -49,11 +53,19 @@ public class StudentService {
         if (byRoleType.isEmpty()) {
             throw new NotFoundException("rot type not found");
         }
-
+        Optional<Attachment> optionalAttachment = attachmentRepository.findById(studentResponseDto.getAttachmentId());
+        if (optionalAttachment.isEmpty()) {
+            throw new NotFoundException("attachment not found");
+        }
+        Attachment attachment = optionalAttachment.get();
         Group group2 = group.get();
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
-        group2.setStudents(List.of(newUserEntity));
+
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), attachment);
         studentRepository.save(newUserEntity);
+
+
+        group2.setStudents(List.of(newUserEntity));
+
         groupRepository.save(group2);
         return ResponseData.successResponse("student succesfuly created to group");
     }
@@ -77,7 +89,7 @@ public class StudentService {
             throw new NotFoundException("student not found");
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("data", studentMapper.toDto(userPage.toList()));
+        response.put("data", userPage.toList());
         response.put("total", userPage.getTotalElements());
         response.put("totalPages", userPage.getTotalPages());
 
@@ -119,7 +131,7 @@ public class StudentService {
     public ResponseData<?> userTransfer(UUID userId) {
         Optional<User> optionalUser = studentRepository.findByIdAndRoleRoleTypeAndDeletedFalse(userId, STUDENT);
         if (optionalUser.isEmpty()) {
-            return new ResponseData<>("user not found", false);
+            throw new NotFoundException("student not found");
         }
         User user = optionalUser.get();
         user.setRole(new Role("intern", RoleType.INTERN));
@@ -130,7 +142,7 @@ public class StudentService {
     public ResponseData<?> getUserById(UUID userId) {
         Optional<User> optionalUser = studentRepository.findById(userId);
         if (optionalUser.isEmpty()) {
-            return new ResponseData<>("student not fouind", false);
+            throw new NotFoundException("student not found");
         }
         User user = optionalUser.get();
         Optional<Group> optionalGroup = groupRepository.findById(user.getId());
