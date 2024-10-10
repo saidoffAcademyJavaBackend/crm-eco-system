@@ -19,6 +19,7 @@ import java.util.UUID;
 public class StudentResponseDto {
 
     private UUID groupId;
+    private UUID attachmentId;
     private String firstName;
     private String lastName;
     private String fatherName;
