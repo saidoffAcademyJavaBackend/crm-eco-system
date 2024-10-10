@@ -8,15 +8,18 @@ import uz.saidoff.crmecosystem.payload.RoleDto;
 @RequiredArgsConstructor
 public class RoleMapper {
 
-    private RoleDto toDto(Role role){
+    public RoleDto toDto(Role role){
         RoleDto dto = new RoleDto();
+        dto.setRoleId(role.getId());
         dto.setName(role.getName());
         dto.setRoleType(role.getRoleType());
         return dto;
     }
 
-    private Role toEntity(RoleDto dto){
+
+    public Role toEntity(RoleDto dto){
         Role role = new Role();
+        role.setId(dto.getRoleId());
         role.setName(dto.getName());
         role.setRoleType(dto.getRoleType());
         return role;

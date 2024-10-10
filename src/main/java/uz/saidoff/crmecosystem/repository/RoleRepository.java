@@ -1,5 +1,8 @@
 package uz.saidoff.crmecosystem.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.enums.RoleType;
@@ -14,7 +17,9 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     Optional<Role> findByIdIsAndDeletedFalse(UUID roleId);
 
-    List<Role> findAllByDeletedFalse();
+    List<Role> findAllByDeletedFalse(Pageable pageable);
+
+    List<Role> findAllByDeletedTrue(Pageable pageable);
 
     Optional<Role> findByIdAndDeletedFalse(UUID roleId);
 

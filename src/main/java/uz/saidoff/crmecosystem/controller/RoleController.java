@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.controller;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
+import uz.saidoff.crmecosystem.payload.RoleDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.RoleService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
@@ -27,8 +28,17 @@ public class RoleController {
 
     @CheckPermission("GET_ALL_ROLES")
     @GetMapping("/getAllRoles")
-    public ResponseData<?> getAllRoles() {
-        List<Role> allRoles = roleService.getAllRoles();
+    public ResponseData<?> getAllRolesPg(@RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "size", defaultValue = "10" ) int size) {
+        List<RoleDto> allRoles = roleService.getAllRoles(page, size);
+        return new ResponseData<>(allRoles, true);
+    }
+
+    @CheckPermission("GET_ALL_DELETED_ROLES")
+    @GetMapping("/getAllDeletedRoles")
+    public ResponseData<?> getAllDeletedRolesPg(@RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "size", defaultValue = "10" ) int size) {
+        List<Role> allRoles = roleService.getAllDeletedRoles(page, size);
         return new ResponseData<>(allRoles, true);
     }
 

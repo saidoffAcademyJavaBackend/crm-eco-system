@@ -2,9 +2,13 @@ package uz.saidoff.crmecosystem.service;
 
 import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
@@ -15,12 +19,13 @@ import uz.saidoff.crmecosystem.util.MessageKey;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static org.springframework.data.domain.PageRequest.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoleService {
 
     private final RoleRepository roleRepository;
@@ -29,18 +34,25 @@ public class RoleService {
 
     public Role getRole(UUID roleId) {
         return getRoleById(roleId);
-
-
     }
 
 
-    public List<Role> getAllRoles() {
-//        PageRequest.of()
-        List<Role> roleList = roleRepository.findAllByDeletedFalse();
+    public List<RoleDto> getAllRoles(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Role> roleList = roleRepository.findAllByDeletedFalse(pageable);
         if (roleList.isEmpty()) {
             throw new NotFoundException(MessageKey.ROLE_NOT_FOUND);
         }
-        return roleList;
+        List<RoleDto> dtoList = roleList
+                .stream()
+                .map(roleMapper::toDto)
+                .toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("roles", dtoList);
+        response.put("totalElements", pageable.getPageSize());
+        response.put("totalPages", pageable.getPageNumber());
+        return dtoList;
     }
 
     public Role addRole(Role role) {
@@ -75,5 +87,19 @@ public class RoleService {
             return byIdAndDeletedFalse.get();
         }
         throw new NotFoundException(MessageKey.ROLE_NOT_FOUND);
+    }
+
+    public List<Role> getAllDeletedRoles(int page, int size) {
+        Pageable pageable=PageRequest.of(page, size);
+        List<Role> roleList = roleRepository.findAllByDeletedTrue(pageable);
+        if (roleList.isEmpty()) {
+            throw new NotFoundException(MessageKey.ROLE_NOT_FOUND);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("roles", roleList);
+        response.put("totalElements", pageable.getPageSize());
+        response.put("totalPages", pageable.getPageNumber());
+
+        return roleList;
     }
 }
