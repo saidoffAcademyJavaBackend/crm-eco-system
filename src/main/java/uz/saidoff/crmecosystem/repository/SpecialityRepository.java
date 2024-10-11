@@ -12,5 +12,5 @@ public interface SpecialityRepository extends JpaRepository<Speciality, UUID> {
     Optional<Speciality> findByName(String name);
     Optional<Speciality> findByIdAndDeletedFalse(UUID id);
     Boolean existsByNameAndDeletedFalse(String name);
-    Page<Speciality> findAllAndDeletedFalse(Pageable pageable);
+//    Page<Speciality> findAllAndDeletedFalse(Pageable pageable);
 }
