@@ -29,15 +29,15 @@ public class SpecialityController {
         return this.specialityService.get(specialityId);
     }
 
-//    @GetMapping("/get-all-speciality")
-//    public ResponseData<?> getAllSpecialities(@RequestParam(defaultValue = "0") int page,
-//                                              @RequestParam(defaultValue = "10") int size) {
-//        return this.specialityService.getAll(page,size);
-//    }
-//
-//    @DeleteMapping("delete-speciality/{specialityId}")
-//    public ResponseData<?> deleteSpeciality(@PathVariable UUID specialityId) {
-//        return this.specialityService.delete(specialityId);
-//    }
+    @GetMapping("/get-all-speciality")
+    public ResponseData<?> getAllSpecialities(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size) {
+        return this.specialityService.getAll(page,size);
+    }
+
+    @DeleteMapping("delete-speciality/{specialityId}")
+    public ResponseData<?> deleteSpeciality(@PathVariable UUID specialityId) {
+        return this.specialityService.delete(specialityId);
+    }
 
 }

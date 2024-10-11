@@ -54,20 +54,20 @@ public class SpecialityService {
         return ResponseData.successResponse("Special updated");
     }
 
-//    public ResponseData<?> getAll(int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        Page<Speciality> specialityPage = specialityRepository.findAllAndDeletedFalse(pageable);
-//        if (specialityPage.isEmpty()){
-//            throw new NotFoundException("Special not found");
-//        }
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("data", this.specialityMapper.toDto(specialityPage.toList()));
-//        response.put("total", specialityPage.getTotalElements());
-//        response.put("totalPages", specialityPage.getTotalPages());
-//
-//        return ResponseData.successResponse(response);
-//    }
+    public ResponseData<?> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Speciality> specialityPage = specialityRepository.findAllAndDeletedFalse(pageable);
+        if (specialityPage.isEmpty()){
+            throw new NotFoundException("Special not found");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", this.specialityMapper.toDto(specialityPage.toList()));
+        response.put("total", specialityPage.getTotalElements());
+        response.put("totalPages", specialityPage.getTotalPages());
+
+        return ResponseData.successResponse(response);
+    }
 
     public ResponseData<?> delete(UUID specialityId) {
         Optional<Speciality> specialityOptional = specialityRepository.findByIdAndDeletedFalse(specialityId);
