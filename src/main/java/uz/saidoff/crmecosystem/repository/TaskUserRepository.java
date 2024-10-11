@@ -10,5 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskUserRepository extends JpaRepository<TaskUser, UUID> {
-    List<User> findAllByTask(Task task);
+//    List<User> findAllByUser(Task task);
+    List<TaskUser> findAllByTask(Task task);
 }

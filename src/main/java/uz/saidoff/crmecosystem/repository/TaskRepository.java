@@ -13,18 +13,18 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     List<Task> findAllByStageIn(List<Stage> stages);
 
     @Modifying
-    @Query(value = "update task set position_order=position_order+1 where position_order>=? and position_order<? " +
+    @Query(value = "update task set task_order=task_order+1 where task_order>=? and task_order<? " +
             "and stage_id=?",
             nativeQuery = true)
 
-    Boolean movingUp(Integer newPositionOrder, Integer previousPositionOrder, UUID stageId);
+    int movingUp(Integer newPositionOrder, Integer previousPositionOrder, UUID stageId);
 
 
     @Modifying
-    @Query(value = "update task set position_order=position_order-1 where position_order<=? and position_order>? " +
+    @Query(value = "update task set task_order=task_order-1 where task_order<=? and task_order>? " +
             "and stage_id=?",
             nativeQuery = true)
 
-    Boolean movingDown(Integer newPositionOrder, Integer previousPositionOrder, UUID stageId);
+    int movingDown(Integer newPositionOrder, Integer previousPositionOrder, UUID stageId);
 
 }
