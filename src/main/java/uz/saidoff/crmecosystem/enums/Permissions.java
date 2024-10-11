@@ -34,5 +34,10 @@ public enum Permissions {
     CREATE_PROJECT,
     DELETE_PROJECT,
     GET_PROJECT,
-    UPDATE_PROJECT
+    UPDATE_PROJECT,
+
+    CREATE_TASK,
+    DELETE_TASK,
+    UPDATE_TASK,
+    GET_TASK
 }
