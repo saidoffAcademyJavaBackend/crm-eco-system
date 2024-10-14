@@ -35,7 +35,13 @@ public class TaskController {
 
     @CheckPermission("UPDATE_TASK")
     @PutMapping("/update-by-id/{taskId}")
-    public ResponseData<?> updateById (@PathVariable UUID taskId,@RequestBody TaskAddDto taskAddDto){
-        return this.taskService.updateById(taskId,taskAddDto);
+    public ResponseData<?> updateById(@PathVariable UUID taskId, @RequestBody TaskAddDto taskAddDto) {
+        return this.taskService.updateById(taskId, taskAddDto);
+    }
+
+    @CheckPermission("UPDATE_TASK")
+    @PutMapping("move-task/{taskId}")
+    public ResponseData<?> moveById(@PathVariable UUID taskId, @RequestParam Integer newTaskOrder, @RequestParam UUID newStage) {
+        return this.taskService.moveById(taskId, newTaskOrder, newStage);
     }
 }

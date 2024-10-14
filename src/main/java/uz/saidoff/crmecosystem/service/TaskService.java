@@ -50,6 +50,7 @@ public class TaskService {
         }
         return ResponseData.successResponse("Task added successfully");
     }
+
     public ResponseData<?> getAllByProjectId(UUID projectId) {
         List<Stage> stages = stageRepository.findAllByProjectId(projectId);
         if (stages.isEmpty()) {
@@ -118,5 +119,33 @@ public class TaskService {
         task.setStage(optionalStage.get());
         Task save = taskRepository.save(task);
         return ResponseData.successResponse("Task updated successfully");
+    }
+
+    public ResponseData<?> moveById(UUID taskId, Integer newTaskOrder, UUID stage) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            return ResponseData.successResponse("Task not found");
+        }
+        Task task = optionalTask.get();
+        Optional<Stage> optionalStage = stageRepository.findById(stage);
+        if (optionalStage.isEmpty()) {
+            return ResponseData.successResponse("Stage not found");
+        }
+        Stage newStage = optionalStage.get();
+        Integer newStageOrder = newStage.getStageOrder();
+        Integer previousTaskOrder = task.getTaskOrder();
+        Stage previousStage = task.getStage();
+
+        Integer previousStageOrder = previousStage.getStageOrder();
+        if (Objects.equals(previousStageOrder, newStageOrder)) {
+            if (previousTaskOrder > newTaskOrder)
+                taskRepository.movingUp(newTaskOrder, previousTaskOrder, task.getStage().getId());
+            if (previousTaskOrder < newTaskOrder)
+                taskRepository.movingDown(newTaskOrder, previousTaskOrder, task.getStage().getId());
+        } else {
+            taskRepository.addingToOtherStage(newTaskOrder,newStage.getId());
+            taskRepository.removingToOtherStage(previousTaskOrder,previousStage.getId());
+        }
+        return ResponseData.successResponse("Task moved successfully");
     }
 }
