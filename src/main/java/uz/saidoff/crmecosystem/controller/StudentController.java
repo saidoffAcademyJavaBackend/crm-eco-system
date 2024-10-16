@@ -19,8 +19,8 @@ public class StudentController {
 
     @CheckPermission("CREATE_STUDENT")
     @PostMapping("/student-create")
-    public ResponseEntity<ResponseData<?>> createStudent( @RequestBody StudentResponseDto studentResponseDto) {
-        ResponseData<?> responseData = studentService.saved( studentResponseDto);
+    public ResponseEntity<ResponseData<?>> createStudent(@RequestBody StudentResponseDto studentResponseDto) {
+        ResponseData<?> responseData = studentService.saved(studentResponseDto);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
@@ -65,6 +65,14 @@ public class StudentController {
     public ResponseEntity<ResponseData<?>> getUser(@PathVariable UUID userId) {
         ResponseData<?> responseData = studentService.getUserById(userId);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
+    }
+
+    @CheckPermission("GET_STUDENT")
+    @GetMapping("/get-all-student-table")
+    public ResponseEntity<?> getAllStudentTable(@RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size) {
+        ResponseData<?> responseData = studentService.getAllStudent(page, size);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
 }

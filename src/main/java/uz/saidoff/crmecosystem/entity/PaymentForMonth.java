@@ -8,6 +8,7 @@ import lombok.Setter;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 
 import java.rmi.server.UID;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.rmi.server.UID;
 @NoArgsConstructor
 @Entity
 public class PaymentForMonth extends AbsEntity {
-    private UID groupStudentId;
+    private UUID groupStudentId;
     private String month;
     private Double paymentAmount;
     private boolean status;
