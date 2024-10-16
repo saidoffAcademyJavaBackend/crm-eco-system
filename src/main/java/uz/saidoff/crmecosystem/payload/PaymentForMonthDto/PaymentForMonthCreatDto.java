@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.rmi.server.UID;
+import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentForMonthCreatDto {
-    private UID groupStudentId;
+    private UUID groupStudentId;
     private String month;
     private Double paymentAmount;
     private boolean status;
