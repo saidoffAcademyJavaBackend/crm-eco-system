@@ -6,14 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.entity.Speciality;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
+import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
@@ -32,11 +31,14 @@ import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
-    private StudentMapper studentMapper;
+    private final StudentMapper studentMapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SpecialityRepository specialityRepository;
     private final AttachmentRepository attachmentRepository;
+    private final GroupStudentRepository groupStudentRepository;
+    private final PaymentForMonthService paymentForMonthService;
+    private final PaymentForServiceRepository paymentForServiceRepository;
 
     public ResponseData<?> saved(StudentResponseDto studentResponseDto) {
 
@@ -58,8 +60,11 @@ public class StudentService {
             throw new NotFoundException("attechment not found");
         }
 
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(),optionalAttachment.get());
-        studentRepository.save(newUserEntity);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), optionalAttachment.get());
+        GroupStudent groupStudent = new GroupStudent(group.get(), newUserEntity);
+        PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(newUserEntity, groupStudent);
+        paymentForMonthService.creat(paymentForDTO);
+        groupStudentRepository.save(groupStudent);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
@@ -143,5 +148,18 @@ public class StudentService {
 
         StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user, group);
         return ResponseData.successResponse(responsStudentDo);
+    }
+
+    public ResponseData<?> getAllStudent(int page, int size) {
+        Pageable pageable = PageRequest.of(size, page);
+        Page<PaymentForMonth> paymentForMonthPage = paymentForServiceRepository.findAll(pageable);
+        if (paymentForMonthPage.isEmpty()) {
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", paymentForMonthPage.toList());
+        response.put("total", paymentForMonthPage.getTotalElements());
+        response.put("totalPages", paymentForMonthPage.getTotalPages());
+        return new ResponseData<>(response, true);
     }
 }

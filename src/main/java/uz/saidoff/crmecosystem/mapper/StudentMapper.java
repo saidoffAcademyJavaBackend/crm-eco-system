@@ -3,14 +3,12 @@ package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.entity.Speciality;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
-
 
 
 import java.util.ArrayList;
@@ -23,9 +21,7 @@ public class StudentMapper {
     public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role, Attachment attachment) {
 
         User user = new User();
-        if (attachment == null) {
-            user.setAttachment(null);
-        }
+
         user.setAttachment(attachment);
 
         user.setFirstName(studentResponseDto.getFirstName());
@@ -103,5 +99,13 @@ public class StudentMapper {
         studentResponseDto.setGroupId(group.getId());
 
         return studentResponseDto;
+    }
+    public PaymentForMonthCreatDto toPaymentForDTO(User newUserEntity, GroupStudent groupStudent) {
+        PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
+        payment.setGroupStudentId(groupStudent.getStudentId().getId());
+        payment.setPaymentAmount(newUserEntity.getSalary());
+        payment.setActive(newUserEntity.isDeleted());
+        payment.setStatus(newUserEntity.isEnabled());
+        return payment;
     }
 }
