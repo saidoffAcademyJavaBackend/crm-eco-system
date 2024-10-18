@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID> {
     List<Task> findAllByStageIn(List<Stage> stages);
 
+    List<Task> findAllByStageId(UUID stageId);
+
     @Modifying
     @Query(value = "update task set task_order=task_order+1 where task_order>=? and task_order<? " +
             "and stage_id=?",

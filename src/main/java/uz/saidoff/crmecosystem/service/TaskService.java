@@ -34,13 +34,13 @@ public class TaskService {
             throw new NotFoundException("Stage not found");
         }
         task.setStage(optionalStage.get());
-        Task save = taskRepository.save(task);
+        taskRepository.save(task);
         if (!taskAddDto.getAttachedUsers().isEmpty()) {
             TaskUser taskUser = new TaskUser();
             taskUser.setTask(task);
             List<UUID> attachedUsers = taskAddDto.getAttachedUsers();
-            for (int i = 0; i < attachedUsers.size(); i++) {
-                Optional<User> optionalUser = userRepository.findById(attachedUsers.get(i));
+            for (UUID attachedUser : attachedUsers) {
+                Optional<User> optionalUser = userRepository.findById(attachedUser);
                 if (optionalUser.isEmpty()) {
                     throw new NotFoundException("User not found");
                 }
@@ -61,17 +61,17 @@ public class TaskService {
             return ResponseData.successResponse("No tasks found");
         }
         List<GetTaskDto> data = new LinkedList<>();
-        for (int i = 0; i < allTasks.size(); i++) {
+        for (Task allTask : allTasks) {
             List<User> usersByTaskId = new LinkedList<>();
-            List<TaskUser> allByTask = taskUserRepository.findAllByTask(allTasks.get(i));
-            for (int j = 0; j < allByTask.size(); j++) {
-                usersByTaskId.add(allByTask.get(j).getUser());
+            List<TaskUser> allByTask = taskUserRepository.findAllByTask(allTask);
+            for (TaskUser taskUser : allByTask) {
+                usersByTaskId.add(taskUser.getUser());
             }
             if (!usersByTaskId.isEmpty()) {
-                data.add(taskMapper.toGetTaskDto(allTasks.get(i), usersByTaskId));
+                data.add(taskMapper.toGetTaskDto(allTask, usersByTaskId));
             } else {
                 GetTaskDto getTaskDto = new GetTaskDto();
-                getTaskDto.setTask(allTasks.get(i));
+                getTaskDto.setTask(allTask);
                 data.add(getTaskDto);
             }
         }
@@ -79,21 +79,22 @@ public class TaskService {
     }
 
     public ResponseData<?> gorOneById(UUID taskId) {
-//        Optional<Task> optionalTask = taskRepository.findById(taskId);
-//        if (optionalTask.isEmpty()) {
-//            return ResponseData.successResponse("Task not found");
-//        }
-//        GetTaskDto data = new GetTaskDto();
-//        Task task = optionalTask.get();
-////        List<User> allByTask = taskUserRepository.findAllByTask(task);
-//        if (!allByTask.isEmpty()) {
-//            data.setTask(task);
-//            data.setAttachedUsers(allByTask);
-//        } else {
-//            data.setTask(task);
-//        }
-//        return ResponseData.successResponse(data);
-        return ResponseData.successResponse(null);
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            throw new NotFoundException("Task not found");
+        }
+        Task task = optionalTask.get();
+        List<TaskUser> allUsersByTask = taskUserRepository.findAllByTask(task);
+        GetTaskDto getTaskDto = new GetTaskDto();
+        getTaskDto.setTask(task);
+        if (!allUsersByTask.isEmpty()) {
+            List<User> users = new LinkedList<>();
+            for (TaskUser taskUser : allUsersByTask) {
+                users.add(taskUser.getUser());
+            }
+            getTaskDto.setAttachedUsers(users);
+        }
+        return ResponseData.successResponse(getTaskDto);
     }
 
     public ResponseData<?> updateById(UUID taskId, TaskAddDto taskAddDto) {
@@ -117,7 +118,7 @@ public class TaskService {
         task.setDeadline(taskAddDto.getDeadline());
         task.setTaskOrder(taskAddDto.getOrder());
         task.setStage(optionalStage.get());
-        Task save = taskRepository.save(task);
+        taskRepository.save(task);
         return ResponseData.successResponse("Task updated successfully");
     }
 
@@ -143,9 +144,32 @@ public class TaskService {
             if (previousTaskOrder < newTaskOrder)
                 taskRepository.movingDown(newTaskOrder, previousTaskOrder, task.getStage().getId());
         } else {
-            taskRepository.addingToOtherStage(newTaskOrder,newStage.getId());
-            taskRepository.removingToOtherStage(previousTaskOrder,previousStage.getId());
+            taskRepository.addingToOtherStage(newTaskOrder, newStage.getId());
+            taskRepository.removingToOtherStage(previousTaskOrder, previousStage.getId());
         }
         return ResponseData.successResponse("Task moved successfully");
+    }
+
+    public ResponseData<?> getAllByStageId(UUID stageId) {
+        List<Task> allByStageId = taskRepository.findAllByStageId(stageId);
+        if (allByStageId.isEmpty()) {
+            return ResponseData.successResponse("No tasks found");
+        }
+        List<GetTaskDto> data = new LinkedList<>();
+        for (Task task : allByStageId) {
+            List<User> usersByTaskId = new LinkedList<>();
+            List<TaskUser> allByTask = taskUserRepository.findAllByTask(task);
+            for (TaskUser taskUser : allByTask) {
+                usersByTaskId.add(taskUser.getUser());
+            }
+            if (!usersByTaskId.isEmpty()) {
+                data.add(taskMapper.toGetTaskDto(task, usersByTaskId));
+            } else {
+                GetTaskDto getTaskDto = new GetTaskDto();
+                getTaskDto.setTask(task);
+                data.add(getTaskDto);
+            }
+        }
+        return ResponseData.successResponse(data);
     }
 }
