@@ -24,6 +24,7 @@ public class TransactionIncomeService {
     private final TransactionIncomeMapper transactionIncomeMapper;
     private final CategoryRepository categoryRepository;
     private final BalanceRepository balanceRepository;
+    private final PaymentForMonthService paymentForMonthService;
 
 
     public ResponseData<?> addTransactionIncome(TransactionIncomeAddDto transactionIncomeAddDto) {
@@ -80,5 +81,16 @@ public class TransactionIncomeService {
         }
 
         return ResponseData.successResponse(optionalTransaction.get());
+    }
+
+    public ResponseData<?> monthlyPaymentStudentOrIntern(UUID userId, UUID groupId, Double paymentAmount, Integer month) {
+//        paymentForMonthService dan payment monthga saqlab kelish
+        Transaction transaction = new Transaction();
+        transaction.setIsIncome(true);
+        transaction.setAmount(paymentAmount);
+        transaction.setCategory(categoryRepository.findByName("MONTHLY_PAYMENT").get());
+        transaction.setDescription("Monthly Payment For Student");
+        transactionRepository.save(transaction);
+        return ResponseData.successResponse("Monthly Payment For Student successfully added");
     }
 }

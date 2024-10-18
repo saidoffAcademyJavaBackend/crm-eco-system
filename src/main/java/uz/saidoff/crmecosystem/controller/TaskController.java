@@ -28,6 +28,13 @@ public class TaskController {
     }
 
     @CheckPermission("GET_TASK")
+    @GetMapping("/get-all-by-stage-id/{stageId}")
+    public ResponseData<?> getAllTaskByStageId(@PathVariable("stageId") UUID stageId) {
+        return this.taskService.getAllByStageId(stageId);
+    }
+
+
+    @CheckPermission("GET_TASK")
     @GetMapping("/get-one-by-id/{taskId}")
     public ResponseData<?> getOneTaskById(@PathVariable("taskId") UUID taskId) {
         return this.taskService.gorOneById(taskId);
