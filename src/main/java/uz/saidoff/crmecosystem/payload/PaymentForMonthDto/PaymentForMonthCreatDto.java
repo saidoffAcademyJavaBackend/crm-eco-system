@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.rmi.server.UID;
+import java.sql.Date;
 import java.util.UUID;
 
 @Getter
@@ -14,9 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PaymentForMonthCreatDto {
     private UUID groupStudentId;
-    private String month;
+    private Date month;
+    private Integer startMonth;
+    private Integer allMonths;
     private Double paymentAmount;
-    private boolean status;
+    private Double allPaymentAmount;
     private boolean active;
     private boolean currentMonth;
 }
