@@ -62,7 +62,7 @@ public class StudentService {
 
         User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), optionalAttachment.get());
         GroupStudent groupStudent = new GroupStudent(group.get(), newUserEntity);
-        PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(newUserEntity, groupStudent);
+        PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
         paymentForMonthService.creat(paymentForDTO);
         groupStudentRepository.save(groupStudent);
         return ResponseData.successResponse("student succesfuly created to group");
