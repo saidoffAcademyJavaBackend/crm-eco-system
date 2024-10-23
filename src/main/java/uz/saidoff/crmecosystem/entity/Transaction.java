@@ -19,4 +19,6 @@ public class Transaction extends AbsEntity {
     @ManyToOne
     private Category category;
     private Boolean isIncome;
+    @ManyToOne
+    private Attachment attachment;
 }
