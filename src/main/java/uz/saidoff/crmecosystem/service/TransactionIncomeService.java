@@ -28,7 +28,7 @@ public class TransactionIncomeService {
 
 
     public ResponseData<?> addTransactionIncome(TransactionIncomeAddDto transactionIncomeAddDto) {
-        Optional<Category> optionalCategory = categoryRepository.findByName(transactionIncomeAddDto.getCategoryName());
+        Optional<Category> optionalCategory = categoryRepository.findById(transactionIncomeAddDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found");
         }
@@ -47,7 +47,7 @@ public class TransactionIncomeService {
         if (optionalTransaction.isEmpty()) {
             throw new NotFoundException("Transaction not found");
         }
-        Optional<Category> optionalCategory = categoryRepository.findByName(transactionIncomeAddDto.getCategoryName());
+        Optional<Category> optionalCategory = categoryRepository.findById(transactionIncomeAddDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found");
         }
