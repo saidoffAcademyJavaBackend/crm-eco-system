@@ -16,7 +16,7 @@ public class TransactionIncomeController {
     private final TransactionIncomeService transactionIncomeService;
 
     @CheckPermission("CREATE_TRANSACTION")
-    @PostMapping("add-income/")
+    @PostMapping("/add-income")
     public ResponseData<?> addIncomeTransaction(@RequestBody TransactionIncomeAddDto transactionIncomeAddDto) {
         return this.transactionIncomeService.addTransactionIncome(transactionIncomeAddDto);
     }
