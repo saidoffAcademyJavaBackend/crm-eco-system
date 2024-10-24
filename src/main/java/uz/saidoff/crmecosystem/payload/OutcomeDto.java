@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OutcomeDto {
+    private UUID outcomeId;
     private Double amount;
     private String description;
     private Currency currency;
