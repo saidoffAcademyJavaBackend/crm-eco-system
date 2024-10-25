@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class BalanceUpdateIncomeOutcomeDto {
-    private UUID balanceId;
     private Double amount;
     private boolean isIncome;
     private Currency currency;

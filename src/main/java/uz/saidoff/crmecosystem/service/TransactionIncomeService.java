@@ -9,6 +9,7 @@ import uz.saidoff.crmecosystem.entity.Category;
 import uz.saidoff.crmecosystem.entity.Transaction;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.TransactionIncomeMapper;
+import uz.saidoff.crmecosystem.payload.BalanceUpdateIncomeOutcomeDto;
 import uz.saidoff.crmecosystem.payload.TransactionIncomeAddDto;
 import uz.saidoff.crmecosystem.repository.BalanceRepository;
 import uz.saidoff.crmecosystem.repository.CategoryRepository;
@@ -23,8 +24,8 @@ public class TransactionIncomeService {
     private final TransactionRepository transactionRepository;
     private final TransactionIncomeMapper transactionIncomeMapper;
     private final CategoryRepository categoryRepository;
-    private final BalanceRepository balanceRepository;
     private final PaymentForMonthService paymentForMonthService;
+    private final BalanceService balanceService;
 
 
     public ResponseData<?> addTransactionIncome(TransactionIncomeAddDto transactionIncomeAddDto) {
@@ -34,11 +35,11 @@ public class TransactionIncomeService {
         }
         Transaction transaction = transactionIncomeMapper.toIncomeTransaction(transactionIncomeAddDto, optionalCategory.get());
         transactionRepository.save(transaction);
-        Balance balance = balanceRepository.findAll().getFirst();
-        Double amount = balance.getAmount();
-        amount = amount + transactionIncomeAddDto.getAmount();
-        balance.setAmount(amount);
-        balanceRepository.save(balance);
+        BalanceUpdateIncomeOutcomeDto balanceUpdateIncomeOutcomeDto = new BalanceUpdateIncomeOutcomeDto();
+        balanceUpdateIncomeOutcomeDto.setIncome(true);
+        balanceUpdateIncomeOutcomeDto.setAmount(transactionIncomeAddDto.getAmount());
+        balanceUpdateIncomeOutcomeDto.setCurrency(transactionIncomeAddDto.getCurrency());
+        balanceService.editBalance(balanceUpdateIncomeOutcomeDto);
         return ResponseData.successResponse("Transaction added successfully");
     }
 
@@ -51,14 +52,9 @@ public class TransactionIncomeService {
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found");
         }
-        Balance balance = balanceRepository.findAll().getFirst();
-        balance.setAmount(balance.getAmount() + transactionIncomeAddDto.getAmount() - optionalTransaction.get().getAmount());
         Transaction transaction = optionalTransaction.get();
-        transaction.setCategory(optionalCategory.get());
-        transaction.setAmount(transactionIncomeAddDto.getAmount());
-        transaction.setDescription(transactionIncomeAddDto.getDescription());
-        transactionRepository.save(transaction);
-        balanceRepository.save(balance);
+        balanceService.editBalance(new BalanceUpdateIncomeOutcomeDto(transactionIncomeAddDto.getAmount(),true,transactionIncomeAddDto.getCurrency()));
+        balanceService.editBalance(new BalanceUpdateIncomeOutcomeDto(transaction.getAmount(),false,transaction.getCurrency()));
         return ResponseData.successResponse("Transaction updated successfully");
     }
 
