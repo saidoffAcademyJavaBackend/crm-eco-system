@@ -10,6 +10,7 @@ import uz.saidoff.crmecosystem.entity.Category;
 import uz.saidoff.crmecosystem.entity.Transaction;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.OutcomeMapper;
+import uz.saidoff.crmecosystem.payload.BalanceUpdateIncomeOutcomeDto;
 import uz.saidoff.crmecosystem.payload.OutcomeCreatDto;
 import uz.saidoff.crmecosystem.payload.OutcomeUpdateDto;
 import uz.saidoff.crmecosystem.repository.AttachmentRepository;
@@ -30,6 +31,7 @@ public class OutcomeService {
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
+    private final BalanceService balanceService;
 
     public ResponseData<?> creat(OutcomeCreatDto outcomeCreatDto) {
         Optional<Category> category = categoryRepository.findByIdAndDeletedFalse(outcomeCreatDto.getCategoryId());
@@ -41,6 +43,12 @@ public class OutcomeService {
         transaction.setCategory(category.get());
         attachment.ifPresent(transaction::setAttachment);
         transactionRepository.save(transaction);
+
+        BalanceUpdateIncomeOutcomeDto balance = new BalanceUpdateIncomeOutcomeDto();
+        balance.setCurrency(outcomeCreatDto.getCurrency());
+        balance.setAmount(outcomeCreatDto.getAmount());
+        balance.setIncome(false);
+        this.balanceService.editBalance(balance);
         return ResponseData.successResponse(this.outcomeMapper.toDto(transaction));
     }
 
@@ -62,6 +70,18 @@ public class OutcomeService {
             attachment.ifPresent(transaction::setAttachment);
         }
         transactionRepository.save(transaction);
+        if (outcomeDto.getAmount()!=null){
+            BalanceUpdateIncomeOutcomeDto balance = new BalanceUpdateIncomeOutcomeDto();
+            balance.setCurrency(transactionOptional.get().getCurrency());
+            balance.setAmount(transactionOptional.get().getAmount());
+            balance.setIncome(true);
+            this.balanceService.editBalance(balance);
+
+            balance.setAmount(outcomeDto.getAmount());
+            balance.setCurrency(outcomeDto.getCurrency());
+            balance.setIncome(false);
+            this.balanceService.editBalance(balance);
+        }
 
         return ResponseData.successResponse(this.outcomeMapper.toDto(transaction));
     }
