@@ -2,15 +2,11 @@ package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.Balance;
-import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.BalanceUpdateIncomeOutcomeDto;
 import uz.saidoff.crmecosystem.repository.BalanceRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,10 +14,9 @@ import java.util.Optional;
 public class BalanceService {
     private final BalanceRepository balanceRepository;
 
-    @Transactional
     public ResponseData<?> editBalance(BalanceUpdateIncomeOutcomeDto balanceUpdateIncomeOutcomeDto) {
 
-        Optional<Balance> optionalBalance = balanceRepository.findById(balanceUpdateIncomeOutcomeDto.getBalanceId());
+        Optional<Balance> optionalBalance = balanceRepository.findByCurrency(balanceUpdateIncomeOutcomeDto.getCurrency());
         if (optionalBalance.isEmpty()) {
             throw new NotFoundException("balance not found");
         }
