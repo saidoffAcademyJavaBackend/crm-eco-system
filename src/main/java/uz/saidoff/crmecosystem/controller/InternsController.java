@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.InternsService;
@@ -29,9 +30,9 @@ public class InternsController {
     }
 
     @CheckPermission("CREATE_INTERN")
-    @PostMapping("add-intern/{userId}")
-    public ResponseData<?> addIntern(@PathVariable UUID userId, @RequestBody InternGetDto internGetDto) {
-        return this.internsService.addIntern(userId, internGetDto);
+    @PostMapping("add-intern")
+    public ResponseData<?> addIntern(@RequestParam(required = false) UUID groupId,@RequestBody InternAddDto internAddDto) {
+        return this.internsService.addIntern(groupId, internAddDto);
     }
 
     @CheckPermission("UPDATE_INTERN")
