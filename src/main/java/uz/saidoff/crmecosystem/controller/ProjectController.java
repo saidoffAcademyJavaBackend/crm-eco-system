@@ -9,6 +9,9 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.ProjectService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +27,7 @@ public class ProjectController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 403).body(responseData);
     }
 
+    // one project
     @CheckPermission("GET_PROJECT")
     @GetMapping("/get-project/{projectId}")
     public ResponseEntity<?> getOneProject(@PathVariable UUID projectId) {
@@ -31,6 +35,7 @@ public class ProjectController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 403).body(responseData);
     }
 
+    // pageable  projectlar page
     @CheckPermission("GET_PROJECT")
     @GetMapping("/get-all-project")
     public ResponseEntity<?> getAllProject(@RequestParam(defaultValue = "0") int page,
@@ -52,4 +57,32 @@ public class ProjectController {
         ResponseData<?> responseData = projectService.editProject(projectId, updateDto);
         return ResponseEntity.ok(responseData);
     }
+
+    // projectga user briktirish
+    @CheckPermission("CREATE_PROJECT")
+    @PostMapping("/add-user-to-project/{userId}/{projectId}")
+    public ResponseEntity<?> addUserToProject(@PathVariable UUID userId, @PathVariable UUID projectId) {
+        ResponseData<?> responseData = projectService.userSavedToProject(userId, projectId);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
+    }
+
+    // projectga tegishli userlar
+    @CheckPermission("GET_PROJECT")
+    @PostMapping("/get-projectBy-all-user/{projectId}")
+    public ResponseEntity<?> getAllByProjectUser(@PathVariable UUID projectId) {
+        ResponseData<?> responseData = projectService.getByIdProject(projectId);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
+    }
+
+    // Ikki vaqt oralig'idagi projectlar royhatini
+    @CheckPermission("GET_PROJECT")
+    @GetMapping("/get-date-between")
+    public ResponseEntity<?> getProjectsByDateBetween(@RequestParam("startDate") String startDate,
+                                                      @RequestParam("endDate") String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        ResponseData<?> responseData = projectService.getProjectsByDate(start, end);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
+    }
+
 }

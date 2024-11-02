@@ -4,11 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.entity.Speciality;
-import uz.saidoff.crmecosystem.entity.auth.Role;
-import uz.saidoff.crmecosystem.enums.RoleType;
-
 import java.sql.Date;
 import java.util.UUID;
 
@@ -33,8 +28,7 @@ public class StudentResponseDto {
 
     private String role ;
     private Double salary;
-    private String addedBy;
-    private Date startWork;
+    private java.util.Date startWork;
 
 
 

@@ -5,39 +5,35 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.Project;
+import uz.saidoff.crmecosystem.entity.ProjectUser;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.ProjectRequestDto;
-import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
-import uz.saidoff.crmecosystem.payload.ProjectUpdateDto;
+import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.repository.ProjectRepository;
+import uz.saidoff.crmecosystem.repository.ProjectUserRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final ProjectUserRepository projectUserRepository;
 
+    @Transactional
     public ResponseData<?> savedProject(ProjectRequestDto projectRequestDto) {
-        Optional<User> optionalUser = userRepository.findById(projectRequestDto.getUserId());
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("user not found ");
-        }
         Project project = new Project();
         project.setName(projectRequestDto.getName());
         project.setStartDate(projectRequestDto.getStartDate());
         project.setEndDate(projectRequestDto.getEndDate());
-        project.setOwner(optionalUser.get());
         projectRepository.save(project);
-
         return ResponseData.successResponse("project created");
     }
 
@@ -52,7 +48,6 @@ public class ProjectService {
         responseDto.setName(project.getName());
         responseDto.setStartDate(project.getStartDate());
         responseDto.setEndDate(project.getEndDate());
-        responseDto.setOwnerId(project.getOwner().getId());
         responseDto.setCreatedAt(project.getCreatedAt());
 
         return ResponseData.successResponse(responseDto);
@@ -101,5 +96,69 @@ public class ProjectService {
         }
         Project save = projectRepository.save(project);
         return ResponseData.successResponse(save);
+    }
+
+    public ResponseData<?> userSavedToProject(UUID userId, UUID projectId) {
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
+        if (optionalProject.isEmpty()) {
+            throw new NotFoundException("project not found ");
+        }
+        Project project = optionalProject.get();
+
+        List<User> usersByProjectId = projectUserRepository.findUsersByProjectId(project.getId());
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("user not found");
+        }
+        User user = optionalUser.get();
+        for (User user1 : usersByProjectId) {
+            if (user1.getId().equals(user.getId())) {
+                throw new NotFoundException("user already exists");
+            }
+        }
+
+        ProjectUser projectUser = new ProjectUser(user, project);
+        projectUserRepository.save(projectUser);
+        return ResponseData.successResponse("user and project succesfuly to saved");
+    }
+
+    public ResponseData<?> getByIdProject(UUID projectId) {
+        List<User> usersByProjectId = projectUserRepository.findUsersByProjectId(projectId);
+        if (usersByProjectId.isEmpty()) {
+            throw new NotFoundException("No users related to the project were found");
+        }
+        List<StudentResponseDto> studentResponseDtos = mapToUser(usersByProjectId);
+        return ResponseData.successResponse(studentResponseDtos);
+    }
+
+    private List<StudentResponseDto> mapToUser(List<User> userList) {
+        List<StudentResponseDto> studentResponseDtos = new ArrayList<>();
+        for (User user : userList) {
+            studentResponseDtos.add(toDto(user));
+        }
+        return studentResponseDtos;
+    }
+
+    private StudentResponseDto toDto(User user) {
+        StudentResponseDto studentResponseDto = new StudentResponseDto();
+        studentResponseDto.setFirstName(user.getFirstName());
+        studentResponseDto.setLastName(user.getLastName());
+        studentResponseDto.setFatherName(user.getFatherName());
+        studentResponseDto.setSpecialty(studentResponseDto.getSpecialty());
+        studentResponseDto.setPhoneNumber(user.getPhoneNumber());
+        studentResponseDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
+        studentResponseDto.setPassportSeries(user.getPassportSeries());
+        studentResponseDto.setRole(user.getRole().getName());
+        studentResponseDto.setCurrentResidence(user.getCurrentResidence());
+        studentResponseDto.setStartWork(user.getStartWork());
+        return studentResponseDto;
+    }
+
+    public ResponseData<?> getProjectsByDate(LocalDate start, LocalDate end) {
+        List<Project> projectsByDate = projectRepository.findProjectsByDate(start, end);
+        if (projectsByDate.isEmpty()) {
+            throw new NotFoundException("No projects found in this range.");
+        }
+        return ResponseData.successResponse(projectsByDate);
     }
 }
