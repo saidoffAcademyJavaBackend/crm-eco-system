@@ -9,6 +9,7 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.StudentService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
 
+import java.text.ParseException;
 import java.util.UUID;
 
 @RestController
@@ -19,7 +20,7 @@ public class StudentController {
 
     @CheckPermission("CREATE_STUDENT")
     @PostMapping("/student-create")
-    public ResponseEntity<ResponseData<?>> createStudent(@RequestBody StudentResponseDto studentResponseDto) {
+    public ResponseEntity<ResponseData<?>> createStudent(@RequestBody StudentResponseDto studentResponseDto) throws ParseException {
         ResponseData<?> responseData = studentService.saved(studentResponseDto);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
