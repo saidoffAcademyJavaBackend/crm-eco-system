@@ -43,7 +43,7 @@ public class InternsService {
         if (optionalRole.isEmpty()) {
             throw new NotFoundException("Role not found");
         }
-//        Pageable pageable = PageRequest.of(page, size);
+//        Pageable pageable = PageRequest. of(page, size);
 //        Page<User> interns = internsRepository.findAllInternsPageable("INTERN", pageable);
         Page<User> interns = internsRepository.findAllByRoleAndDeletedFalse(optionalRole.get(), PageRequest.of(page, size));
         if (interns.isEmpty()) {
