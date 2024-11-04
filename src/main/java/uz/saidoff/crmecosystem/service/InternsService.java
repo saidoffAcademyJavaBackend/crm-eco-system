@@ -12,7 +12,9 @@ import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.mapper.GroupMapper;
 import uz.saidoff.crmecosystem.mapper.InternsMapper;
+import uz.saidoff.crmecosystem.payload.GroupDto;
 import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
@@ -34,6 +36,7 @@ public class InternsService {
     private final GroupRepository groupRepository;
     private final GroupStudentRepository groupStudentRepository;
     private final ProjectUserRepository projectUserRepository;
+    private final GroupMapper groupMapper;
 
     public ResponseData<?> getAllInterns(int page, int size) {
         Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.INTERN);
@@ -163,10 +166,27 @@ public class InternsService {
         if (userProjects.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        List<ProjectResponseDto> projectResponseDtos=new LinkedList<>();
+        List<ProjectResponseDto> projectResponseDtos = new LinkedList<>();
         for (ProjectUser userProject : userProjects) {
             projectResponseDtos.add(internsMapper.getInternProjects(userProject));
         }
         return ResponseData.successResponse(projectResponseDtos);
+    }
+
+    public ResponseData<?> getGroups(UUID userId) {
+        if (userId == null) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userId = user.getId();
+        }
+        List<GroupStudent> groupStudents = groupStudentRepository.findByStudentId(userId);
+        if (groupStudents.isEmpty()) {
+            throw new NotFoundException("Group not found");
+        }
+        List<GroupDto> groupDtos = new LinkedList<>();
+        groupMapper.toDto(groupStudents.getFirst().getGroupId());
+        for (GroupStudent groupStudent : groupStudents) {
+            groupDtos.add(groupMapper.toDto(groupStudent.getGroupId()));
+        }
+        return ResponseData.successResponse(groupDtos);
     }
 }

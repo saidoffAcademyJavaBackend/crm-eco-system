@@ -3,6 +3,7 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Attachment;
+import uz.saidoff.crmecosystem.entity.GroupStudent;
 import uz.saidoff.crmecosystem.entity.ProjectUser;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
@@ -34,8 +35,8 @@ public class InternsMapper {
         internGetDto.setPaymentAmount(user.getSalary());
         internGetDto.setStartStudying(user.getStartStudying());
         internGetDto.setPermissionsList(user.getPermissions());
-        if (user.getAttachment()!=null)
-             internGetDto.setAttachmentId(user.getAttachment().getId());
+        if (user.getAttachment() != null)
+            internGetDto.setAttachmentId(user.getAttachment().getId());
         return internGetDto;
     }
 
@@ -54,9 +55,9 @@ public class InternsMapper {
         user.setCurrentResidence(internAddDto.getCurrentResidence());
         user.setStartStudying(new Date(internAddDto.getStartStudying().getTime()));
         user.setRole(role);
-        user.setPermissions(internAddDto.getPermissionsList()==null?
+        user.setPermissions(internAddDto.getPermissionsList() == null ?
                 Collections.singletonList(Permissions.GET_INTERN)
-                :internAddDto.getPermissionsList());
+                : internAddDto.getPermissionsList());
         user.setCreatedBy(userId);
         attachment.ifPresent(user::setAttachment);
         return user;
