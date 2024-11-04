@@ -11,6 +11,9 @@ import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentMapper {
 
-    public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role, Attachment attachment) {
+    public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role, Attachment attachment) throws ParseException {
 
         User user = new User();
 
@@ -47,6 +50,8 @@ public class StudentMapper {
         user.setRole(role);
 
         user.setSalary(studentResponseDto.getSalary());
+
+        user.setStartWork(new Date(studentResponseDto.getStartWork().getTime()));
 
         return user;
     }
@@ -100,7 +105,8 @@ public class StudentMapper {
 
         return studentResponseDto;
     }
-    public PaymentForMonthCreatDto toPaymentForDTO( GroupStudent groupStudent) {
+
+    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent) {
         PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
         payment.setGroupStudentId(groupStudent.getStudentId().getId());
         payment.setActive(groupStudent.getGroupId().isActive());

@@ -21,6 +21,7 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
 
+import java.text.ParseException;
 import java.util.*;
 
 import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
@@ -40,7 +41,7 @@ public class StudentService {
     private final PaymentForMonthService paymentForMonthService;
     private final PaymentForServiceRepository paymentForServiceRepository;
 
-    public ResponseData<?> saved(StudentResponseDto studentResponseDto) {
+    public ResponseData<?> saved(StudentResponseDto studentResponseDto) throws ParseException {
 
         Optional<Group> group = groupRepository.findById(studentResponseDto.getGroupId());
         if (group.isEmpty()) {
@@ -51,16 +52,20 @@ public class StudentService {
         if (byName.isEmpty()) {
             throw new NotFoundException("speciality not found");
         }
-        Optional<Role> byRoleType = roleRepository.findByRoleType(STUDENT);
+        Optional<Role> byRoleType = roleRepository.findByRoleType(RoleType.STUDENT);
         if (byRoleType.isEmpty()) {
             throw new NotFoundException("rot type not found");
         }
-        Optional<Attachment> optionalAttachment = attachmentRepository.findById(studentResponseDto.getAttachmentId());
-        if (optionalAttachment.isEmpty()) {
-            throw new NotFoundException("attechment not found");
+        Attachment attachment = new Attachment();
+        if (studentResponseDto.getAttachmentId() != null) {
+            Optional<Attachment> optionalAttachment = attachmentRepository.findById(studentResponseDto.getAttachmentId());
+            if (optionalAttachment.isEmpty()) {
+                throw new NotFoundException("attechment not found");
+            }
+           attachment=optionalAttachment.get();
         }
 
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), optionalAttachment.get());
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(),attachment);
         GroupStudent groupStudent = new GroupStudent(group.get(), newUserEntity);
         PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
         paymentForMonthService.creat(paymentForDTO);
