@@ -3,7 +3,6 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.GroupStudent;
 import uz.saidoff.crmecosystem.entity.ProjectUser;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
