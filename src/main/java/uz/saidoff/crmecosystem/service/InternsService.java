@@ -6,10 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.entity.GroupStudent;
-import uz.saidoff.crmecosystem.entity.Speciality;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.Permissions;
@@ -18,6 +15,7 @@ import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.InternsMapper;
 import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
+import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
@@ -34,7 +32,8 @@ public class InternsService {
     private final SpecialityRepository specialityRepository;
     private final AttachmentRepository fileRepository;
     private final GroupRepository groupRepository;
-    private GroupStudentRepository groupStudentRepository;
+    private final GroupStudentRepository groupStudentRepository;
+    private final ProjectUserRepository projectUserRepository;
 
     public ResponseData<?> getAllInterns(int page, int size) {
         Optional<Role> optionalRole = roleRepository.findByRoleType(RoleType.INTERN);
@@ -152,6 +151,22 @@ public class InternsService {
         intern.setRole(optionalRole.get());
         intern.setPermissions(Collections.singletonList(Permissions.valueOf("READ_EMPLOYEE")));
         internsRepository.save(intern);
-        return null;
+        return ResponseData.successResponse("intern updated successfully");
+    }
+
+    public ResponseData<?> getParticipatedProjects(UUID userId) {
+        if (userId == null) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userId = user.getId();
+        }
+        List<ProjectUser> userProjects = projectUserRepository.findByUserId(userId);
+        if (userProjects.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+        List<ProjectResponseDto> projectResponseDtos=new LinkedList<>();
+        for (ProjectUser userProject : userProjects) {
+            projectResponseDtos.add(internsMapper.getInternProjects(userProject));
+        }
+        return ResponseData.successResponse(projectResponseDtos);
     }
 }

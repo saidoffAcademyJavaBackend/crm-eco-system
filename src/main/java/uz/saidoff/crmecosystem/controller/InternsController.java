@@ -53,5 +53,11 @@ public class InternsController {
         return this.internsService.internToEmployee(internId);
     }
 
+    @CheckPermission("GET_INTERN")
+    @GetMapping("get-projects")
+    public ResponseData<?> getParticipatedProjects(@RequestParam(required = false) UUID userId){
+        return this.internsService.getParticipatedProjects(userId);
+    }
+
 
 }
