@@ -58,9 +58,7 @@ public class InternsMapper {
                 Collections.singletonList(Permissions.GET_INTERN)
                 :internAddDto.getPermissionsList());
         user.setCreatedBy(userId);
-        if (attachment.isPresent()) {
-            user.setAttachment(attachment.get());
-        }
+        attachment.ifPresent(user::setAttachment);
         return user;
     }
 
