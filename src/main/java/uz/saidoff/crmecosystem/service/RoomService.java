@@ -14,6 +14,7 @@ import uz.saidoff.crmecosystem.enums.WeekDays;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.RoomMapper;
+import uz.saidoff.crmecosystem.payload.GroupInfoInRoomResponse;
 import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomDto;
 import uz.saidoff.crmecosystem.repository.GroupRepository;
@@ -104,6 +105,9 @@ public class RoomService {
     }
 
     public ResponseData<?> assignRoom(UUID roomId, UUID userId, UUID groupId, List<WeekDays> daysAssigned) {
+        if (daysAssigned == null || daysAssigned.isEmpty()) {
+            throw new NotFoundException("Days assigned cannot be empty");
+        }
         Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(()
                 -> new NotFoundException("room not found"));
         User user = userRepository.findByIdAndDeletedFalse(userId).orElseThrow(()
@@ -119,4 +123,12 @@ public class RoomService {
         return new ResponseData<>("Room has been assigned: ", true);
     }
 
+    public ResponseData<?> getGroupsByRoomId(UUID roomId) {
+        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(() -> new NotFoundException("room not found"));
+        List<GroupInfoInRoomResponse> groupsByRoomId = roomAssignmentRepository.getGroupsByRoomId(room.getId());
+        if (groupsByRoomId.isEmpty()) {
+            throw new NotFoundException("groups not found");
+        }
+        return new ResponseData<>(groupsByRoomId, true);
+    }
 }
