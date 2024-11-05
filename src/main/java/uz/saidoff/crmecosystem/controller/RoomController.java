@@ -84,5 +84,12 @@ public class RoomController {
         ResponseData<?> responseData = roomService.assignRoom(roomId, userId, groupId, daysAssigned);
         return ResponseEntity.ok(responseData);
     }
+    @GetMapping("/getGroupsByRoom/{roomId}")
+    public HttpEntity<?> getGroupsByRoomId(@PathVariable(name = "roomId") UUID roomId){
+        ResponseData<?> groupsByRoomId = roomService.getGroupsByRoomId(roomId);
+        return ResponseEntity.ok(groupsByRoomId);
+    }
+
+
 
 }

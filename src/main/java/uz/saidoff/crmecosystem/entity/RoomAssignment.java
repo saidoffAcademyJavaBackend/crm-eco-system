@@ -24,11 +24,11 @@ public class RoomAssignment extends AbsEntity {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User responsiblePerson;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "assignment_days", joinColumns = @JoinColumn(name = "assignment_id"))
     private List<WeekDays> weekDays;
 
