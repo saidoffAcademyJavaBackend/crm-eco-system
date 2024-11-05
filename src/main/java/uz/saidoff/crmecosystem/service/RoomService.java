@@ -36,13 +36,22 @@ public class RoomService {
 
 
     public ResponseData<?> addRoom(RoomCreateUpdateDto roomDto) {
-        Optional<Room> optionalRoom = roomRepository.findByRoomNumber(roomDto.getRoomNumber());
+        Optional<Room> optionalRoom = roomRepository.findByRoomNameAndDeletedFalse(roomDto.getRoomName());
         if (optionalRoom.isPresent()) {
             throw new AlreadyExistException("Room already exists");
         }
         Room room = roomMapper.toRoomEntity(roomDto);
         roomRepository.save(room);
         return new ResponseData<>("Room has been added", true);
+    }
+
+    public ResponseData<?> updateRoom(UUID roomId, RoomCreateUpdateDto roomDto) {
+        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(()
+                -> new NotFoundException("room not found"));
+        Room updatedRoom = roomMapper.toRoomUpdateEntity(room, roomDto);
+        Room savedRoom = roomRepository.save(updatedRoom);
+        roomMapper.toRoomDto(savedRoom);
+        return new ResponseData<>("Room has been successfully updated", true);
     }
 
     public ResponseData<?> getRoom(UUID roomId) {
@@ -65,24 +74,6 @@ public class RoomService {
         return new ResponseData<>(response, true);
     }
 
-    public ResponseData<?> deleteRoom(UUID roomId) {
-        Room room = roomRepository.findById(roomId).orElseThrow(()
-                -> new NotFoundException("room not found"));
-        room.setRoomStatus(RoomStatus.UNAVAILABLE);
-        room.setDeleted(true);
-        roomRepository.save(room);
-        return new ResponseData<>("Room successfully has been deleted", true);
-    }
-
-    public ResponseData<?> updateRoom(UUID roomId, RoomCreateUpdateDto roomDto) {
-        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(()
-                -> new NotFoundException("room not found"));
-        Room updatedRoom = roomMapper.toRoomUpdateEntity(room, roomDto);
-        Room savedRoom = roomRepository.save(updatedRoom);
-        roomMapper.toRoomDto(savedRoom);
-        return new ResponseData<>("Room has been successfully updated", true);
-    }
-
     public ResponseData<?> getAvailableRoom(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Room> roomList = roomRepository.findAllByDeletedIsFalse(pageable);
@@ -103,6 +94,15 @@ public class RoomService {
         return new ResponseData<>(roomDtoList, true);
     }
 
+    public ResponseData<?> deleteRoom(UUID roomId) {
+        Room room = roomRepository.findById(roomId).orElseThrow(()
+                -> new NotFoundException("room not found"));
+        room.setRoomStatus(RoomStatus.UNAVAILABLE);
+        room.setDeleted(true);
+        roomRepository.save(room);
+        return new ResponseData<>("Room successfully has been deleted", true);
+    }
+
     public ResponseData<?> assignRoom(UUID roomId, UUID userId, UUID groupId, List<WeekDays> daysAssigned) {
         Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(()
                 -> new NotFoundException("room not found"));
@@ -118,4 +118,5 @@ public class RoomService {
         roomAssignmentRepository.save(roomAssignment);
         return new ResponseData<>("Room has been assigned: ", true);
     }
+
 }

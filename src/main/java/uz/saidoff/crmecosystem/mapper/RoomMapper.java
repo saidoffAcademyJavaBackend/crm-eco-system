@@ -11,9 +11,10 @@ public class RoomMapper {
     public Room toRoomEntity(RoomCreateUpdateDto roomDto) {
         Room room = new Room();
         room.setRoomName(roomDto.getRoomName());
-        room.setRoomNumber(roomDto.getRoomNumber());
-        room.setEquipment(roomDto.getEquipment());
+        room.setCapacity(roomDto.getCapacity());
+        room.setEquipments(roomDto.getEquipments());
         room.setComment(roomDto.getComment());
+        room.setRoomType(roomDto.getRoomType());
         room.setRoomStatus(roomDto.getRoomStatus());
         return room;
     }
@@ -22,17 +23,20 @@ public class RoomMapper {
         RoomDto roomDto = new RoomDto();
         roomDto.setId(room.getId());
         roomDto.setRoomName(room.getRoomName());
-        roomDto.setRoomNumber(room.getRoomNumber());
-        roomDto.setEquipment(room.getEquipment());
+        roomDto.setCapacity(room.getCapacity());
+        roomDto.setEquipments(room.getEquipments());
         roomDto.setComment(room.getComment());
+        roomDto.setRoomType(room.getRoomType());
         roomDto.setRoomStatus(room.getRoomStatus());
         return roomDto;
     }
-    public Room toRoomUpdateEntity(Room room, RoomCreateUpdateDto roomDto){
+
+    public Room toRoomUpdateEntity(Room room, RoomCreateUpdateDto roomDto) {
         room.setRoomName(roomDto.getRoomName());
-        room.setRoomNumber(roomDto.getRoomNumber());
-        room.setEquipment(roomDto.getEquipment());
+        room.setCapacity(roomDto.getCapacity());
+        room.setEquipments(roomDto.getEquipments());
         room.setComment(roomDto.getComment());
+        room.setRoomType(roomDto.getRoomType());
         room.setRoomStatus(roomDto.getRoomStatus());
         return room;
     }

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
+import uz.saidoff.crmecosystem.enums.Equipment;
 import uz.saidoff.crmecosystem.enums.RoomStatus;
+import uz.saidoff.crmecosystem.enums.RoomType;
 import uz.saidoff.crmecosystem.enums.WeekDays;
 
 import java.util.List;
@@ -17,14 +19,19 @@ import java.util.List;
 @Entity(name = "rooms")
 public class Room extends AbsEntity {
 
+    @Column(unique = true)
     private String roomName;
 
-    @Column(unique = true)
-    private Integer roomNumber;
+    private int capacity;
 
-    private String equipment;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<Equipment> equipments;
 
     private String comment;
+
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;

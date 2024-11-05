@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
 
-    Optional<Room> findByRoomNumber(Integer roomNumber);
+    Optional<Room> findByRoomNameAndDeletedFalse(String roomName);
     Optional<Room> findRoomByIdAndDeletedFalse(UUID roomId);
     List<Room> findAllByDeletedIsFalse(Pageable pageable);
     List<Room> findAllByDeletedIsTrue(Pageable pageable);
