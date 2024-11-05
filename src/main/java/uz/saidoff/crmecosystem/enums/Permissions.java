@@ -39,5 +39,14 @@ public enum Permissions {
     CREATE_TASK,
     DELETE_TASK,
     UPDATE_TASK,
-    GET_TASK
+    GET_TASK,
+
+
+    //****************ROOMS*****************//
+    ADD_ROOM,
+    UPDATE_ROOM,
+    DELETE_ROOM,
+    GET_ROOM,
+    GET_ALL_ROOMS,
+    ASSIGN_ROOM
 }

@@ -1,0 +1,26 @@
+package uz.saidoff.crmecosystem.enums;
+
+public enum Equipment {
+    PROJECTOR,
+    INTERACTIVE_WHITEBOARD,
+    SPEAKER_SYSTEM,
+    COMPUTER,
+    PRINTER,
+    D3_PRINTER,
+    VR_HEADSET,
+    SERVER,
+    NETWORK_ROUTER,
+    CCTV_CAMERA,
+    MICROPHONE,
+    VIDEO_CONFERENCING_SYSTEM,
+    SMART_TV,
+    WHITEBOARD,
+    LAB_EQUIPMENT,
+    LAPTOP_CHARGING_STATION,
+    TABLET,
+    ROBOTICS_KIT,
+    IT_TOOLKIT,
+    CABLES_AND_ADAPTERS,
+    SERVER_RACK,
+    UPS // Uninterruptible Power Supply
+}
