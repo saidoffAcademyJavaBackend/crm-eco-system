@@ -48,7 +48,7 @@ public class EmployeeMapper {
         user.setStartWork(employeeCreatDto.getStartWork());
         user.setRole(roleRepository.findByRoleType(RoleType.EMPLOYEE).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
-
+        user.setPermissions(employeeCreatDto.getPermissions());
         return user;
     }
 
@@ -115,6 +115,9 @@ public class EmployeeMapper {
         }
         if (employeeCreatDto.getStartWork() != null) {
             user.setStartWork(employeeCreatDto.getStartWork());
+        }
+        if (employeeCreatDto.getPermissions() != null) {
+            user.setPermissions(employeeCreatDto.getPermissions());
         }
         return user;
     }

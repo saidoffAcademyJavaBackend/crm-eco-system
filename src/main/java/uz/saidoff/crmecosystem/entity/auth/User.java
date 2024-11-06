@@ -15,7 +15,6 @@ import uz.saidoff.crmecosystem.enums.Permissions;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -47,6 +46,7 @@ public class User extends AbsEntity implements UserDetails {
     private Double salary;
     private Date startWork;
     private Date startStudying;
+    private Integer warning;
 
     @ManyToOne(optional = false)
     private Role role;
