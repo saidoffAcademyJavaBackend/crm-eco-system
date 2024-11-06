@@ -80,7 +80,8 @@ public class TransactionIncomeService {
     }
 
     public ResponseData<?> monthlyPaymentStudentOrIntern(UUID userId, UUID groupId, Double paymentAmount, Integer month) {
-//        paymentForMonthService dan payment monthga saqlab kelish
+/*        paymentForMonthService dan payment monthga saqlab kelish
+ */
         Transaction transaction = new Transaction();
         transaction.setIsIncome(true);
         transaction.setAmount(paymentAmount);
