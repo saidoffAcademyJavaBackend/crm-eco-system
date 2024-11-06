@@ -3,15 +3,17 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Attachment;
+import uz.saidoff.crmecosystem.entity.ProjectUser;
 import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.Permissions;
+import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
+import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
 
 import java.sql.Date;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -32,33 +34,31 @@ public class InternsMapper {
         internGetDto.setPaymentAmount(user.getSalary());
         internGetDto.setStartStudying(user.getStartStudying());
         internGetDto.setPermissionsList(user.getPermissions());
-        internGetDto.setAttachmentId(user.getAttachment().getId());
+        if (user.getAttachment() != null)
+            internGetDto.setAttachmentId(user.getAttachment().getId());
         return internGetDto;
     }
 
 
-    public User toUser(UUID userId, InternGetDto internGetDto, Speciality speciality, Role role, Attachment attachment) {
+    public User toUser(UUID userId, InternAddDto internAddDto, Speciality speciality, Role role, Optional<Attachment> attachment) {
         User user = new User();
-        user.setId(internGetDto.getInterId());
-        user.setBirthPlace(internGetDto.getBirthPlace());
-        user.setFirstName(internGetDto.getFirsName());
-        user.setLastName(internGetDto.getLastName());
-        user.setFatherName(internGetDto.getFatherName());
-        user.setBirthDate(new Date(internGetDto.getBirthDate().getTime()));
-        user.setPassportSeries(internGetDto.getPassportSeries());
-        user.setPhoneNumber(internGetDto.getPhoneNumber());
-        user.setSecondPhoneNumber(internGetDto.getSecondPhoneNumber());
+        user.setBirthPlace(internAddDto.getBirthPlace());
+        user.setFirstName(internAddDto.getFirsName());
+        user.setLastName(internAddDto.getLastName());
+        user.setFatherName(internAddDto.getFatherName());
+        user.setBirthDate(new Date(internAddDto.getBirthDate().getTime()));
+        user.setPassportSeries(internAddDto.getPassportSeries());
+        user.setPhoneNumber(internAddDto.getPhoneNumber());
+        user.setSecondPhoneNumber(internAddDto.getSecondPhoneNumber());
         user.setSpeciality(speciality);
-        user.setCurrentResidence(internGetDto.getCurrentResidence());
-        user.setStartStudying(new Date(internGetDto.getStartStudying().getTime()));
+        user.setCurrentResidence(internAddDto.getCurrentResidence());
+        user.setStartStudying(new Date(internAddDto.getStartStudying().getTime()));
         user.setRole(role);
-        user.setPermissions(internGetDto.getPermissionsList()==null?
+        user.setPermissions(internAddDto.getPermissionsList() == null ?
                 Collections.singletonList(Permissions.GET_INTERN)
-                :internGetDto.getPermissionsList());
+                : internAddDto.getPermissionsList());
         user.setCreatedBy(userId);
-        if (attachment != null) {
-            user.setAttachment(attachment);
-        }
+        attachment.ifPresent(user::setAttachment);
         return user;
     }
 
@@ -78,5 +78,15 @@ public class InternsMapper {
         intern.setSpeciality(speciality);
         intern.setAttachment(attachment);
         return intern;
+    }
+
+    public ProjectResponseDto getInternProjects(ProjectUser userProjects) {
+        ProjectResponseDto projectResponseDto = new ProjectResponseDto();
+        projectResponseDto.setProjectId(userProjects.getProject().getId());
+        projectResponseDto.setName(userProjects.getProject().getName());
+        projectResponseDto.setStartDate(userProjects.getProject().getStartDate());
+        projectResponseDto.setEndDate(userProjects.getProject().getEndDate());
+        //  owner Id qoshib ketish kk
+        return projectResponseDto;
     }
 }

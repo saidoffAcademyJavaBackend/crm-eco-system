@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.InternsService;
@@ -29,9 +30,9 @@ public class InternsController {
     }
 
     @CheckPermission("CREATE_INTERN")
-    @PostMapping("add-intern/{userId}")
-    public ResponseData<?> addIntern(@PathVariable UUID userId, @RequestBody InternGetDto internGetDto) {
-        return this.internsService.addIntern(userId, internGetDto);
+    @PostMapping("add-intern")
+    public ResponseData<?> addIntern(@RequestParam(required = false) UUID groupId, @RequestBody InternAddDto internAddDto) {
+        return this.internsService.addIntern(groupId, internAddDto);
     }
 
     @CheckPermission("UPDATE_INTERN")
@@ -43,7 +44,7 @@ public class InternsController {
     @CheckPermission("DELETE_INTERN")
     @DeleteMapping("delete-intern-by-id/{internId}")
     public ResponseData<?> deleteInternById(@PathVariable UUID internId) {
-        return  this.internsService.deleteById(internId);
+        return this.internsService.deleteById(internId);
     }
 
     @CheckPermission("UPDATE_INTERN")
@@ -52,5 +53,15 @@ public class InternsController {
         return this.internsService.internToEmployee(internId);
     }
 
+    @CheckPermission("GET_INTERN")
+    @GetMapping("get-projects")
+    public ResponseData<?> getParticipatedProjects(@RequestParam(required = false) UUID userId) {
+        return this.internsService.getParticipatedProjects(userId);
+    }
 
+    @CheckPermission("GET_INTERN")
+    @GetMapping("get-groups")
+    public ResponseData<?> getGroups(@RequestParam(required = false) UUID userId) {
+        return this.internsService.getGroups(userId);
+    }
 }
