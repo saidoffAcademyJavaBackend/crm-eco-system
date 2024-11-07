@@ -48,5 +48,18 @@ public enum Permissions {
     DELETE_ROOM,
     GET_ROOM,
     GET_ALL_ROOMS,
-    ASSIGN_ROOM
+    ASSIGN_ROOM,
+    UPDATE_ASSIGN_ROOM,
+
+
+
+    //**************EQUIPMENTS***************//
+    ADD_EQUIPMENT,
+    UPDATE_EQUIPMENT,
+    GET_EQUIPMENT,
+    GET_ALL_EXIST_EQUIPMENTS,
+    GET_ALL_EQUIPMENTS,
+    GET_ALL_DELETED_EQUIPMENTS,
+    DELETE_EQUIPMENT
+
 }
