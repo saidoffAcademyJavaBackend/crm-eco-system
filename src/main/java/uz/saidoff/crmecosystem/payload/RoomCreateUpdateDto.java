@@ -13,10 +13,11 @@ import java.util.UUID;
 @Getter
 public class RoomCreateUpdateDto {
 
+    private UUID id;
     private String roomName;
     private int capacity;
-    private List<Equipment> equipments;
     private String comment;
     private RoomType roomType;
     private RoomStatus roomStatus;
+    private List<RoomCreateUpdateEquipDto> equipmentsList;
 }

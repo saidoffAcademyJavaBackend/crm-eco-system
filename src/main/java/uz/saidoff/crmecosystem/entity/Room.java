@@ -17,16 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity(name = "rooms")
-public class Room extends AbsEntity {
+public class Room extends AbsEntity { //todo 1. equipment new table, 2. remove three fields  (status, weekdays, )
 
     @Column(unique = true)
     private String roomName;
 
     private int capacity;
-
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<Equipment> equipments;
 
     private String comment;
 
@@ -36,7 +32,14 @@ public class Room extends AbsEntity {
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RoomAssignment> roomAssignments;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RoomEquipment> equipments;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User responsiblePerson;
 
 }
