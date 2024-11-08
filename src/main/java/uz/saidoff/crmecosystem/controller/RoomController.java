@@ -24,7 +24,7 @@ public class RoomController {
 
     @CheckPermission("ADD_ROOM")
     @PostMapping("/add_room")
-    public ResponseEntity<?> addRoom(@RequestBody RoomCreateUpdateDto roomDto ) {
+    public ResponseEntity<?> addRoom(@RequestBody RoomCreateUpdateDto roomDto) {
         ResponseData<?> responseData = roomService.addRoom(roomDto);
         return ResponseEntity.ok(responseData);
     }
@@ -84,26 +84,12 @@ public class RoomController {
         return ResponseEntity.ok(responseData);
     }
 
-//    @GetMapping("/getGroupsByRoom/{roomId}")
-//    public HttpEntity<?> getGroupsByRoomId(@PathVariable(name = "roomId") UUID roomId) {
-//        ResponseData<?> groupsByRoomId = roomService.getGroupsByRoomId(roomId);
-//        return ResponseEntity.ok(groupsByRoomId);
-//    }
-//
-//    @CheckPermission("UPDATE_ASSIGN_ROOM")
-//    @PutMapping("/updateAssignRoom")
-//    public HttpEntity<?> updateAssignRoom(@RequestParam UUID roomId,
-//                                          @RequestParam UUID groupId,
-//                                          @RequestParam UUID userId,
-//                                          @RequestBody List<WeekDays> daysAssigned) {
-//        ResponseData<?> responseData = roomService.updateAssignRoom(roomId, userId, groupId, daysAssigned);
-//        return ResponseEntity.ok(responseData);
-//    }
-//
-//    @GetMapping("/get/{teacherId}")
-//    public HttpEntity<?> getTeacherAvailableDaysAndTime(@PathVariable("teacherId") UUID teacherId) {
-//        ResponseData<?> responseData = roomService.getTeacherAvailableDaysAndTime(teacherId);
-//        return ResponseEntity.ok(responseData);
-//    }
+    @CheckPermission("GET_GROUPS_IN_ROOM")
+    @GetMapping("/getGroupsByRoom/{roomId}")
+    public HttpEntity<?> getGroupsByRoomId(@PathVariable(name = "roomId") UUID roomId) {
+        ResponseData<?> groupsByRoomId = roomService.getGroupsByRoomId(roomId);
+        return ResponseEntity.ok(groupsByRoomId);
+    }
+
 
 }

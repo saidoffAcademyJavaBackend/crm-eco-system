@@ -50,6 +50,7 @@ public enum Permissions {
     GET_ALL_ROOMS,
     ASSIGN_ROOM,
     UPDATE_ASSIGN_ROOM,
+    GET_GROUPS_IN_ROOM,
 
 
 
