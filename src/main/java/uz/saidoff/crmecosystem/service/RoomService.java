@@ -121,14 +121,14 @@ public class RoomService {
         return new ResponseData<>(roomDtoAssigning, true);
     }
 
-//    public ResponseData<?> getGroupsByRoomId(UUID roomId) {
-//        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(() -> new NotFoundException("room not found"));
-//        List<GroupInfoInRoomResponse> groupsByRoomId = roomAssignmentRepository.getGroupsByRoomId(room.getId());
-//        if (groupsByRoomId.isEmpty()) {
-//            throw new NotFoundException("groups not found");
-//        }
-//        return new ResponseData<>(groupsByRoomId, true);
-//    }
+    public ResponseData<?> getGroupsByRoomId(UUID roomId) {
+        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(() -> new NotFoundException("room not found"));
+        List<GroupInfoInRoomResponse> groupsByRoomId = roomAssignmentRepository.getGroupsByRoomId(room.getId());
+        if (groupsByRoomId.isEmpty()) {
+            throw new NotFoundException("groups not found");
+        }
+        return new ResponseData<>(groupsByRoomId, true);
+    }
 //
 //    public ResponseData<?> updateAssignRoom(UUID roomId, UUID userId, UUID groupId, List<WeekDays> daysAssigned) {
 //        if (daysAssigned == null || daysAssigned.isEmpty()) {
