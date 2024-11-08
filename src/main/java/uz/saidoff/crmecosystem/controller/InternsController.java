@@ -37,8 +37,8 @@ public class InternsController {
 
     @CheckPermission("UPDATE_INTERN")
     @PutMapping("update-intern")
-    public ResponseData<?> updateIntern(@RequestBody InternGetDto internGetDto) {
-        return this.internsService.update(internGetDto);
+    public ResponseData<?> updateIntern(@RequestBody InternGetDto internGetDto,@RequestParam(required = false) UUID groupId) {
+        return this.internsService.update(internGetDto,groupId);
     }
 
     @CheckPermission("DELETE_INTERN")
@@ -63,5 +63,11 @@ public class InternsController {
     @GetMapping("get-groups")
     public ResponseData<?> getGroups(@RequestParam(required = false) UUID userId) {
         return this.internsService.getGroups(userId);
+    }
+
+    @CheckPermission("GET_INTERN")
+    @GetMapping("lesson-schedule")
+    public ResponseData<?> getInternsLessonSchedule(@RequestParam(required = false) UUID userId) {
+        return this.internsService.getLessonSchedule(userId);
     }
 }

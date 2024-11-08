@@ -14,10 +14,7 @@ import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.GroupMapper;
 import uz.saidoff.crmecosystem.mapper.InternsMapper;
-import uz.saidoff.crmecosystem.payload.GroupDto;
-import uz.saidoff.crmecosystem.payload.InternAddDto;
-import uz.saidoff.crmecosystem.payload.InternGetDto;
-import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
+import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
@@ -112,7 +109,14 @@ public class InternsService {
         return ResponseData.successResponse("intern deleted successfully");
     }
 
-    public ResponseData<?> update(InternGetDto internGetDto) {
+    public ResponseData<?> update(InternGetDto internGetDto, UUID groupId) {
+        Optional<Group> optionalGroup = Optional.empty();
+        if (groupId != null) {
+            optionalGroup = groupRepository.findById(groupId);
+            if (optionalGroup.isEmpty()) {
+                throw new NotFoundException("Group not found");
+            }
+        }
         Optional<User> optionalIntern = internsRepository.findById(internGetDto.getInterId());
         if (optionalIntern.isEmpty()) {
             throw new NotFoundException("intern not found");
@@ -136,6 +140,9 @@ public class InternsService {
         User intern = optionalIntern.get();
         intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get());
         internsRepository.save(intern);
+        if (optionalGroup.isPresent()) {
+            groupStudentRepository.save(new GroupStudent(optionalGroup.get(), intern));
+        }
         return ResponseData.successResponse("intern updated successfully");
     }
 
@@ -188,5 +195,23 @@ public class InternsService {
             groupDtos.add(groupMapper.toDto(groupStudent.getGroupId()));
         }
         return ResponseData.successResponse(groupDtos);
+    }
+
+    public ResponseData<?> getLessonSchedule(UUID userId) {
+        if (userId == null) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userId = user.getId();
+        }
+        List<GroupStudent> groupStudents = groupStudentRepository.findByStudentId(userId);
+        if (groupStudents.isEmpty()) {
+            throw new NotFoundException("Group not found");
+        }
+        List<InternsLessonSchedule> internsLessonSchedules = new LinkedList<>();
+        for (GroupStudent groupStudent : groupStudents) {
+            internsLessonSchedules.add(new InternsLessonSchedule(groupStudent.getGroupId().getStartTime(),
+                    groupStudent.getGroupId().getEndTime(), groupStudent.getGroupId().getWeekDays(),
+                    groupStudent.getGroupId().getStartedDate()));
+        }
+        return ResponseData.successResponse(internsLessonSchedules);
     }
 }
