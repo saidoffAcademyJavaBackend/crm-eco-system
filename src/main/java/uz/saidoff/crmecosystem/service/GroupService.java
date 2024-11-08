@@ -28,10 +28,10 @@ public class GroupService {
     private final GroupMapper groupMapper;
 
 
-    public ResponseData<?> create(GroupCreateDto createDto) {
+    public ResponseData<GroupDto> create(GroupCreateDto createDto) {
         Group group = groupMapper.toEntity(createDto);
         groupRepository.save(group);
-        return ResponseData.successResponse("Success");
+        return ResponseData.successResponse(groupMapper.toDto(group));
     }
 
     public ResponseData<?> attachStudentGroup(UUID studentId, UUID groupId) {
@@ -59,5 +59,13 @@ public class GroupService {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
                 groups.stream().map(groupMapper::toDto).toList());
+    }
+    public ResponseData<List<GroupDto>> getAllByTeacherId(UUID teacherId) {
+        List<Group> groups = groupRepository.findAllByTeacherIdAndDeletedIsFalse(teacherId);
+        if (groups.isEmpty()){
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        }
+        List<GroupDto> response = groups.stream().map(groupMapper::toDto).toList();
+        return ResponseData.successResponse(response);
     }
 }

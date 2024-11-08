@@ -29,5 +29,7 @@ public class GroupCreateDto {
     private boolean active;
     private boolean student;
     private Double paymentAmount;
+    private List<UUID> students;
+    private UUID room;
 
 }

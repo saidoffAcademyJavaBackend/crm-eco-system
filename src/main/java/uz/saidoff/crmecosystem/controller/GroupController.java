@@ -37,4 +37,9 @@ public class GroupController {
     private ResponseData<List<GroupDto>> getAllGroup(){
         return groupService.getAll();
     }
+
+    @GetMapping("get-all-by-teacher-id/{id}")
+    private ResponseData<List<GroupDto>> getAllByTeacherId(@PathVariable("id") UUID teacherId){
+        return groupService.getAllByTeacherId(teacherId);
+    }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.entity.Room;
 import uz.saidoff.crmecosystem.enums.WeekDays;
 import java.sql.Date;
 import java.sql.Time;
@@ -28,5 +29,6 @@ public class GroupDto {
     private boolean active;
     private boolean student;
     private Double paymentAmount;
-    private String room;
+    private UUID room;
+    private Integer totalStudents;
 }
