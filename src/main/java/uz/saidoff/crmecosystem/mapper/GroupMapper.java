@@ -7,6 +7,7 @@ import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.GroupCreateDto;
 import uz.saidoff.crmecosystem.payload.GroupDto;
 import uz.saidoff.crmecosystem.repository.GroupTypeRepository;
+import uz.saidoff.crmecosystem.repository.RoomRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
@@ -17,6 +18,7 @@ public class GroupMapper {
 
     private final UserRepository userRepository;
     private final GroupTypeRepository groupTypeRepository;
+    private final RoomRepository roomRepository;
 
     public Group toEntity(GroupCreateDto createDto){
         Group group = new Group();
@@ -33,6 +35,9 @@ public class GroupMapper {
         group.setWeekDays(createDto.getWeekDays());
         group.setGroupType(groupTypeRepository.findById(createDto.getGroupTypeId()).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT))));
+        group.setStudents(userRepository.findAllById(createDto.getStudents()));
+        group.setRoom(roomRepository.findById(createDto.getRoom()).orElseThrow(
+                () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT))));
 
         return group;
     }
@@ -47,6 +52,8 @@ public class GroupMapper {
         groupDto.setLinkOfTelegram(group.getLinkForTelegram());
         groupDto.setWeekDays(group.getWeekDays());
         groupDto.setTeacherId(group.getTeacher().getId());
+        groupDto.setRoom(group.getRoom().getId());
+        groupDto.setTotalStudents(group.getStudents().size());
         return groupDto;
     }
 

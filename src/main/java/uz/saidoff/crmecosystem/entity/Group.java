@@ -45,5 +45,9 @@ public class Group extends AbsEntity {
 
     private boolean student;
 
-    private String room;
+    @ManyToMany
+    private List<User> students;
+
+    @ManyToOne
+    private Room room;
 }
