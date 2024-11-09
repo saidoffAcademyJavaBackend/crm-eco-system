@@ -16,12 +16,7 @@ public class RoomEquipment extends AbsEntity {
 
     private String name;
 
-    private int count;
-
-    private int deletedCount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Room room;
+    private Integer totalNumber;
 
 
 }

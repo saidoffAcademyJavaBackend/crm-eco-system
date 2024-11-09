@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.AuthService;
-
 @RestController
 @RequestMapping("api/v1/auth")
 @RequiredArgsConstructor

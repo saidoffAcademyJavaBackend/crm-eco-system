@@ -9,8 +9,8 @@ import java.util.UUID;
 @Setter
 @Getter
 @Component
-public class RoomCreateUpdateEquipDto {
+public class RoomEquipCountDto {
 
-    private String name;
-    private int count;
+    private UUID id;
+    private Integer count;
 }

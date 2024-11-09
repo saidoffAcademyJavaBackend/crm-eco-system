@@ -1,17 +1,15 @@
 package uz.saidoff.crmecosystem.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.saidoff.crmecosystem.enums.WeekDays;
 import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
+import uz.saidoff.crmecosystem.payload.RoomEquipCountDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.RoomService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor

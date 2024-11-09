@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.payload.RoomEquipCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.EquipmentService;
@@ -21,14 +22,14 @@ public class RoomEquipmentController {
 
     @CheckPermission("ADD_EQUIPMENT")
     @PostMapping("add_equipment")
-    public HttpEntity<?> addEquipment(@RequestBody List<RoomEquipmentDto> equipmentDto) {
+    public HttpEntity<?> addEquipment(@RequestBody List<RoomEquipCreateUpdateDto> equipmentDto) {
         ResponseData<?> responseData = equipmentService.addEquipment(equipmentDto);
         return ResponseEntity.ok(responseData);
     }
 
     @CheckPermission("UPDATE_EQUIPMENT")
     @PutMapping("update_equipment/{equipmentId}")
-    public HttpEntity<?> updateEquipment(@PathVariable("equipmentId") UUID equipmentId, @RequestBody RoomEquipmentDto roomEquipmentDto) {
+    public HttpEntity<?> updateEquipment(@PathVariable("equipmentId") UUID equipmentId, @RequestBody RoomEquipCreateUpdateDto roomEquipmentDto) {
         ResponseData<?> responseData = equipmentService.updateEquipment(equipmentId, roomEquipmentDto);
         return ResponseEntity.ok(responseData);
     }
@@ -59,8 +60,8 @@ public class RoomEquipmentController {
     @GetMapping("get_all_deleted_equipments")
     public HttpEntity<?> getAllDeletedEquipments(@RequestParam(value = "size", defaultValue = "0") int size,
                                           @RequestParam(value = "page", defaultValue = "10") int page) {
-        ResponseData<?> allEquipments = equipmentService.getAllDeletedEquipments(size, page);
-        return ResponseEntity.ok(allEquipments);
+//        ResponseData<?> allEquipments = equipmentService.getAllDeletedEquipments(size, page);
+        return ResponseEntity.ok(null);
     }
 
     @CheckPermission("DELETE_EQUIPMENT")
