@@ -29,9 +29,6 @@ public class Room extends AbsEntity {
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<RoomEquipment> equipments;
-
     @OneToMany
     public List<RoomCountEquipment> roomCountEquipments;
 

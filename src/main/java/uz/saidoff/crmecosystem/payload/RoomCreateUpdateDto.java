@@ -18,5 +18,5 @@ public class RoomCreateUpdateDto {
     private int capacity;
     private String comment;
     private RoomType roomType;
-    private List<RoomEquipmentDto> roomEquipmentDtoList;
+    private List<RoomEquipCountDto> roomEquipCountDtoList;
 }

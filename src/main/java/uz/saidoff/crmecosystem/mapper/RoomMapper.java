@@ -14,6 +14,7 @@ import uz.saidoff.crmecosystem.payload.RoomEquipCountDto;
 import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.service.EquipmentService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,6 @@ public class RoomMapper {
     private final EquipmentService equipmentService;
 
 
-
-
     public Room toRoomEntity(RoomDto roomDto) {
         User user = userRepository.findByIdAndDeletedFalse(roomDto.getResponsiblePersonId()).orElseThrow(
                 () -> new NotFoundException("User not found"));
@@ -44,7 +43,6 @@ public class RoomMapper {
         room.setCapacity(roomDto.getCapacity());
         room.setComment(roomDto.getComment());
         room.setRoomType(roomDto.getRoomType());
-//        room.setEquipments(List.of(equipment));
         room.setGroup(group);
         room.setResponsiblePerson(user);
         return room;
@@ -75,14 +73,10 @@ public class RoomMapper {
         List<RoomEquipment> roomEquipments = new ArrayList<>();
         for (RoomEquipmentDto equipmentDto : roomEquipmentDtoList) {
             RoomEquipment equipment = new RoomEquipment();
-//            RoomCountEquipment countEquipment = roomCountEquipmentRepository.findById(equipment.getRoomCountEquipment().getId()).orElseThrow(
-//                    () -> new NotFoundException("equipment not found"));
             equipment.setId(equipmentDto.getId());
             equipment.setName(equipmentDto.getName());
             equipment.setTotalNumber(equipmentDto.getCount());
-//            countEquipment.setCount(equipment.getTotalNumber());
             roomEquipments.add(equipment);
-
         }
         return roomEquipments;
     }
@@ -94,20 +88,21 @@ public class RoomMapper {
         room.setCapacity(roomDto.getCapacity());
         room.setComment(roomDto.getComment());
         room.setRoomType(roomDto.getRoomType());
-        // room:{nme:NImadir, {[equipmentId:1 , count:2].[equipmentId:23 , count:1]} }
-        List<RoomCountEquipment> listEquipmentCount =  new ArrayList<>();
-        for (RoomEquipmentDto dto : roomDto.getRoomEquipmentDtoList()) {
-        var roomCountEquipment = new RoomCountEquipment();
-        var equipment = equipmentService.getEquipmentById(dto.getId());
-        roomCountEquipment.setId(dto.getId());
-        roomCountEquipment.setCount(dto.getCount());
-        roomCountEquipment.setRoomEquipment(equipment);
-        roomCountEquipmentRepository.save(roomCountEquipment);
+        room.setRoomCountEquipments(getRoomCountEquipmentList(roomDto));
+        return room;
+    }
+
+    private List<RoomCountEquipment> getRoomCountEquipmentList(RoomCreateUpdateDto roomDto) {
+        List<RoomCountEquipment> listEquipmentCount = new ArrayList<>();
+        for (RoomEquipCountDto dto : roomDto.getRoomEquipCountDtoList()) {
+            var roomCountEquipment = new RoomCountEquipment();
+            var equipment = equipmentService.getEquipmentById(dto.getId());
+            roomCountEquipment.setCount(dto.getCount());
+            roomCountEquipment.setRoomEquipment(equipment);
+            roomCountEquipmentRepository.save(roomCountEquipment);
             listEquipmentCount.add(roomCountEquipment);
         }
-        room.setRoomCountEquipments(listEquipmentCount);
-//        room.setEquipments(toRoomEquipmentEntity(roomDto.getRoomEquipmentDtoList()));
-        return room;
+        return listEquipmentCount;
     }
 
     public RoomCreateUpdateDto toRoomDto(Room room) {
@@ -116,6 +111,13 @@ public class RoomMapper {
         roomDto.setCapacity(room.getCapacity());
         roomDto.setComment(room.getComment());
         roomDto.setRoomType(room.getRoomType());
+        roomDto.setRoomEquipCountDtoList(room
+                .getRoomCountEquipments()
+                .stream()
+                .map(value -> new RoomEquipCountDto(
+                        value.getId(),
+                        value.getCount()))
+                .toList());
         return roomDto;
     }
 
@@ -133,10 +135,6 @@ public class RoomMapper {
 
     public Room toRoomUpdateEntity(Room room, RoomCreateUpdateDto roomDto) {
 
-//        List<RoomEquipment> equipments = roomEquipmentRepository.findAllByIdAndDeletedFalse(roomDto.getEquipmentId());
-//        if (equipments.isEmpty()) {
-//            throw new NotFoundException("Equipment not found");
-//        }
         if (roomDto.getRoomName() != null) {
             room.setRoomName(roomDto.getRoomName());
         }
@@ -149,10 +147,6 @@ public class RoomMapper {
         if (roomDto.getRoomType() != null) {
             room.setRoomType(roomDto.getRoomType());
         }
-
-//        if (roomDto.getRoomEquipmentId() != null) {
-//            room.setEquipments(roomEquipmentMapper.toEquipmentEntityResponse(roomDto.getEquipmentsList()));
-//        }
         return room;
     }
 }
