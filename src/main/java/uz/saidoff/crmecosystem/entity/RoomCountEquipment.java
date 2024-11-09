@@ -10,7 +10,7 @@ import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "room_count_equipments")
+@Entity
 @Builder
 public class RoomCountEquipment extends AbsEntity {
 

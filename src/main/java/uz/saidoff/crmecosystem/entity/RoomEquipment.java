@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "equipments")
+@Entity
 @Builder
 public class RoomEquipment extends AbsEntity {
 
