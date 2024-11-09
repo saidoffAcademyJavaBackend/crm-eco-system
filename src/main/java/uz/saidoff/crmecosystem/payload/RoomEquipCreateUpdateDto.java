@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Setter
 @Getter
 @Component
-public class RoomEquipmentDto {
+public class RoomEquipCreateUpdateDto {
 
-    private UUID id;
     private String name;
-    private Integer count;
+    private Integer totalNumber;
 }

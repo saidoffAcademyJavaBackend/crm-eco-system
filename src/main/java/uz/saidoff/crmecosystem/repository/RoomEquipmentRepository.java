@@ -18,13 +18,14 @@ public interface RoomEquipmentRepository extends JpaRepository<RoomEquipment, UU
 
 
     Optional<RoomEquipment> findByIdAndDeletedFalse(UUID equipmentId);
+    List<RoomEquipment> findByIdAndDeletedIsFalse(UUID equipmentId);
 
-    List<RoomEquipment> findAllByIdAndDeletedIsFalse(UUID id);
+    List<RoomEquipment> findAllByNameAndDeletedIsFalse(String name);
 
     List<RoomEquipment> findAllByDeletedIsFalse(Pageable pageable);
 
-    @Query("select new uz.saidoff.crmecosystem.payload.RoomDeletedInfoResponse(e.id, e.name, e.deletedCount) from equipments as e where e.deletedCount>0")
-    List<RoomDeletedInfoResponse> getDeletedEquipments(Pageable pageable);
+//    @Query("select new uz.saidoff.crmecosystem.payload.RoomDeletedInfoResponse(e.id, e.name  groups as g from equipments as e")
+//    List<RoomDeletedInfoResponse> getDeletedEquipments(Pageable pageable);
 
     @Query("select new uz.saidoff.crmecosystem.payload.GroupInfoInRoomResponse (r.group.id, r.group.name, r.group.teacher.id, " +
             "r.group.startTime, r.group.endTime, r.group.startedDate) from rooms as r INNER JOIN groups as g ON r.group.id = g.id where r.id = :roomId")

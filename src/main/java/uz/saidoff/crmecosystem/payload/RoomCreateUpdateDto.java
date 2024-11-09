@@ -2,7 +2,8 @@ package uz.saidoff.crmecosystem.payload;
 
 import lombok.Getter;
 import lombok.Setter;
-import uz.saidoff.crmecosystem.enums.Equipment;
+import uz.saidoff.crmecosystem.entity.RoomCountEquipment;
+import uz.saidoff.crmecosystem.entity.RoomEquipment;
 import uz.saidoff.crmecosystem.enums.RoomStatus;
 import uz.saidoff.crmecosystem.enums.RoomType;
 
@@ -13,11 +14,9 @@ import java.util.UUID;
 @Getter
 public class RoomCreateUpdateDto {
 
-    private UUID id;
     private String roomName;
     private int capacity;
     private String comment;
     private RoomType roomType;
-    private RoomStatus roomStatus;
-    private List<RoomCreateUpdateEquipDto> equipmentsList;
+    private List<RoomEquipmentDto> roomEquipmentDtoList;
 }

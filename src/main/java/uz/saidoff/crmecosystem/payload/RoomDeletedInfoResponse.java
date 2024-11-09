@@ -11,19 +11,12 @@ import java.util.UUID;
 @Setter
 @Getter
 @Component
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoomDeletedInfoResponse {
 
     private UUID id;
     private String name;
-    private int deletedCount = 0;
     private UUID roomId;
 
-
-    public RoomDeletedInfoResponse(UUID id, String name, int deletedCount) {
-        this.id = id;
-        this.name = name;
-        this.deletedCount = deletedCount;
-    }
 }
