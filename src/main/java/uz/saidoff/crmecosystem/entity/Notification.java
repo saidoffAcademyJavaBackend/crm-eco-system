@@ -28,7 +28,7 @@ public class Notification extends AbsEntity {
     @ManyToOne
     private User user;
 
-    private Boolean read = false;
+    private Boolean read = Boolean.FALSE;
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;
