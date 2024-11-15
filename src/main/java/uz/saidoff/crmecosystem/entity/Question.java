@@ -1,7 +1,6 @@
 package uz.saidoff.crmecosystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 
@@ -28,7 +27,13 @@ public class Question extends AbsEntity {
     private LocalDateTime endDate;
 
     @OneToMany
-    private List<Answer> answers;
+    private List<Answers> answers;
 
-    private Boolean isInProcess;
+    @ManyToMany
+    private List<AnsweredQuestions> answeredQuestions;
+
+    private boolean isInProcess;
+
+    //if true it is questionnaire, else it's test
+    private boolean questionnaire = true;
 }

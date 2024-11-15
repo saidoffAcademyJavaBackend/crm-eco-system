@@ -10,7 +10,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @NoArgsConstructor
 @Builder
 @Entity(name = "answers")
-public class Answer extends AbsEntity {
+public class Answers extends AbsEntity {
 
     private String value;
 
