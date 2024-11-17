@@ -61,6 +61,17 @@ public enum Permissions {
     GET_ALL_EXIST_EQUIPMENTS,
     GET_ALL_EQUIPMENTS,
     GET_ALL_DELETED_EQUIPMENTS,
-    DELETE_EQUIPMENT
+    DELETE_EQUIPMENT,
+
+
+
+
+
+    //******************WARNINGS*******************//
+    ADD_WARNING,
+    GET_WARNING,
+    GET_ALL_WARNINGS,
+    DELETE_ALL_WARNINGS,
+    GET_PUNISHMENT
 
 }
