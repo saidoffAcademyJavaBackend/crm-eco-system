@@ -1,0 +1,26 @@
+POST http://localhost:8080/api/create_question
+Content-Type: application/json
+
+{
+  "question": "What's your name?",
+  "description": "Tell me your name",
+  "answers": [
+    {
+      "value": "Robinho"
+    },
+    {
+      "value": "Rivaldo"
+    },
+    {
+      "value": "Bergkamp"
+    }
+  ],
+  "attachmentIds": [
+    {
+      "id": "e8789ba1-e030-4d08-9dc3-03a5c76a7f6a"
+    },
+    {
+      "id": "0d0b4b84-edb9-4b3a-85a9-8dc75efaa818"
+    }
+  ]
+}

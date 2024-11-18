@@ -12,17 +12,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class QuestionDto {
+public class QuestionCreateDto {
     private UUID questionId;
     private String question;
     private String description;
-    private List<UUID> attachmentIds;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private List<Attachment> attachmentIds;
+    private List<AnswersDto> answers;
     private List<UUID> answerIds;
     private List<UUID> answeredQuestionIds;
-    private boolean isInProcess;
-    private boolean questionnaire;
     private List<Group> groups;
     private List<User> users;
 }

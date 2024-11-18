@@ -9,6 +9,6 @@ import java.util.UUID;
 @Setter
 public class AnswersDto {
     private UUID id;
-    private String answer;
+    private String value;
     private Boolean isRightAnswer;
 }
