@@ -31,7 +31,7 @@ public class EmployeeController {
     }
 
     @CheckPermission("GET_USER")
-    @GetMapping("/{employeeId}")
+    @GetMapping("get/{employeeId}")
     public ResponseData<EmployeeDto> getEmployee(@PathVariable UUID employeeId) {
         return this.employeeService.getUser(employeeId);
     }

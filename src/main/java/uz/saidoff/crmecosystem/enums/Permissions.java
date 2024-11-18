@@ -25,6 +25,12 @@ public enum Permissions {
     UPDATE_TRANSACTION,
     GET_TRANSACTION,
 
+    CREATE_OUTCOME,
+    EDIT_OUTCOME,
+    DELETE_OUTCOME,
+    GET_OUTCOME,
+
+
     GET_ROLE,
     ADD_ROLE,
     UPDATE_ROLE,
