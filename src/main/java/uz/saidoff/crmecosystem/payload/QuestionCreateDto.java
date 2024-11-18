@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.payload;
 
 import lombok.Getter;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.entity.AnsweredQuestions;
 import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.auth.User;
@@ -19,7 +20,8 @@ public class QuestionCreateDto {
     private List<Attachment> attachmentIds;
     private List<AnswersDto> answers;
     private List<UUID> answerIds;
-    private List<UUID> answeredQuestionIds;
+    private List<AnsweredQuestions> answeredQuestionIds;
+    private boolean questionnaire;
     private List<Group> groups;
     private List<User> users;
 }

@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,12 @@ public class Question extends AbsEntity {
 
     @ManyToMany
     private List<AnsweredQuestions> answeredQuestions;
+
+    @ManyToMany
+    private List<Group> groups;
+
+    @ManyToMany
+    private List<User> users;
 
     private boolean isInProcess;
 

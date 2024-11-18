@@ -25,4 +25,13 @@ public class AnswersService {
         return answers;
     }
 
+    public List<Answers> updateAnswers(QuestionCreateDto questionDto) {
+
+        List<Answers> answersList = answerMapper.dtoToEntity(questionDto.getAnswers());
+
+        List<Answers> answers = answersRepository.saveAll(answersList);
+
+        return answers;
+    }
+
 }
