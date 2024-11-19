@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.Warning;
@@ -82,5 +81,17 @@ public class WarningService {
         Page<Warning> warningList = warningRepository.findAllByPunishmentIsTrue(pageable);
         List<WarningDTO> warningDTO = warningMapper.toPunishmentDTOList(warningList);
         return new ResponseData<>(warningDTO, true);
+    }
+
+    public ResponseData<?> getAllWarningsByUserId(UUID userId) {
+        List<Warning> warningList = warningRepository.findAllByUserId(userId);
+        if (warningList.isEmpty()) {
+            throw new NotFoundException("there is no any warnings");
+        }
+        List<WarningDTO> warningDTOList = warningList
+                .stream()
+                .map(warningMapper::toWarningGetDTO)
+                .toList();
+        return new ResponseData<>(warningDTOList, true);
     }
 }
