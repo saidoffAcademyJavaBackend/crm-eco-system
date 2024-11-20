@@ -10,6 +10,7 @@ import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.EmployeeMapper;
 import uz.saidoff.crmecosystem.payload.EmployeeCreatDto;
 import uz.saidoff.crmecosystem.payload.EmployeeDto;
+import uz.saidoff.crmecosystem.payload.EmployeeWarningDto;
 import uz.saidoff.crmecosystem.repository.EmployeeRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
@@ -37,7 +38,7 @@ public class EmployeeService {
     }
 
     public ResponseData<?> update(UUID employeeId, EmployeeCreatDto employeeCreatDto) {
-        Optional<User> userOptional = this.employeeRepository.findById(employeeId);
+        Optional<User> userOptional = this.employeeRepository.findByIdAndDeletedFalse(employeeId);
         if (userOptional.isEmpty()) {
             throw new NotFoundException("Employee not found");
         }
@@ -52,7 +53,7 @@ public class EmployeeService {
     }
 
     public ResponseData<EmployeeDto> getUser(UUID employeeId) {
-        Optional<User> userOptional = this.employeeRepository.findById(employeeId);
+        Optional<User> userOptional = this.employeeRepository.findByIdAndDeletedFalse(employeeId);
         if (userOptional.isEmpty()) {
             throw new NotFoundException("Employee not found");
         }
@@ -61,7 +62,7 @@ public class EmployeeService {
 
     public ResponseData<?> getAllUser(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = this.employeeRepository.findAll(pageable);
+        Page<User> users = this.employeeRepository.findAllByDeletedFalse(pageable);
         if (users.isEmpty()) {
             throw new NotFoundException("No users found");
         }
@@ -75,7 +76,7 @@ public class EmployeeService {
     }
 
     public ResponseData<?> deleteEmployee(UUID employeeId) {
-        Optional<User> userOptional = this.employeeRepository.findById(employeeId);
+        Optional<User> userOptional = this.employeeRepository.findByIdAndDeletedFalse(employeeId);
         if (userOptional.isEmpty()) {
             throw new NotFoundException("Employee not found");
         }
@@ -84,4 +85,17 @@ public class EmployeeService {
         this.employeeRepository.save(user);
         return ResponseData.successResponse("delete success");
     }
+
+    public ResponseData<?> warningAddAndSubtraction(UUID employeeId, EmployeeWarningDto employeeWarningDto) {
+        Optional<User> userOptional = this.employeeRepository.findByIdAndDeletedFalse(employeeId);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("Employee not found");
+        }
+        User user = userOptional.get();
+        if (employeeWarningDto.isWarning()) user.setWarning(user.getWarning()+1);
+        else user.setWarning(user.getWarning()-1);
+        this.employeeRepository.save(user);
+        return ResponseData.successResponse("success");
+    }
+
 }

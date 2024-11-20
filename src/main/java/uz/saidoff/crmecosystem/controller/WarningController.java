@@ -1,0 +1,55 @@
+package uz.saidoff.crmecosystem.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.entity.Warning;
+import uz.saidoff.crmecosystem.payload.WarningDTO;
+import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.service.WarningService;
+import uz.saidoff.crmecosystem.valid.CheckPermission;
+
+import java.util.UUID;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/warnings")
+public class WarningController {
+
+    private final WarningService warningService;
+
+
+    @CheckPermission("ADD_WARNING")
+    @PostMapping("/addWarning/{userId}")
+    public HttpEntity<?> addWarning(@RequestParam("userId") UUID userId,
+                                    @RequestParam String reason) {
+        ResponseData<?> responseData = warningService.addWarning(userId, reason);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @CheckPermission("GET_ALL_WARNINGS")
+    @GetMapping("/getWarnings")
+    public HttpEntity<?> getWarnings(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        ResponseData<?> warnings = warningService.getWarnings(page, size);
+        return ResponseEntity.ok(warnings);
+    }
+
+    @CheckPermission("GET_WARNING")
+    @GetMapping("/getWarning/{warningId}")
+    public HttpEntity<?> getWarning(@PathVariable(name = "warningId") UUID warningId) {
+        ResponseData<WarningDTO> warning = warningService.getWarning(warningId);
+        return ResponseEntity.ok(warning);
+    }
+
+    @CheckPermission("GET_ALL_WARNINGS")
+    @GetMapping("/getPunishments")
+    public HttpEntity<?> getPunishments(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        ResponseData<?> punishments = warningService.getPunishments(page, size);
+        return ResponseEntity.ok(punishments);
+    }
+}

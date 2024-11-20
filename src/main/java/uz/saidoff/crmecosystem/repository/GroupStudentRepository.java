@@ -24,4 +24,6 @@ public interface GroupStudentRepository extends JpaRepository<GroupStudent, UUID
 
     @Query("select u.groupId from GroupStudent u where u.studentId.id=:userId")
     Optional<Group> getGroupByUser(@Param("userId") UUID userId);
+    @Query(value = "select * from group_student where student_id_id=?", nativeQuery = true)
+    List<GroupStudent> findByStudentId(UUID studentId);
 }

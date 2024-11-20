@@ -30,6 +30,14 @@ public class PaymentForMonthService {
     private final UserRepository userRepository;
     private final PaymentForMonthMapper paymentForMonthMapper;
 
+
+    /*
+    * groupStudent id boyichamas alohida student id va group id beriladi // dto ga qoshish
+    *
+    * create metodni transaction income foydalanmaydi group yoki student qoshayotganda foydalaniladi
+    *
+    *
+    * */
     public ResponseData<?> creat(PaymentForMonthCreatDto paymentForMonthCreatDto) {
         Optional<GroupStudent> groupStudentOptional = this.groupStudentRepository
                 .findById(paymentForMonthCreatDto.getGroupStudentId());
