@@ -5,15 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.DashboardStatsRequestDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.DashboardService;
-import uz.saidoff.crmecosystem.service.EmployeeService;
-import uz.saidoff.crmecosystem.service.ProjectService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/dashboard")
 public class DashboardController {
     private final DashboardService dashboardService;
-    private final EmployeeService employeeService;
 
     @PostMapping("get-income-outcome-stats")
     public ResponseData<?> getStats(@RequestBody DashboardStatsRequestDto dashboardStatsRequestDto) {
