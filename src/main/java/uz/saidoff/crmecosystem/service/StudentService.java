@@ -1,11 +1,11 @@
 package uz.saidoff.crmecosystem.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
@@ -29,7 +29,6 @@ import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
@@ -43,6 +42,7 @@ public class StudentService {
     private final PaymentForServiceRepository paymentForServiceRepository;
     private final ProjectUserRepository projectUserRepository;
 
+    @Transactional
     public ResponseData<?> saved(StudentResponseDto studentResponseDto) throws ParseException {
 
         Optional<Group> group = groupRepository.findById(studentResponseDto.getGroupId());
@@ -68,13 +68,13 @@ public class StudentService {
         }
 
         User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), attachment);
-
+        User saved = userRepository.save(newUserEntity);
         GroupStudent groupStudent = new GroupStudent();
-        groupStudent.setStudentId(newUserEntity);
+        groupStudent.setStudentId(saved);
         groupStudent.setGroupId(group.get());
         groupStudentRepository.save(groupStudent);
-        PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
-        paymentForMonthService.creat(paymentForDTO);
+        // PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
+        // paymentForMonthService.creat(paymentForDTO);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
@@ -148,13 +148,16 @@ public class StudentService {
     }
 
     public ResponseData<?> getUserById(UUID userId) {
-        Optional<User> optionalUser = studentRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
+        Optional<User> userByGroup = groupStudentRepository.getUserByGroup(userId);
+        if (userByGroup.isEmpty()) {
             throw new NotFoundException("student not found");
         }
-        User user = optionalUser.get();
-        Optional<Group> optionalGroup = groupRepository.findById(user.getId());
-        Group group = optionalGroup.get();
+        User user = userByGroup.get();
+        Optional<Group> groupByUser = groupStudentRepository.getGroupByUser(user.getId());
+        if (groupByUser.isEmpty()) {
+            throw new NotFoundException("userga tegishli guruh topilmadi");
+        }
+        Group group = groupByUser.get();
 
         StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user, group);
         return ResponseData.successResponse(responsStudentDo);

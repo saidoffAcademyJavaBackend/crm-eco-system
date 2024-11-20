@@ -104,15 +104,15 @@ public class StudentMapper {
         return studentResponseDto;
     }
 
-    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent) {
+    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent1) {
         PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
-        payment.setGroupStudentId(groupStudent.getStudentId().getId());
-        payment.setActive(groupStudent.getGroupId().isActive());
+        payment.setGroupStudentId(groupStudent1.getId());
+        payment.setActive(groupStudent1.getGroupId().isActive());
         payment.setCurrentMonth(true);
-        payment.setStartMonth(null);
-        payment.setPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
-        payment.setAllPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
-        payment.setMonth(groupStudent.getGroupId().getStartedDate());
+        payment.setStartMonth(1);
+        payment.setPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
+        payment.setAllPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
+        payment.setMonth(groupStudent1.getGroupId().getStartedDate());
         payment.setCurrentMonth(true);
 
         return payment;
