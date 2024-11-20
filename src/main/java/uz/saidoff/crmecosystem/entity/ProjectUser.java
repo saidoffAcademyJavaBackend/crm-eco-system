@@ -18,4 +18,6 @@ public class ProjectUser extends AbsEntity {
 
     @ManyToOne(optional = false)
     private Project project;
+
+    private boolean isOwner;
 }

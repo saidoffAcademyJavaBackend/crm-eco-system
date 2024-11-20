@@ -49,7 +49,7 @@ public class InternsService {
         if (interns.isEmpty()) {
             throw new NotFoundException("Interns not found");
         }
-        List<InternGetDto> list = interns.get().map(internsMapper::toInternGetDto).toList();
+        List<InternGetDto> list = interns.get().map(internsMapper:: toInternGetDto).toList();
         Map<String, Object> result = new HashMap<>();
         result.put("data", list);
         result.put("total", interns.getTotalElements());

@@ -53,8 +53,6 @@ public class User extends AbsEntity implements UserDetails {
 
     @OneToMany
     private List<Notification> notifications;
-    @OneToMany
-    private List<ProjectUser> projectUsers;
 
     private boolean enabled = false;
     private boolean accountNonExpired = true;
