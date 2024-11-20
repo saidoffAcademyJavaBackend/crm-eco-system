@@ -16,6 +16,7 @@ import uz.saidoff.crmecosystem.repository.ProjectUserRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -150,7 +151,7 @@ public class ProjectService {
         studentResponseDto.setPassportSeries(user.getPassportSeries());
         studentResponseDto.setRole(user.getRole().getName());
         studentResponseDto.setCurrentResidence(user.getCurrentResidence());
-        studentResponseDto.setStartWork(user.getStartWork());
+        studentResponseDto.setStartWork(Date.valueOf(String.valueOf((Date.valueOf(user.getStartWork().toLocalDate())))));
         return studentResponseDto;
     }
 
@@ -160,5 +161,18 @@ public class ProjectService {
             throw new NotFoundException("No projects found in this range.");
         }
         return ResponseData.successResponse(projectsByDate);
+    }
+
+    public ResponseData<?> getProjectByUser(UUID userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("user not found");
+        }
+        User user = optionalUser.get();
+        List<Project> projectList = projectUserRepository.findByProjectsByUserId(user.getId());
+        if (projectList.isEmpty()) {
+            throw new NotFoundException("project not found");
+        }
+        return ResponseData.successResponse(List.of(projectList));
     }
 }
