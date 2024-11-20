@@ -62,4 +62,5 @@ public enum Permissions {
     GET_ALL_EQUIPMENTS,
     GET_ALL_DELETED_EQUIPMENTS,
     DELETE_EQUIPMENT
+
 }
