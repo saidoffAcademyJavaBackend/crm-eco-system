@@ -3,10 +3,10 @@ package uz.saidoff.crmecosystem.mapper;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.RoomEquipment;
 import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
-import uz.saidoff.crmecosystem.payload.RoomCreateUpdateEquipDto;
+import uz.saidoff.crmecosystem.payload.RoomEquipCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomDeletedInfoResponse;
 import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
-import uz.saidoff.crmecosystem.repository.RoomEquipmentRepository;
+import uz.saidoff.crmecosystem.repository.RoomCountEquipmentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +14,45 @@ import java.util.List;
 @Component
 public class RoomEquipmentMapper {
 
-    public List<RoomEquipment> toEquipmentEntity(List<RoomEquipmentDto> dto) {
+    private final RoomCountEquipmentRepository roomCountEquipmentRepository;
+
+    public RoomEquipmentMapper(RoomCountEquipmentRepository roomCountEquipmentRepository) {
+        this.roomCountEquipmentRepository = roomCountEquipmentRepository;
+    }
+
+    public List<RoomEquipment> toEquipmentEntity(List<RoomEquipCreateUpdateDto> dto) {
         List<RoomEquipment> roomEquipmentList = new ArrayList<>();
-        for (RoomEquipmentDto equipmentDto : dto) {
+        for (RoomEquipCreateUpdateDto equipmentDto : dto) {
             RoomEquipment equipment = new RoomEquipment();
             equipment.setName(equipmentDto.getName());
-            equipment.setCount(equipmentDto.getNumber());
-            equipment.setDeleted(false);
+            equipment.setTotalNumber(equipmentDto.getTotalNumber());
             roomEquipmentList.add(equipment);
         }
         return roomEquipmentList;
     }
 
-    public List<RoomEquipment> toEquipmentEntityResponse(List<RoomCreateUpdateEquipDto> dto) {
+    public RoomEquipment toEquipmentEntity(RoomEquipCreateUpdateDto dto) {
+        RoomEquipment equipment = new RoomEquipment();
+        equipment.setName(dto.getName());
+        equipment.setTotalNumber(dto.getTotalNumber());
+        return equipment;
+    }
+
+    public List<RoomEquipment> toEquipmentEntityResponse(List<RoomEquipCreateUpdateDto> dto) {
         List<RoomEquipment> roomEquipmentList = new ArrayList<>();
-        for (RoomCreateUpdateEquipDto roomCreateUpdateEquipDto : dto) {
+        for (RoomEquipCreateUpdateDto roomEquipCreateUpdateDto : dto) {
             RoomEquipment equipment = new RoomEquipment();
-            equipment.setName(roomCreateUpdateEquipDto.getName());
-            equipment.setCount(roomCreateUpdateEquipDto.getCount());
+            equipment.setName(roomEquipCreateUpdateDto.getName());
             roomEquipmentList.add(equipment);
         }
         return roomEquipmentList;
     }
-    public List<RoomCreateUpdateEquipDto> toRoomEquipDto(List<RoomEquipment> dto) {
-        List<RoomCreateUpdateEquipDto> roomEquipmentList = new ArrayList<>();
+
+    public List<RoomEquipCreateUpdateDto> toRoomEquipDto(List<RoomEquipment> dto) {
+        List<RoomEquipCreateUpdateDto> roomEquipmentList = new ArrayList<>();
         for (RoomEquipment roomEquipment : dto) {
-            RoomCreateUpdateEquipDto equipDto = new RoomCreateUpdateEquipDto();
+            RoomEquipCreateUpdateDto equipDto = new RoomEquipCreateUpdateDto();
             equipDto.setName(roomEquipment.getName());
-            equipDto.setCount(roomEquipment.getCount());
             roomEquipmentList.add(equipDto);
         }
         return roomEquipmentList;
@@ -52,7 +63,7 @@ public class RoomEquipmentMapper {
         RoomEquipmentDto dto = new RoomEquipmentDto();
         dto.setId(roomEquipment.getId());
         dto.setName(roomEquipment.getName());
-        dto.setNumber(roomEquipment.getCount());
+        dto.setCount(roomEquipment.getTotalNumber());
         return dto;
     }
 
@@ -60,7 +71,7 @@ public class RoomEquipmentMapper {
         RoomEquipmentDto dto = new RoomEquipmentDto();
         dto.setId(roomEquipment.getId());
         dto.setName(roomEquipment.getName());
-        dto.setNumber(roomEquipment.getDeletedCount());
+//        dto.setTotalNumber(roomEquipment.get());
         return dto;
     }
 
@@ -68,21 +79,21 @@ public class RoomEquipmentMapper {
         List<RoomEquipmentDto> equipmentDtoList = new ArrayList<>();
         for (RoomEquipment equipment : roomEquipment) {
             RoomEquipmentDto dto = new RoomEquipmentDto();
-            dto.setName(equipment.getName());
-            dto.setNumber(equipment.getCount());
             dto.setId(equipment.getId());
+            dto.setName(equipment.getName());
+            dto.setCount(equipment.getTotalNumber());
             equipmentDtoList.add(dto);
         }
         return equipmentDtoList;
     }
 
-    public RoomEquipment toEquipmentUpdate(RoomEquipment roomEquipment, RoomEquipmentDto roomEquipmentDto) {
+    public RoomEquipment toEquipmentUpdate(RoomEquipment roomEquipment, RoomEquipCreateUpdateDto roomEquipmentDto) {
 
         if (roomEquipmentDto.getName() != null) {
             roomEquipment.setName(roomEquipmentDto.getName());
         }
-        if (roomEquipmentDto.getNumber() != 0) {
-            roomEquipment.setCount(roomEquipmentDto.getNumber());
+        if (roomEquipmentDto.getTotalNumber() != 0) {
+            roomEquipment.setTotalNumber(roomEquipmentDto.getTotalNumber());
         }
         return roomEquipment;
     }

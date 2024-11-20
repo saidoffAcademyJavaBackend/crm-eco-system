@@ -7,20 +7,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.Room;
+import uz.saidoff.crmecosystem.entity.RoomCountEquipment;
 import uz.saidoff.crmecosystem.entity.RoomEquipment;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoomStatus;
-import uz.saidoff.crmecosystem.enums.WeekDays;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
+import uz.saidoff.crmecosystem.mapper.RoomEquipmentMapper;
 import uz.saidoff.crmecosystem.mapper.RoomMapper;
-import uz.saidoff.crmecosystem.payload.GroupInfoInRoomResponse;
-import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
-import uz.saidoff.crmecosystem.payload.RoomDto;
-import uz.saidoff.crmecosystem.repository.GroupRepository;
-import uz.saidoff.crmecosystem.repository.RoomEquipmentRepository;
-import uz.saidoff.crmecosystem.repository.RoomRepository;
-import uz.saidoff.crmecosystem.repository.UserRepository;
+import uz.saidoff.crmecosystem.payload.*;
+import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 import java.util.*;
@@ -34,6 +30,9 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RoomEquipmentRepository roomEquipmentRepository;
+    private final RoomEquipmentMapper roomEquipmentMapper;
+    private final RoomCountEquipmentRepository roomCountEquipmentRepository;
 
 
     public ResponseData<?> addRoom(RoomCreateUpdateDto roomDto) {
@@ -100,7 +99,6 @@ public class RoomService {
     public ResponseData<?> deleteRoom(UUID roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(()
                 -> new NotFoundException("room not found"));
-        room.setRoomStatus(RoomStatus.UNAVAILABLE);
         room.setDeleted(true);
         roomRepository.save(room);
         return new ResponseData<>("Room successfully has been deleted", true);
@@ -121,14 +119,14 @@ public class RoomService {
         return new ResponseData<>(roomDtoAssigning, true);
     }
 
-//    public ResponseData<?> getGroupsByRoomId(UUID roomId) {
-//        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(() -> new NotFoundException("room not found"));
-//        List<GroupInfoInRoomResponse> groupsByRoomId = roomAssignmentRepository.getGroupsByRoomId(room.getId());
-//        if (groupsByRoomId.isEmpty()) {
-//            throw new NotFoundException("groups not found");
-//        }
-//        return new ResponseData<>(groupsByRoomId, true);
-//    }
+    public ResponseData<?> getGroupsByRoomId(UUID roomId) {
+        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(() -> new NotFoundException("room not found"));
+        List<GroupInfoInRoomResponse> groupsByRoomId = roomAssignmentRepository.getGroupsByRoomId(room.getId());
+        if (groupsByRoomId.isEmpty()) {
+            throw new NotFoundException("groups not found");
+        }
+        return new ResponseData<>(groupsByRoomId, true);
+    }
 //
 //    public ResponseData<?> updateAssignRoom(UUID roomId, UUID userId, UUID groupId, List<WeekDays> daysAssigned) {
 //        if (daysAssigned == null || daysAssigned.isEmpty()) {

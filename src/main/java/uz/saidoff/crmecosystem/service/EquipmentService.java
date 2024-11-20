@@ -6,10 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.RoomEquipment;
+import uz.saidoff.crmecosystem.enums.Equipment;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.RoomEquipmentMapper;
-import uz.saidoff.crmecosystem.payload.RoomDeletedInfoResponse;
+import uz.saidoff.crmecosystem.payload.RoomEquipCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
 import uz.saidoff.crmecosystem.repository.RoomEquipmentRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
@@ -24,9 +25,9 @@ public class EquipmentService {
     private final RoomEquipmentMapper roomEquipmentMapper;
 
 
-    public ResponseData<?> addEquipment(List<RoomEquipmentDto> equipmentDto) {
-        for (RoomEquipmentDto dto : equipmentDto) {
-            List<RoomEquipment> equipmentList = roomEquipmentRepository.findAllByIdAndDeletedIsFalse(dto.getId());
+    public ResponseData<?> addEquipment(List<RoomEquipCreateUpdateDto> equipmentDto) {
+        for (RoomEquipCreateUpdateDto dto : equipmentDto) {
+            List<RoomEquipment> equipmentList = roomEquipmentRepository.findAllByNameAndDeletedIsFalse(dto.getName());
             if (!equipmentList.isEmpty()) {
                 throw new AlreadyExistException("This Equipment already exists");
             }
@@ -38,7 +39,7 @@ public class EquipmentService {
         return new ResponseData<>(equipmentDtoList, true);
     }
 
-    public ResponseData<?> updateEquipment(UUID equipmentId, RoomEquipmentDto roomEquipmentDto) {
+    public ResponseData<?> updateEquipment(UUID equipmentId, RoomEquipCreateUpdateDto roomEquipmentDto) {
         RoomEquipment equipment = roomEquipmentRepository.findById(equipmentId).orElseThrow(()
                 -> new NotFoundException("Equipment not found"));
         RoomEquipment equipmentUpdate = roomEquipmentMapper.toEquipmentUpdate(equipment, roomEquipmentDto);
@@ -73,30 +74,34 @@ public class EquipmentService {
         return new ResponseData<>(list, true);
     }
 
-    public ResponseData<?> getAllDeletedEquipments(int size, int page) {
-        Pageable pageable = PageRequest.of(size, page);
-        List<RoomDeletedInfoResponse> deletedEquipments = roomEquipmentRepository.getDeletedEquipments(pageable);
-        List<RoomEquipmentDto> list = deletedEquipments
-                .stream()
-                .map(roomEquipmentMapper::toEquipmentDto)
-                .toList();
-        return new ResponseData<>(list, true);
-
-    }
+//    public ResponseData<?> getAllDeletedEquipments(int size, int page) {
+//        Pageable pageable = PageRequest.of(size, page);
+//        List<RoomDeletedInfoResponse> deletedEquipments = roomEquipmentRepository.getDeletedEquipments(pageable);
+//        List<RoomEquipmentDto> list = deletedEquipments
+//                .stream()
+//                .map(roomEquipmentMapper::toEquipmentDto)
+//                .toList();
+//        return new ResponseData<>(list, true);
+//
+//    }
 
     public ResponseData<?> deleteRoomEquipment(UUID equipmentId, int countToDelete) {
         RoomEquipment equipment = roomEquipmentRepository.findByIdAndDeletedFalse(equipmentId)
                 .orElseThrow(() -> new NotFoundException("equipment not found"));
-        if (equipment.getCount() >= countToDelete) {
-            equipment.setCount(equipment.getCount() - countToDelete);
-            equipment.setDeletedCount(equipment.getDeletedCount() + countToDelete);
-            if (equipment.getCount() == 0) {
-                equipment.setDeleted(true);
-            }
-        } else {
-            throw new NotFoundException("Invalid or Insufficient number you required");
-        }
+//        if (equipment.getCount() >= countToDelete) {
+//            equipment.setCount(equipment.getCount() - countToDelete);
+//            equipment.setDeletedCount(equipment.getDeletedCount() + countToDelete);
+//            if (equipment.getCount() == 0) {
+//                equipment.setDeleted(true);
+//            }
+//        } else {
+//            throw new NotFoundException("Invalid or Insufficient number you required");
+//        }
         RoomEquipment roomEquipment = roomEquipmentRepository.save(equipment);
         return new ResponseData<>(roomEquipment, true);
+    }
+
+    public RoomEquipment getEquipmentById(UUID equipmentId){
+     return roomEquipmentRepository.findById(equipmentId).orElseThrow(() -> new NotFoundException("Not Found Equipment"));
     }
 }

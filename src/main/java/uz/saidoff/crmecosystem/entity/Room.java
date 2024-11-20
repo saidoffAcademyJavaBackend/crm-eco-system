@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity(name = "rooms")
-public class Room extends AbsEntity { //todo 1. equipment new table, 2. remove three fields  (status, weekdays, )
+public class Room extends AbsEntity {
 
     @Column(unique = true)
     private String roomName;
@@ -29,17 +29,15 @@ public class Room extends AbsEntity { //todo 1. equipment new table, 2. remove t
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-    @Enumerated(EnumType.STRING)
-    private RoomStatus roomStatus;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RoomEquipment> equipments;
+    @OneToMany
+    public List<RoomCountEquipment> roomCountEquipments;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responsible_person_id")
     private User responsiblePerson;
 
 }
