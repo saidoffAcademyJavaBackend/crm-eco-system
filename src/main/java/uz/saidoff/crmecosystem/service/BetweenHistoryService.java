@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.ForEmployees;
 import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.SalaryHistory;
-import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.EmployeeTransactionRepository;
-import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.UserTransactionRepository;
+import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.EmployeeTransaction;
+import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.UserTransaction;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 import java.sql.Date;
@@ -15,8 +15,8 @@ import java.sql.Date;
 @RequiredArgsConstructor
 public class BetweenHistoryService {
 
-    private final EmployeeTransactionRepository employeeTransaction;
-    private final UserTransactionRepository userTransaction;
+    private final EmployeeTransaction employeeTransaction;
+    private final UserTransaction userTransaction;
 
     public ResponseData<?> salaryHistory(Date start, Date end, SalaryHistory salaryHistory) {
         Double allSalary = this.userTransaction.getTotalSalaryByRoleType(salaryHistory.getRoleType());
@@ -26,7 +26,7 @@ public class BetweenHistoryService {
             throw new NotFoundException("Employee not found");
         }
         forEmployees.setAllSum(allSalary);
-        forEmployees.setMustBePaid(allSalary - forEmployees.getPaid());
+        forEmployees.setMustBePaid(allSalary- forEmployees.getPaid());
         return ResponseData.successResponse(forEmployees);
     }
 

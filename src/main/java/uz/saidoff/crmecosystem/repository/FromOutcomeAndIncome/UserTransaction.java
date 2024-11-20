@@ -3,14 +3,16 @@ package uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.enums.RoleType;
 
 @Service
 @RequiredArgsConstructor
-public class UserTransactionRepository {
+public class UserTransaction {
 
-    private final EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
     public Double getTotalSalaryByRoleType(RoleType roleType) {
         String jpql = "SELECT SUM(u.salary) " +

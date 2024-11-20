@@ -13,7 +13,6 @@ import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
 import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
-import uz.saidoff.crmecosystem.payload.RequestWeekDayStudentDTO;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
@@ -41,7 +40,6 @@ public class StudentService {
     private final GroupStudentRepository groupStudentRepository;
     private final PaymentForMonthService paymentForMonthService;
     private final PaymentForServiceRepository paymentForServiceRepository;
-    private final ProjectUserRepository projectUserRepository;
 
     public ResponseData<?> saved(StudentResponseDto studentResponseDto) throws ParseException {
 
@@ -64,17 +62,14 @@ public class StudentService {
             if (optionalAttachment.isEmpty()) {
                 throw new NotFoundException("attechment not found");
             }
-            attachment = optionalAttachment.get();
+           attachment=optionalAttachment.get();
         }
 
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), attachment);
-
-        GroupStudent groupStudent = new GroupStudent();
-        groupStudent.setStudentId(newUserEntity);
-        groupStudent.setGroupId(group.get());
-        groupStudentRepository.save(groupStudent);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(),attachment);
+        GroupStudent groupStudent = new GroupStudent(group.get(), newUserEntity);
         PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
         paymentForMonthService.creat(paymentForDTO);
+        groupStudentRepository.save(groupStudent);
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
@@ -171,42 +166,5 @@ public class StudentService {
         response.put("total", paymentForMonthPage.getTotalElements());
         response.put("totalPages", paymentForMonthPage.getTotalPages());
         return new ResponseData<>(response, true);
-    }
-
-    public ResponseData<?> getByAllStudentProject(UUID userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("user not found");
-        }
-        User user = optionalUser.get();
-        List<Project> projectList = projectUserRepository.findByProjectsByUserId(user.getId());
-        if (projectList.isEmpty()) {
-            throw new NotFoundException("projects not found");
-        }
-        return ResponseData.successResponse(List.of(projectList));
-    }
-
-    public ResponseData<?> getStudentClassSchedule(UUID studentId) {
-        RequestWeekDayStudentDTO request = new RequestWeekDayStudentDTO();
-        Optional<User> optionalUser = userRepository.findById(studentId);
-        if (optionalUser.isPresent()) {
-            Optional<Group> dayByStudentId = groupStudentRepository.getWeekDayByStudentId(studentId);
-            if (dayByStudentId.isEmpty()) {
-                throw new NotFoundException("There are no students in the group.");
-            }
-            Group group = dayByStudentId.get();
-
-            request.setStudentId(optionalUser.get().getId());
-            request.setGroupName(group.getName());
-            request.setDays(group.getWeekDays());
-            request.setStartTime(group.getStartTime());
-            request.setEndTime(group.getEndTime());
-            request.setCount((int) dayByStudentId.stream().count());
-
-
-        } else {
-            throw new NotFoundException("student not found");
-        }
-        return ResponseData.successResponse(request);
     }
 }

@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OutcomeHistory {
-    private Double amount;
-    private String nameCategory;
-    private Double categoryInterest;
+    private Double FromEmployee;
+    private Double InterestOnEmployee;
+    private Double FromAdvertisement;
+    private Double InterestOnAdvertisement;
+    private Double FromAnother;
+    private Double InterestOnAnother;
+    private Double AllOutcomesSum;
 }

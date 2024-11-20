@@ -76,19 +76,4 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
-    // userga tegishli projectlar
-    @CheckPermission("GET_STUDENT")
-    @GetMapping("/get-all-student-projects/{userId}")
-    public ResponseEntity<?> getAllUsersProject(@PathVariable UUID userId) {
-        ResponseData<?> responseData = studentService.getByAllStudentProject(userId);
-        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
-    }
-
-    @CheckPermission("GET_STUDENT")
-    @GetMapping("/get-student-class-schedule/{studentId}")
-    public ResponseEntity<?> getStudentSchedule(@PathVariable UUID studentId) {
-        ResponseData<?> responseData = studentService.getStudentClassSchedule(studentId);
-        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
-    }
-
 }

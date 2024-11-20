@@ -11,7 +11,9 @@ import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 
 
+import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class StudentMapper {
 
         user.setSalary(studentResponseDto.getSalary());
 
-        user.setStartWork(studentResponseDto.getStartWork());
+        user.setStartWork(new Date(studentResponseDto.getStartWork().getTime()));
 
         return user;
     }
@@ -108,8 +110,8 @@ public class StudentMapper {
         PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
         payment.setGroupStudentId(groupStudent.getStudentId().getId());
         payment.setActive(groupStudent.getGroupId().isActive());
-        payment.setCurrentMonth(true);
-        payment.setStartMonth(null);
+        payment.setCurrentMonth(Boolean.parseBoolean(String.valueOf(groupStudent.getGroupId().getCreatedAt())));
+        payment.setStartMonth(Integer.valueOf(String.valueOf(groupStudent.getGroupId().getStartedDate())));
         payment.setPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
         payment.setAllPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
         payment.setMonth(groupStudent.getGroupId().getStartedDate());

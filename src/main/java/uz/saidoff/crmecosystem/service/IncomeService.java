@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.IncomeHistoryList;
-import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.IncomeTransactionRepository;
+import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.IncomeDto;
+import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.IncomeHistory;
+import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.IncomeTransaction;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 import java.sql.Date;
@@ -14,10 +15,12 @@ import java.sql.Date;
 @RequiredArgsConstructor
 public class IncomeService {
 
-    private final IncomeTransactionRepository incomeTransaction;
+    private final IncomeTransaction incomeTransaction;
 
-    public ResponseData<?> income(Date start, Date end, Currency currency) {
-        IncomeHistoryList incomeHistory = this.incomeTransaction.getIncomeBreakdownBetweenDates(start, end, currency);
+    public ResponseData<?> income(Date start, Date end, Currency currency, IncomeDto incomeDto) {
+        IncomeHistory incomeHistory = this.incomeTransaction.getIncomeBreakdownBetweenDates(start, end, currency,
+                incomeDto.getProject(), incomeDto.getStudent(), incomeDto.getIntern(), incomeDto.getAdvertisement(),
+                incomeDto.getAnother());
         if (incomeHistory==null) {
             throw new NotFoundException("Income history not found");
         }

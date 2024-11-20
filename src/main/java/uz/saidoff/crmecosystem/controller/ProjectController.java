@@ -85,12 +85,4 @@ public class ProjectController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
-    // userga tegishli projectlar
-    @CheckPermission("GET_PROJECT")
-    @GetMapping("/get-user-by-project/{userId}")
-    public ResponseEntity<?> getProjects(@PathVariable UUID userId) {
-        ResponseData<?> responseData = projectService.getProjectByUser(userId);
-        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
-    }
-
 }

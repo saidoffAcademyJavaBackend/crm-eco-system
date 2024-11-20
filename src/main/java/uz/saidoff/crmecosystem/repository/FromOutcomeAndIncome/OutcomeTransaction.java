@@ -3,22 +3,24 @@ package uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeHistory;
-import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeHistoryList;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class OutcomeTransactionRepository {
+public class OutcomeTransaction {
 
-    private final EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
-    public OutcomeHistoryList getOutcomeBreakdownBetweenDates(Date startDate, Date endDate, Currency currency) {
+    public OutcomeHistory getOutcomeBreakdownBetweenDates(Date startDate, Date endDate, Currency currency,
+                                                          String employee, String advertisement, String another) {
         String sql = "SELECT c.name, SUM(t.amount) " +
                 "FROM Transaction t " +
                 "JOIN t.category c " +
@@ -35,27 +37,28 @@ public class OutcomeTransactionRepository {
 
         double totalOutcome = results.stream().mapToDouble(row -> (Double) row[1]).sum();
 
-        return getOutcomeHistoryList(totalOutcome, results);
-    }
-
-    private static OutcomeHistoryList getOutcomeHistoryList(double totalOutcome, List<Object[]> results) {
-        OutcomeHistoryList outcomeHistoryList = new OutcomeHistoryList();
-        outcomeHistoryList.setAllAmount(totalOutcome);
-
-        List<OutcomeHistory> list = new ArrayList<>();
+        OutcomeHistory outcomeHistory = new OutcomeHistory();
+        outcomeHistory.setAllOutcomesSum(totalOutcome);
 
         for (Object[] row : results) {
             String categoryName = (String) row[0];
             double amount = (Double) row[1];
             double percentage = (amount / totalOutcome) * 100;
 
-            OutcomeHistory outcomeHistory = new OutcomeHistory();
-            outcomeHistory.setNameCategory(categoryName);
-            outcomeHistory.setAmount(amount);
-            outcomeHistory.setCategoryInterest(percentage);
-            list.add(outcomeHistory);
+            if (Objects.equals(categoryName, employee)) {
+                outcomeHistory.setFromEmployee(amount);
+                outcomeHistory.setInterestOnEmployee(percentage);
+            }
+            else if (Objects.equals(categoryName, advertisement)) {
+                outcomeHistory.setFromAdvertisement(amount);
+                outcomeHistory.setInterestOnAdvertisement(percentage);
+            }
+            else if (Objects.equals(categoryName, another)) {
+                outcomeHistory.setFromAnother(amount);
+                outcomeHistory.setInterestOnAnother(percentage);
+            }
         }
-        outcomeHistoryList.setOutcomeHistory(list);
-        return outcomeHistoryList;
+
+        return outcomeHistory;
     }
 }

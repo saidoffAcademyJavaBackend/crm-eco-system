@@ -3,6 +3,7 @@ package uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.ForEmployees;
@@ -11,9 +12,10 @@ import java.sql.Date;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeTransactionRepository {
+public class EmployeeTransaction {
 
-    private final EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
     public ForEmployees getEmployeeBreakdownBetweenDates(Date startDate, Date endDate, Currency currency,
                                                         String name, boolean isType) {
