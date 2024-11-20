@@ -3,7 +3,6 @@ package uz.saidoff.crmecosystem.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.enums.Currency;
-import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeDtoForGet;
 import uz.saidoff.crmecosystem.payload.OutcomeCreatDto;
 import uz.saidoff.crmecosystem.payload.OutcomeUpdateDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
@@ -53,8 +52,8 @@ public class OutcomeController {
     @CheckPermission("GET_OUTCOME")
     @GetMapping("get-outcome-history/{start}/{end}/{currency}")
     public ResponseData<?> outcomeHistory(@PathVariable Date start, @PathVariable Date end,
-                                          @PathVariable Currency currency, @RequestBody OutcomeDtoForGet outcomeDtoForGet) {
-        return this.outcomeService.outcome(start, end, currency, outcomeDtoForGet);
+                                          @PathVariable Currency currency) {
+        return this.outcomeService.outcome(start, end, currency);
     }
 
 }

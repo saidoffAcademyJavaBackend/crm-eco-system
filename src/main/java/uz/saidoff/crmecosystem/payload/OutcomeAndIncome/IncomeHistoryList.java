@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IncomeDto {
-    private String project;
-    private String student;
-    private String intern;
-    private String advertisement;
-    private String another;
+public class IncomeHistoryList {
+    private Double AllAmount;
+    private List<IncomeHistory> IncomeHistory;
 }
