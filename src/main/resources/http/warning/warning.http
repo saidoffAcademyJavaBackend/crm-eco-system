@@ -1,5 +1,0 @@
-POST localhost:8081/api/warnings/addWarning
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzMjEiLCJpYXQiOjE3MzE3NjI3MTQsImV4cCI6MTczMjM2NzUxNH0.fIkJleyexC9tiEv4AS5-WiLzuJvLQq4Kwl5YnSvqSHiTp7BycCxh1C_dNHhCD-kw
-
-

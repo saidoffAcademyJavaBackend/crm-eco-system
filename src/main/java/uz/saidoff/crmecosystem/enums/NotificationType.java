@@ -6,6 +6,5 @@ public enum NotificationType {
     BIRTHDAYS,
     HOLIDAYS,
     EVENTS,
-    TASKS,
-    WARNING
+    TASKS
 }
