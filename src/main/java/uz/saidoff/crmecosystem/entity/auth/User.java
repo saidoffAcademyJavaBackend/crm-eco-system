@@ -5,9 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.Notification;
-import uz.saidoff.crmecosystem.entity.Speciality;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Permissions;
 
@@ -53,6 +51,12 @@ public class User extends AbsEntity implements UserDetails {
     @OneToMany
     private List<Notification> notifications;
 
+    @OneToMany
+    private List<ProjectUser> projectUsers;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Warning> warnings;
+
     private boolean enabled = false;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
@@ -74,5 +78,9 @@ public class User extends AbsEntity implements UserDetails {
     @Override
     public String getUsername() {
         return phoneNumber;
+    }
+
+    public Integer getWarning() {
+        return warnings != null ? warnings.size() : 0;
     }
 }

@@ -25,6 +25,12 @@ public enum Permissions {
     UPDATE_TRANSACTION,
     GET_TRANSACTION,
 
+    CREATE_OUTCOME,
+    EDIT_OUTCOME,
+    DELETE_OUTCOME,
+    GET_OUTCOME,
+
+
     GET_ROLE,
     ADD_ROLE,
     UPDATE_ROLE,
@@ -61,6 +67,17 @@ public enum Permissions {
     GET_ALL_EXIST_EQUIPMENTS,
     GET_ALL_EQUIPMENTS,
     GET_ALL_DELETED_EQUIPMENTS,
-    DELETE_EQUIPMENT
+    DELETE_EQUIPMENT,
+
+
+
+
+
+    //******************WARNINGS*******************//
+    ADD_WARNING,
+    GET_WARNING,
+    GET_ALL_WARNINGS,
+    DELETE_ALL_WARNINGS,
+    GET_PUNISHMENT
 
 }
