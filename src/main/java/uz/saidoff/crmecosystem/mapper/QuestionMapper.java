@@ -2,56 +2,64 @@ package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import uz.saidoff.crmecosystem.entity.AnsweredQuestions;
 import uz.saidoff.crmecosystem.entity.Answers;
 import uz.saidoff.crmecosystem.entity.Question;
 import uz.saidoff.crmecosystem.payload.AnswersDto;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
+import uz.saidoff.crmecosystem.service.AnswerService;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
 public class QuestionMapper {
 
-    public Question toQuestionEntity(QuestionCreateDto dto, List<Answers> answersList) {
+
+    private final AnswerService answerService;
+
+    public Question dtoToEntity(QuestionCreateDto questionDto, List<Answers> answer) {
 
         Question question = new Question();
-        question.setQuestion(dto.getQuestion());
-        question.setDescription(dto.getDescription());
-        question.setAnswers(answersList);
-        question.setAttachments(dto.getAttachmentIds());
-        question.setInProcess(false);
-        question.setQuestionnaire(dto.isQuestionnaire());
-        question.setGroups(dto.getGroups());
-        question.setUsers(dto.getUsers());
+
+        question.setQuestion(questionDto.getQuestion());
+        question.setDescription(questionDto.getDescription());
+        question.setAnswers(answer);
+        question.setAttachmentIDs(questionDto.getAttachmentIds());
+        question.setAnsweredQuestions(questionDto.getAnsweredQuestionIds());
+        question.setStartDate(questionDto.getStartDate());
+        question.setEndDate(questionDto.getEndDate());
+        question.setQuestionnaire(questionDto.isQuestionnaire());
+        question.setGroupIDs(questionDto.getGroupIDs());
+        question.setUsersIDs(questionDto.getUserIDs());
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(question.getStartDate())) {
+            question.setInProcess(true);
+        }
 
         return question;
     }
 
-    public QuestionCreateDto toQuestionCreateDto(Question question, List<AnswersDto> answersDtoList) {
+    public QuestionCreateDto entityToDto(Question save) {
 
-        QuestionCreateDto dto = new QuestionCreateDto();
-        dto.setQuestion(question.getQuestion());
-        dto.setDescription(question.getDescription());
-        dto.setAttachmentIds(question.getAttachments());
-        dto.setAnswers(answersDtoList);
+        List<AnswersDto> answersDto = answerService.getAnswersDto(save.getAnswers());
 
-        return dto;
-    }
+        QuestionCreateDto questionDto = new QuestionCreateDto();
 
-    public QuestionCreateDto toQuestionDto(Question question) {
+        questionDto.setQuestion(save.getQuestion());
+        questionDto.setDescription(save.getDescription());
+        questionDto.setAnswers(answersDto);
+        questionDto.setAttachmentIds(save.getAttachmentIDs());
+        questionDto.setAnsweredQuestionIds(save.getAnsweredQuestions());
+        questionDto.setStartDate(save.getStartDate());
+        questionDto.setEndDate(save.getEndDate());
+        questionDto.setQuestionnaire(save.isQuestionnaire());
+        questionDto.setGroupIDs(save.getGroupIDs());
+        questionDto.setUserIDs(save.getUsersIDs());
+        questionDto.setInProcess(save.isInProcess());
 
-        QuestionCreateDto dto = new QuestionCreateDto();
-        dto.setQuestion(question.getQuestion());
-        dto.setDescription(question.getDescription());
-        dto.setAttachmentIds(question.getAttachments());
-        dto.setQuestionId(question.getId());
-        dto.setAnsweredQuestionIds(question.getAnsweredQuestions());
-        dto.setGroups(question.getGroups());
-
-        return dto;
+        return questionDto;
     }
 }

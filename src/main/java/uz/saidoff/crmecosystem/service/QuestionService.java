@@ -4,15 +4,21 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Answers;
+import uz.saidoff.crmecosystem.entity.GroupStudent;
 import uz.saidoff.crmecosystem.entity.Question;
-import uz.saidoff.crmecosystem.mapper.AnswerMapper;
+import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.exception.ForbiddenException;
 import uz.saidoff.crmecosystem.mapper.QuestionMapper;
-import uz.saidoff.crmecosystem.payload.AnswersDto;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
-import uz.saidoff.crmecosystem.payload.QuestionSetDatesDto;
+import uz.saidoff.crmecosystem.payload.UserDto;
+import uz.saidoff.crmecosystem.repository.GroupStudentRepository;
 import uz.saidoff.crmecosystem.repository.QuestionRepository;
+import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.security.JWTProvider;
+import uz.saidoff.crmecosystem.util.UserSession;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,15 +28,24 @@ import java.util.UUID;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final AnswersService answersService;
     private final QuestionMapper questionMapper;
-    private final AnswerMapper answerMapper;
+    private final AnswerService answerService;
+    private final JWTProvider jWTProvider;
+    private final UserSession userSession;
+    private final UserRepository userRepository;
+    private final GroupStudentRepository groupStudentRepository;
 
     public ResponseData<?> createQuestion(QuestionCreateDto questionDto) {
 
-        List<Answers> answers = answersService.createAnswers(questionDto);
+        List<Answers> answer = answerService.createAnswer(questionDto);
 
-        return service(questionDto);
+        Question question = questionMapper.dtoToEntity(questionDto, answer);
+
+        Question save = questionRepository.save(question);
+
+        QuestionCreateDto questionCreateDto = questionMapper.entityToDto(save);
+
+        return new ResponseData<>(questionCreateDto, true);
     }
 
     public ResponseData<?> updateQuestion(QuestionCreateDto questionDto) {
@@ -41,43 +56,39 @@ public class QuestionService {
             throw new EntityNotFoundException("Question not found");
         }
 
-        return service(questionDto);
-    }
-
-    public ResponseData<?> setDates(QuestionSetDatesDto questionSetDatesDto) {
-
-        Optional<Question> byId = questionRepository.findById(questionSetDatesDto.getQuestionId());
-
-        if (byId.isEmpty()) {
-            throw new EntityNotFoundException("Question not found");
-        }
+        List<Answers> answers = answerService.updateAnswers(questionDto.getAnswers());
 
         Question question = byId.get();
-        question.setStartDate(questionSetDatesDto.getStartDate());
-        question.setEndDate(questionSetDatesDto.getEndDate());
-//        question.setInProcess(true);
+
+        question = questionMapper.dtoToEntity(questionDto, answers);
 
         Question save = questionRepository.save(question);
 
-        return new ResponseData<>(questionSetDatesDto, true);
-    }
-
-    public ResponseData<?> service(QuestionCreateDto questionDto) {
-
-        List<Answers> answers = answersService.updateAnswers(questionDto);
-
-        Question question = questionMapper.toQuestionEntity(questionDto, answers);
-
-        Question save = questionRepository.save(question);
-
-        List<AnswersDto> answersDtos = answerMapper.entityToDto(answers);
-
-        QuestionCreateDto questionCreateDto = questionMapper.toQuestionCreateDto(save, answersDtos);
+        QuestionCreateDto questionCreateDto = questionMapper.entityToDto(save);
 
         return new ResponseData<>(questionCreateDto, true);
     }
 
-    public ResponseData<?> getQuestion(UUID id) {
+    public ResponseData<?> getAllQuestions() {
+
+        List<QuestionCreateDto> questionDtoList = new ArrayList<>();
+        List<Question> all = questionRepository.findAll();
+
+        if(all.isEmpty()) {
+            throw new EntityNotFoundException("Question not found");
+        }
+
+        for (Question question : all) {
+
+            QuestionCreateDto questionDto = questionMapper.entityToDto(question);
+
+            questionDtoList.add(questionDto);
+        }
+
+        return new ResponseData<>(questionDtoList, true);
+    }
+
+    public ResponseData<?> getQuestionById(UUID id) {
 
         Optional<Question> byId = questionRepository.findById(id);
 
@@ -87,15 +98,53 @@ public class QuestionService {
 
         Question question = byId.get();
 
-        QuestionCreateDto questionCreateDto = questionMapper.toQuestionDto(question);
+        QuestionCreateDto questionCreateDto = questionMapper.entityToDto(question);
 
         return new ResponseData<>(questionCreateDto, true);
     }
 
-    public ResponseData<?> getAllQuestions() {
+    public ResponseData<?> getQuestionForStudents(UUID id) {
 
-        List<Question> all = questionRepository.findAll();
+        UUID userId = userSession.getUser().getId();
 
-        return null;
+        Optional<Question> questionById = questionRepository.findById(id);
+        Optional<User> userById = userRepository.findById(userId);
+        List<GroupStudent> byStudentId = groupStudentRepository.findByStudentId(userId);
+
+        if (questionById.isEmpty()) {
+            throw new EntityNotFoundException("Question not found");
+        }
+        if (userById.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        Question question = questionById.get();
+
+        for (UUID groupID : question.getGroupIDs()) {
+            for (GroupStudent groupStudent : byStudentId) {
+                if (!groupID.equals(groupStudent.getGroupId())) {
+                    throw new ForbiddenException("This user", "forbidden");
+                }
+            }
+        }
+
+        for (UUID usersID : question.getUsersIDs()) {
+            for (GroupStudent groupStudent : byStudentId) {
+                if(usersID.equals(groupStudent.getStudentId())) {
+                    throw new ForbiddenException("This user", "forbidden");
+                }
+            }
+        }
+
+        QuestionCreateDto questionCreateDto = questionMapper.entityToDto(question);
+
+        return new ResponseData<>(questionCreateDto, true);
+    }
+
+    public ResponseData<?> deleteQuestion(UUID id) {
+
+        questionRepository.deleteById(id);
+
+        return new ResponseData<>(true);
     }
 }

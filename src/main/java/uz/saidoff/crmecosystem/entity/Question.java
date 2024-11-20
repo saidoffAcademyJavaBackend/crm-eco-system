@@ -7,6 +7,7 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,8 +21,8 @@ public class Question extends AbsEntity {
 
     private String description;
 
-    @OneToMany
-    private List<Attachment> attachments;
+    @ElementCollection
+    private List<UUID> attachmentIDs;
 
     private LocalDateTime startDate;
 
@@ -33,13 +34,13 @@ public class Question extends AbsEntity {
     @ManyToMany
     private List<AnsweredQuestions> answeredQuestions;
 
-    @ManyToMany
-    private List<Group> groups;
+    @ElementCollection
+    private List<UUID> groupIDs;
 
-    @ManyToMany
-    private List<User> users;
+    @ElementCollection
+    private List<UUID> usersIDs;
 
-    private boolean isInProcess;
+    private boolean isInProcess = false;
 
     //if true it is questionnaire, else it's test
     private boolean questionnaire = true;
