@@ -117,8 +117,8 @@ public class ProjectService {
             }
         }
 
-        ProjectUser projectUser = new ProjectUser(user, project);
-        projectUserRepository.save(projectUser);
+        ProjectUser projectUser = new ProjectUser(user, project,false);   //false ni ozim qoshib qoydim hatolik berayothani uchun // ToDo Azimbek project bilan project usergan yana boshqa narsa ham qoshuvdim
+        projectUserRepository.save(projectUser);                              // isOwner va yana summasi va currency si  shularni ko'rib tog'irlab qoyarsiz
         return ResponseData.successResponse("user and project succesfuly to saved");
     }
 
