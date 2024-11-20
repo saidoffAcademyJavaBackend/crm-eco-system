@@ -28,7 +28,7 @@ public class StudentResponseDto {
 
     private String role ;
     private Double salary;
-    private java.util.Date startWork;
+    private Date startWork;
 
 
 
