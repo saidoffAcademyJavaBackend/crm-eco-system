@@ -8,15 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IncomeHistory {
-    private Double FromProject;
-    private Double InterestOnProject;
-    private Double FromStudent;
-    private Double InterestOnStudent;
-    private Double FromIntern;
-    private Double InterestOnIntern;
-    private Double FromAdvertisement;
-    private Double InterestOnAdvertisement;
-    private Double FromAnother;
-    private Double InterestOnAnother;
-    private Double AllOutcomesSum;
+    private Double amount;
+    private String nameCategory;
+    private Double categoryInterest;
 }
