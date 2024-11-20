@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.EmployeeCreatDto;
 import uz.saidoff.crmecosystem.payload.EmployeeDto;
+import uz.saidoff.crmecosystem.payload.EmployeeWarningDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.EmployeeService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
@@ -30,7 +31,7 @@ public class EmployeeController {
     }
 
     @CheckPermission("GET_USER")
-    @GetMapping("/{employeeId}")
+    @GetMapping("get/{employeeId}")
     public ResponseData<EmployeeDto> getEmployee(@PathVariable UUID employeeId) {
         return this.employeeService.getUser(employeeId);
     }
@@ -46,6 +47,12 @@ public class EmployeeController {
     @DeleteMapping("delete-employee/{employeeId}")
     public ResponseData<?> deleteEmployee(@PathVariable UUID employeeId) {
         return this.employeeService.deleteEmployee(employeeId);
+    }
+
+    @CheckPermission("EDIT_USER")
+    @PutMapping("employee-warning-edit/{employeeId}")
+    public ResponseData<?> warningEmployee(@PathVariable UUID employeeId, EmployeeWarningDto employeeWarningDto) {
+        return this.employeeService.warningAddAndSubtraction(employeeId,employeeWarningDto);
     }
 
 }

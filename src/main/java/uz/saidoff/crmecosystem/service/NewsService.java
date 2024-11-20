@@ -1,5 +1,6 @@
 package uz.saidoff.crmecosystem.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,14 @@ import java.util.UUID;
 public class NewsService {
     private final NewsMapper newsMapper;
     private final NewsRepository newsRepository;
-    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AttachmentRepository fileRepository;
 
+    @Transactional
     public ResponseData<?> getAllNewsByUserRoles(int size, int page) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Role role = user.getRole();
-        List<News> news = newsRepository.findByRolesAndNewsId(role.getRoleType().name(), size, page * size);
+        List<News> news = newsRepository.findByRolesAndNewsId(String.valueOf(role.getRoleType()), size, page * size);
         if (news.isEmpty()) {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         }
