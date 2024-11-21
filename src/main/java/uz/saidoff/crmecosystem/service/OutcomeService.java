@@ -12,13 +12,12 @@ import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.OutcomeMapper;
 import uz.saidoff.crmecosystem.payload.BalanceUpdateIncomeOutcomeDto;
-import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeDtoForGet;
-import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeHistory;
+import uz.saidoff.crmecosystem.payload.OutcomeAndIncome.OutcomeHistoryList;
 import uz.saidoff.crmecosystem.payload.OutcomeCreatDto;
 import uz.saidoff.crmecosystem.payload.OutcomeUpdateDto;
 import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.repository.CategoryRepository;
-import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.OutcomeTransaction;
+import uz.saidoff.crmecosystem.repository.FromOutcomeAndIncome.OutcomeTransactionRepository;
 import uz.saidoff.crmecosystem.repository.TransactionRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
@@ -37,7 +36,7 @@ public class OutcomeService {
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
     private final BalanceService balanceService;
-    private final OutcomeTransaction outcomeTransaction;
+    private final OutcomeTransactionRepository outcomeTransaction;
 
     public ResponseData<?> creat(OutcomeCreatDto outcomeCreatDto) {
         Optional<Category> category = categoryRepository.findByIdAndDeletedFalse(outcomeCreatDto.getCategoryId());
@@ -126,9 +125,8 @@ public class OutcomeService {
         return ResponseData.successResponse("success");
     }
 
-    public ResponseData<?> outcome(Date start, Date end, Currency currency, OutcomeDtoForGet outcomeDtoForGet) {
-        OutcomeHistory outcomeHistory = this.outcomeTransaction.getOutcomeBreakdownBetweenDates(start, end, currency,
-                outcomeDtoForGet.getEmployee(), outcomeDtoForGet.getAdvertisement(), outcomeDtoForGet.getAnother());
+    public ResponseData<?> outcome(Date start, Date end, Currency currency) {
+        OutcomeHistoryList outcomeHistory = this.outcomeTransaction.getOutcomeBreakdownBetweenDates(start, end, currency);
         if (outcomeHistory == null) {
             throw new NotFoundException("Outcome history not found");
         }
