@@ -30,7 +30,7 @@ public class InternGetDto {
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;
-    private String specialty;
+    private UUID specialtyId;
     private String passportSeries;
     private Double paymentAmount;
     private Date startStudying;
