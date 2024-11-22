@@ -145,7 +145,7 @@ public class ProjectService {
         studentResponseDto.setFirstName(user.getFirstName());
         studentResponseDto.setLastName(user.getLastName());
         studentResponseDto.setFatherName(user.getFatherName());
-        studentResponseDto.setSpecialty(studentResponseDto.getSpecialty());
+        studentResponseDto.setSpecialtyId(studentResponseDto.getSpecialtyId());
         studentResponseDto.setPhoneNumber(user.getPhoneNumber());
         studentResponseDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
         studentResponseDto.setPassportSeries(user.getPassportSeries());

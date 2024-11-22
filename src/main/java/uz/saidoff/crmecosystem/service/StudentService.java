@@ -12,11 +12,8 @@ import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.StudentMapper;
+import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
-import uz.saidoff.crmecosystem.payload.RequestWeekDayStudentDTO;
-import uz.saidoff.crmecosystem.payload.StudentDto;
-import uz.saidoff.crmecosystem.payload.StudentResponseDto;
-import uz.saidoff.crmecosystem.payload.StudentUpdateDto;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
@@ -30,6 +27,9 @@ import static uz.saidoff.crmecosystem.enums.RoleType.STUDENT;
 @Service
 @RequiredArgsConstructor
 public class StudentService {
+    /***
+     * @author Azimbek Shaymanov 14 07
+     */
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final StudentMapper studentMapper;
@@ -49,8 +49,7 @@ public class StudentService {
         if (group.isEmpty()) {
             throw new NotFoundException("group not found");
         }
-
-        Optional<Speciality> byName = specialityRepository.findByName(studentResponseDto.getSpecialty());
+        Optional<Speciality> byName = specialityRepository.findById(studentResponseDto.getSpecialtyId());
         if (byName.isEmpty()) {
             throw new NotFoundException("speciality not found");
         }
@@ -58,16 +57,15 @@ public class StudentService {
         if (byRoleType.isEmpty()) {
             throw new NotFoundException("rot type not found");
         }
-        Attachment attachment = new Attachment();
-        if (studentResponseDto.getAttachmentId() != null) {
-            Optional<Attachment> optionalAttachment = attachmentRepository.findById(studentResponseDto.getAttachmentId());
-            if (optionalAttachment.isEmpty()) {
-                throw new NotFoundException("attechment not found");
-            }
-            attachment = optionalAttachment.get();
-        }
 
-        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get(), attachment);
+        User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
+        // groupStudentRepository.getUserByGroup(newUserEntity.getId()).orElseThrow(() -> new NotFoundException(MessageService.getMessage(MessageKey.USER_ALREADY_REGISTERED)));
+        List<User> idPassportSeries = groupStudentRepository.findByStudentIdPassportSeries(studentResponseDto.getGroupId());
+        for (User user : idPassportSeries) {
+            if (user.getPassportSeries().equals(newUserEntity.getPassportSeries())) {
+                throw new NotFoundException("student already exists");
+            }
+        }
         User saved = userRepository.save(newUserEntity);
         GroupStudent groupStudent = new GroupStudent();
         groupStudent.setStudentId(saved);
@@ -105,14 +103,6 @@ public class StudentService {
 
     }
 
-//    public ResponseData<?> getFiltr(UUID groupId) {
-//        List<User> userList = studentRepository.findByGroupIdAndRoleRoleTypeAndDeletedFalse(groupId, STUDENT);
-//        if (userList.isEmpty()) {
-//            return new ResponseData<>("not found user group", false);
-//        }
-//        return ResponseData.successResponse(userList);
-//    }
-
     public ResponseData<?> updateStudent(UUID studentId, StudentUpdateDto updateDto) {
         Optional<User> optionalUser = studentRepository.findById(studentId);
         if (optionalUser.isEmpty()) {
@@ -132,19 +122,29 @@ public class StudentService {
             user.setRole(roleRepository.findByRoleType(updateDto.getRole().getRoleType()).orElseThrow(()
                     -> new NotFoundException(MessageService.getMessage(MessageKey.ROLE_NOT_FOUND))));
         }
+        if (updateDto.getSalary() != null) {
+            user.setSalary(updateDto.getSalary());
+        }
+        if (updateDto.getNumberOfChildren() != null) {
+            user.setNumberOfChildren(updateDto.getNumberOfChildren());
+        }
         studentRepository.save(user);
         return ResponseData.successResponse(user);
     }
 
     public ResponseData<?> userTransfer(UUID userId) {
-        Optional<User> optionalUser = studentRepository.findByIdAndRoleRoleTypeAndDeletedFalse(userId, STUDENT);
+        Optional<User> optionalUser = studentRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("student not found");
         }
+        Optional<Role> roleType = roleRepository.findByRoleType(RoleType.INTERN);
+        if (roleType.isEmpty()) {
+            throw new NotFoundException("INTERN ->  ... role not found ");
+        }
         User user = optionalUser.get();
-        user.setRole(new Role("intern", RoleType.INTERN));
+        user.setRole(roleType.get());
         userRepository.save(user);
-        return ResponseData.successResponse("student succesfuly intern ");
+        return ResponseData.successResponse("The student successfully transitioned to an intern. ");
     }
 
     public ResponseData<?> getUserById(UUID userId) {
@@ -193,18 +193,18 @@ public class StudentService {
         RequestWeekDayStudentDTO request = new RequestWeekDayStudentDTO();
         Optional<User> optionalUser = userRepository.findById(studentId);
         if (optionalUser.isPresent()) {
-            Optional<Group> dayByStudentId = groupStudentRepository.getWeekDayByStudentId(studentId);
+            User user = optionalUser.get();
+            Optional<Group> dayByStudentId = groupStudentRepository.getWeekDayByStudentId(user.getId());
             if (dayByStudentId.isEmpty()) {
                 throw new NotFoundException("There are no students in the group.");
             }
             Group group = dayByStudentId.get();
-
             request.setStudentId(optionalUser.get().getId());
             request.setGroupName(group.getName());
             request.setDays(group.getWeekDays());
             request.setStartTime(group.getStartTime());
             request.setEndTime(group.getEndTime());
-            request.setCount((int) dayByStudentId.stream().count());
+            request.setCount(groupStudentRepository.countStudentsGroup(group.getId()));
 
 
         } else {
@@ -212,4 +212,27 @@ public class StudentService {
         }
         return ResponseData.successResponse(request);
     }
+
+    public ResponseData<?> getStudentGroups(UUID userId) {
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("user not found");
+        }
+        User user = optionalUser.get();
+        List<Group> studentGroups = groupStudentRepository.getStudentGroups(user.getId());
+
+        StudentGroupsResponseDto responseDto = new StudentGroupsResponseDto();
+        for (Group group : studentGroups) {
+            responseDto.setStudentId(user.getId());
+            responseDto.setGroupsName(group.getName());
+            responseDto.setCount(groupStudentRepository.countStudentsGroup(group.getId()));
+            responseDto.setTeacherName(group.getTeacher().getFirstName());
+        }
+        return ResponseData.successResponse(responseDto);
+    }
+
+    /***
+     * @author Azimbek Shaymanov
+     */
 }
