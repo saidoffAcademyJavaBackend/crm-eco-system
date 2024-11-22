@@ -39,6 +39,8 @@ public class Group extends AbsEntity {
 
     private Double paymentAmount;
 
+    private int groupStage=1;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<WeekDays> weekDays;
