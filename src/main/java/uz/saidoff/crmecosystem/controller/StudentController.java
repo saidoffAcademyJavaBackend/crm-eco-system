@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/student-crud")
+@RequestMapping("/api/v1/student")
 @RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
@@ -63,7 +63,7 @@ public class StudentController {
 
     @CheckPermission("GET_STUDENT")
     @GetMapping("/get-user/{userId}")
-    public ResponseEntity<ResponseData<?>> getUser(@PathVariable UUID userId) {
+    public ResponseEntity<?> getUser(@PathVariable UUID userId) {
         ResponseData<?> responseData = studentService.getUserById(userId);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
     }
@@ -84,11 +84,20 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
     }
 
+    // studentga tegishli dars grafigi
     @CheckPermission("GET_STUDENT")
     @GetMapping("/get-student-class-schedule/{studentId}")
     public ResponseEntity<?> getStudentSchedule(@PathVariable UUID studentId) {
         ResponseData<?> responseData = studentService.getStudentClassSchedule(studentId);
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
+    }
+
+    // studentning guruxlari
+    @CheckPermission("GET_STUDENT")
+    @GetMapping("/get-student-groups/{studentId}")
+    public ResponseEntity<?> getStudentByGroups(@PathVariable UUID studentId) {
+        ResponseData<?> studentGroups = studentService.getStudentGroups(studentId);
+        return ResponseEntity.status(studentGroups.isSuccess() ? 200 : 409).body(studentGroups);
     }
 
 }

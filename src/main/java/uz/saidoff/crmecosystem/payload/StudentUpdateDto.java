@@ -16,5 +16,7 @@ public class StudentUpdateDto {
     private String lastName;
     private String phoneNumber;
     private boolean enabled;
+    private String numberOfChildren;
+    private Double salary;
     private Role role;
 }
