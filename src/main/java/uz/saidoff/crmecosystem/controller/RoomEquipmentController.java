@@ -20,29 +20,38 @@ public class RoomEquipmentController {
 
     private final EquipmentService equipmentService;
 
-    @CheckPermission("ADD_EQUIPMENT")
-    @PostMapping("add_equipment")
+    @CheckPermission("ADD_EQUIPMENT") //done...
+    @PostMapping("/add_equipment")
     public HttpEntity<?> addEquipment(@RequestBody List<RoomEquipCreateUpdateDto> equipmentDto) {
         ResponseData<?> responseData = equipmentService.addEquipment(equipmentDto);
         return ResponseEntity.ok(responseData);
     }
 
     @CheckPermission("UPDATE_EQUIPMENT")
-    @PutMapping("update_equipment/{equipmentId}")
-    public HttpEntity<?> updateEquipment(@PathVariable("equipmentId") UUID equipmentId, @RequestBody RoomEquipCreateUpdateDto roomEquipmentDto) {
+    @PutMapping("/update_equipment/{equipmentId}")
+    public HttpEntity<?> updateEquipment(@PathVariable("equipmentId") UUID equipmentId,
+                                         @RequestBody RoomEquipCreateUpdateDto roomEquipmentDto) {
         ResponseData<?> responseData = equipmentService.updateEquipment(equipmentId, roomEquipmentDto);
         return ResponseEntity.ok(responseData);
     }
 
+    @CheckPermission("UPDATE_EQUIPMENT")
+    @PutMapping("/addEquipment/{equipmentId}")
+    public HttpEntity<?> addEquipmentToExistEquipment(@PathVariable("equipmentId") UUID equipmentId,
+                                                      @RequestParam Integer equipmentCount) {
+        ResponseData<?> responseData = equipmentService.addEquipmentToExistEquipment(equipmentId, equipmentCount);
+        return ResponseEntity.ok(responseData);
+    }
+
     @CheckPermission("GET_EQUIPMENT")
-    @GetMapping("getEquipment/{equipmentId}")
+    @GetMapping("/getEquipment/{equipmentId}")
     public HttpEntity<?> getEquipment(@PathVariable("equipmentId") UUID equipmentId) {
         ResponseData<?> roomEquipment = equipmentService.getRoomEquipment(equipmentId);
         return ResponseEntity.ok(roomEquipment);
     }
 
     @CheckPermission("GET_ALL_EXIST_EQUIPMENTS")
-    @GetMapping("get_all_exist_equipments")
+    @GetMapping("/get_all_exist_equipments")
     public HttpEntity<?> getAllExistEquipments(@RequestParam(value = "size", defaultValue = "0") int size,
                                                @RequestParam(value = "page", defaultValue = "10") int page) {
         ResponseData<?> allEquipments = equipmentService.getAllExistEquipments(size, page);
@@ -50,24 +59,32 @@ public class RoomEquipmentController {
     }
 
     @CheckPermission("GET_ALL_EQUIPMENTS")
-    @GetMapping("get_all_equipments")
+    @GetMapping("/get_all_equipments")
     public HttpEntity<?> getAllEquipments(@RequestParam(value = "size", defaultValue = "0") int size,
-                                               @RequestParam(value = "page", defaultValue = "10") int page) {
+                                          @RequestParam(value = "page", defaultValue = "10") int page) {
         ResponseData<?> allEquipments = equipmentService.getAllEquipments(size, page);
         return ResponseEntity.ok(allEquipments);
     }
-    @CheckPermission("GET_ALL_DELETED_EQUIPMENTS")
-    @GetMapping("get_all_deleted_equipments")
-    public HttpEntity<?> getAllDeletedEquipments(@RequestParam(value = "size", defaultValue = "0") int size,
-                                          @RequestParam(value = "page", defaultValue = "10") int page) {
+//    @CheckPermission("GET_ALL_DELETED_EQUIPMENTS")
+//    @GetMapping("/get_all_deleted_equipments")
+//    public HttpEntity<?> getAllDeletedEquipments(@RequestParam(value = "size", defaultValue = "0") int size,
+//                                          @RequestParam(value = "page", defaultValue = "10") int page) {
 //        ResponseData<?> allEquipments = equipmentService.getAllDeletedEquipments(size, page);
-        return ResponseEntity.ok(null);
+//        return ResponseEntity.ok(null);
+//    }
+
+    @CheckPermission("DELETE_EQUIPMENT")
+    @DeleteMapping("/delete-equipment/{equipmentId}")
+    public HttpEntity<?> deleteEquipment(@PathVariable("equipmentId") UUID equipmentId) {
+        ResponseData<?> responseData = equipmentService.deleteRoomEquipment(equipmentId);
+        return ResponseEntity.ok(responseData);
     }
 
     @CheckPermission("DELETE_EQUIPMENT")
-    @DeleteMapping("/delete_equipment/{equipmentId}")
-    public HttpEntity<?> deleteEquipment(@PathVariable("equipmentId") UUID equipmentId, @RequestParam("number") int number) {
-        ResponseData<?> responseData = equipmentService.deleteRoomEquipment(equipmentId, number);
+    @DeleteMapping("/delete-some-equipment/{equipmentId}")
+    public HttpEntity<?> deleteSomeEquipment(@PathVariable("equipmentId") UUID equipmentId,
+                                             @RequestParam(name = "toDeleteCount") Integer toDeleteCount) {
+        ResponseData<?> responseData = equipmentService.deleteSomeEquipment(equipmentId, toDeleteCount);
         return ResponseEntity.ok(responseData);
     }
 }

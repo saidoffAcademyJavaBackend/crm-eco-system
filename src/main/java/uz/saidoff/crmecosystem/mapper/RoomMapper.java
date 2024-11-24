@@ -8,10 +8,7 @@ import uz.saidoff.crmecosystem.entity.RoomCountEquipment;
 import uz.saidoff.crmecosystem.entity.RoomEquipment;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
-import uz.saidoff.crmecosystem.payload.RoomDto;
-import uz.saidoff.crmecosystem.payload.RoomEquipCountDto;
-import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
+import uz.saidoff.crmecosystem.payload.*;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.service.EquipmentService;
 
@@ -52,33 +49,18 @@ public class RoomMapper {
         List<RoomCountEquipment> countEquipments = new ArrayList<>();
         for (RoomEquipCountDto roomEquipCountDto : roomCountEquipmentList) {
             RoomCountEquipment countEquipment = new RoomCountEquipment();
+            countEquipment.setId(roomEquipCountDto.getId());
             countEquipment.setCount(roomEquipCountDto.getCount());
             countEquipments.add(countEquipment);
         }
         return countEquipments;
     }
 
-    public List<RoomEquipCountDto> toRoomCountEquipmentDto(List<RoomCountEquipment> roomCountEquipments) {
-        List<RoomEquipCountDto> roomCountEquipmentList = new ArrayList<>();
-        for (RoomCountEquipment roomCountEquipment : roomCountEquipments) {
-            RoomEquipCountDto countDto = new RoomEquipCountDto();
-            countDto.setId(roomCountEquipment.getId());
-            countDto.setCount(roomCountEquipment.getCount());
-            roomCountEquipmentList.add(countDto);
-        }
-        return roomCountEquipmentList;
-    }
-
-    public List<RoomEquipment> toRoomEquipmentEntity(List<RoomEquipmentDto> roomEquipmentDtoList) {
-        List<RoomEquipment> roomEquipments = new ArrayList<>();
-        for (RoomEquipmentDto equipmentDto : roomEquipmentDtoList) {
-            RoomEquipment equipment = new RoomEquipment();
-            equipment.setId(equipmentDto.getId());
-            equipment.setName(equipmentDto.getName());
-            equipment.setTotalNumber(equipmentDto.getCount());
-            roomEquipments.add(equipment);
-        }
-        return roomEquipments;
+    public RoomCountEquipment toRoomCountEquipmentEntity(RoomEquipCountDto roomCountEquipment) {
+        RoomCountEquipment countDto = new RoomCountEquipment();
+        countDto.setId(roomCountEquipment.getId());
+        countDto.setCount(roomCountEquipment.getCount());
+        return countDto;
     }
 
 
@@ -121,6 +103,23 @@ public class RoomMapper {
         return roomDto;
     }
 
+    public RoomResponseDto toRoomResponseDto(Room room) {
+        RoomResponseDto roomDto = new RoomResponseDto();
+        roomDto.setId(room.getId());
+        roomDto.setRoomName(room.getRoomName());
+        roomDto.setCapacity(room.getCapacity());
+        roomDto.setComment(room.getComment());
+        roomDto.setRoomType(room.getRoomType());
+        roomDto.setRoomEquipCountDtoList(room
+                .getRoomCountEquipments()
+                .stream()
+                .map(value -> new RoomEquipCountDto(
+                        value.getId(),
+                        value.getCount()))
+                .toList());
+        return roomDto;
+    }
+
     public RoomDto toRoomDtoAssigning(Room room) {
         RoomDto roomDto = new RoomDto();
         roomDto.setId(room.getId());
@@ -134,7 +133,12 @@ public class RoomMapper {
     }
 
     public Room toRoomUpdateEntity(Room room, RoomCreateUpdateDto roomDto) {
-
+        List<RoomEquipCountDto> countDtoList = roomDto.getRoomEquipCountDtoList();
+        List<RoomCountEquipment> roomCountEquipmentList = new ArrayList<>();
+        for (RoomEquipCountDto countDto : countDtoList) {
+            roomCountEquipmentList.add(toRoomCountEquipmentEntity(countDto));
+            roomCountEquipmentRepository.saveAll(roomCountEquipmentList);
+        }
         if (roomDto.getRoomName() != null) {
             room.setRoomName(roomDto.getRoomName());
         }
@@ -146,6 +150,9 @@ public class RoomMapper {
         }
         if (roomDto.getRoomType() != null) {
             room.setRoomType(roomDto.getRoomType());
+        }
+        if (roomDto.getRoomEquipCountDtoList() != null) {
+            room.setRoomCountEquipments(roomCountEquipmentList);
         }
         return room;
     }

@@ -42,7 +42,7 @@ public class RoomService {
         }
         Room room = roomMapper.toRoomEntity(roomDto);
         Room addedRoom = roomRepository.save(room);
-        RoomCreateUpdateDto mapperRoomDto = roomMapper.toRoomDto(addedRoom);
+        RoomResponseDto mapperRoomDto = roomMapper.toRoomResponseDto(addedRoom);
         return new ResponseData<>(mapperRoomDto, true);
     }
 
@@ -51,23 +51,23 @@ public class RoomService {
                 -> new NotFoundException("room not found"));
         Room updatedRoom = roomMapper.toRoomUpdateEntity(room, roomDto);
         Room savedRoom = roomRepository.save(updatedRoom);
-        roomMapper.toRoomDto(savedRoom);
-        return new ResponseData<>("Room has been successfully updated", true);
+//        RoomResponseDto mapperRoomDto = roomMapper.toRoomResponseDto(savedRoom);
+        return new ResponseData<>("Room has been successfully updated: " + savedRoom, true);
     }
 
     public ResponseData<?> getRoom(UUID roomId) {
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new NotFoundException("room not found"));
-        RoomCreateUpdateDto mapperRoomDto = roomMapper.toRoomDto(room);
+        RoomResponseDto mapperRoomDto = roomMapper.toRoomResponseDto(room);
         return new ResponseData<>(mapperRoomDto, true);
     }
 
     public ResponseData<?> getAllRooms(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Room> roomPage = roomRepository.findAll(pageable);
-        List<RoomCreateUpdateDto> list = roomPage
+        List<RoomResponseDto> list = roomPage
                 .stream()
-                .map(roomMapper::toRoomDto)
+                .map(roomMapper::toRoomResponseDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("Rooms:", list);
@@ -79,9 +79,9 @@ public class RoomService {
     public ResponseData<?> getAvailableRoom(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Room> roomList = roomRepository.findAllByDeletedIsFalse(pageable);
-        List<RoomCreateUpdateDto> list = roomList
+        List<RoomResponseDto> list = roomList
                 .stream()
-                .map(roomMapper::toRoomDto)
+                .map(roomMapper::toRoomResponseDto)
                 .toList();
         return new ResponseData<>(list, true);
     }

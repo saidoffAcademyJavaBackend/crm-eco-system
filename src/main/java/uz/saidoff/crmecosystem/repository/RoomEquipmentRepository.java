@@ -18,6 +18,7 @@ public interface RoomEquipmentRepository extends JpaRepository<RoomEquipment, UU
 
 
     Optional<RoomEquipment> findByIdAndDeletedFalse(UUID equipmentId);
+
     List<RoomEquipment> findByIdAndDeletedIsFalse(UUID equipmentId);
 
     List<RoomEquipment> findAllByNameAndDeletedIsFalse(String name);
