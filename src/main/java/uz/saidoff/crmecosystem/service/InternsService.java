@@ -112,7 +112,7 @@ public class InternsService {
         return ResponseData.successResponse("intern deleted successfully");
     }
 
-    public ResponseData<?> update(InternGetDto internGetDto) {
+    public ResponseData<?> update(InternGetDto internGetDto,String password) {
         Optional<User> optionalIntern = internsRepository.findById(internGetDto.getInterId());
         if (optionalIntern.isEmpty()) {
             throw new NotFoundException("intern not found");
@@ -134,7 +134,7 @@ public class InternsService {
             attachment = optionalAttachment.get();
         }
         User intern = optionalIntern.get();
-        intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get());
+        intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get(),password);
         internsRepository.save(intern);
         return ResponseData.successResponse("intern updated successfully");
     }
