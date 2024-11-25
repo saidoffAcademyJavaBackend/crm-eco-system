@@ -1,16 +1,12 @@
 package uz.saidoff.crmecosystem.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
-import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
+import uz.saidoff.crmecosystem.enums.Currency;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 
 @Getter
@@ -23,6 +19,9 @@ public class Project extends AbsEntity {
     private String name;
     private Date startDate;
     private Date endDate;
+    private Double price;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
     @OneToMany
     private List<ProjectUser> projectUsers;
