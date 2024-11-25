@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.ProjectUser;
@@ -18,6 +19,8 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class InternsMapper {
+    private final PasswordEncoder passwordEncoder;
+
     public InternGetDto toInternGetDto(User user) {
         InternGetDto internGetDto = new InternGetDto();
         internGetDto.setInterId((user.getId()));
@@ -42,6 +45,7 @@ public class InternsMapper {
 
     public User toUser(UUID userId, InternAddDto internAddDto, Speciality speciality, Role role, Optional<Attachment> attachment) {
         User user = new User();
+        user.setPassword(passwordEncoder.encode(internAddDto.getPassword()));
         user.setBirthPlace(internAddDto.getBirthPlace());
         user.setFirstName(internAddDto.getFirsName());
         user.setLastName(internAddDto.getLastName());
@@ -62,7 +66,7 @@ public class InternsMapper {
         return user;
     }
 
-    public User toUpdateUser(User intern, InternGetDto internGetDto, Attachment attachment, Role role, Speciality speciality) {
+    public User     toUpdateUser(User intern, InternGetDto internGetDto, Attachment attachment, Role role, Speciality speciality,String password) {
         intern.setFirstName(internGetDto.getFirsName());
         intern.setLastName(internGetDto.getLastName());
         intern.setFatherName(internGetDto.getFatherName());
@@ -76,7 +80,12 @@ public class InternsMapper {
         intern.setCurrentResidence(internGetDto.getCurrentResidence());
         intern.setStartStudying(new Date(internGetDto.getStartStudying().getTime()));
         intern.setSpeciality(speciality);
-        intern.setAttachment(attachment);
+        intern.setGender(internGetDto.isGender());
+        intern.setSalary(internGetDto.getPaymentAmount());
+        if (password != null)
+            intern.setPassword(passwordEncoder.encode(password));
+        if(attachment.getId() != null)
+            intern.setAttachment(attachment);
         return intern;
     }
 

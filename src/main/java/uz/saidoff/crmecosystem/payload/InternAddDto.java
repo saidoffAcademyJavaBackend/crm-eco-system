@@ -20,6 +20,7 @@ public class InternAddDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
+    private String password;
     private UUID attachmentId;
     private Date birthDate;
     private String birthPlace;
