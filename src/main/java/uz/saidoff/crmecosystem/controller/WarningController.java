@@ -22,7 +22,7 @@ public class WarningController {
 
     @CheckPermission("ADD_WARNING")
     @PostMapping("/addWarning/{userId}")
-    public HttpEntity<?> addWarning(@RequestParam("userId") UUID userId,
+    public HttpEntity<?> addWarning(@PathVariable("userId") UUID userId,
                                     @RequestParam String reason) {
         ResponseData<?> responseData = warningService.addWarning(userId, reason);
         return ResponseEntity.ok(responseData);
@@ -51,5 +51,12 @@ public class WarningController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         ResponseData<?> punishments = warningService.getPunishments(page, size);
         return ResponseEntity.ok(punishments);
+    }
+
+    @CheckPermission("GET_WARNING")
+    @GetMapping("/getWarningsByUserId/{userId}")
+    public HttpEntity<?> getWarningsByUserId(@PathVariable(name = "userId") UUID userId) {
+        ResponseData<?> allWarningsByUserId = warningService.getAllWarningsByUserId(userId);
+        return ResponseEntity.ok(allWarningsByUserId);
     }
 }
