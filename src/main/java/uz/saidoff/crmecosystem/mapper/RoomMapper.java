@@ -48,10 +48,11 @@ public class RoomMapper {
     public List<RoomCountEquipment> toRoomCountEquipmentEntity(List<RoomEquipCountDto> roomCountEquipmentList) {
         List<RoomCountEquipment> countEquipments = new ArrayList<>();
         for (RoomEquipCountDto roomEquipCountDto : roomCountEquipmentList) {
-            RoomCountEquipment countEquipment = new RoomCountEquipment();
-            countEquipment.setId(roomEquipCountDto.getId());
-            countEquipment.setCount(roomEquipCountDto.getCount());
-            countEquipments.add(countEquipment);
+            RoomCountEquipment equipment = roomCountEquipmentRepository.findById(roomEquipCountDto.getId()).orElseThrow(
+                    () -> new NotFoundException("Equipment not found"));
+            equipment.setCount(roomEquipCountDto.getCount());
+            countEquipments.add(equipment);
+
         }
         return countEquipments;
     }
@@ -133,12 +134,7 @@ public class RoomMapper {
     }
 
     public Room toRoomUpdateEntity(Room room, RoomCreateUpdateDto roomDto) {
-        List<RoomEquipCountDto> countDtoList = roomDto.getRoomEquipCountDtoList();
-        List<RoomCountEquipment> roomCountEquipmentList = new ArrayList<>();
-        for (RoomEquipCountDto countDto : countDtoList) {
-            roomCountEquipmentList.add(toRoomCountEquipmentEntity(countDto));
-            roomCountEquipmentRepository.saveAll(roomCountEquipmentList);
-        }
+
         if (roomDto.getRoomName() != null) {
             room.setRoomName(roomDto.getRoomName());
         }
@@ -152,7 +148,7 @@ public class RoomMapper {
             room.setRoomType(roomDto.getRoomType());
         }
         if (roomDto.getRoomEquipCountDtoList() != null) {
-            room.setRoomCountEquipments(roomCountEquipmentList);
+            room.setRoomCountEquipments(toRoomCountEquipmentEntity(roomDto.getRoomEquipCountDtoList()));
         }
         return room;
     }
