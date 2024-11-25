@@ -22,7 +22,6 @@ public class GroupDto {
     private Time startTime;
     private Time endTime;
     private Date startDate;
-    private int groupStage;
     private String linkOfTelegram;
     private UUID groupTypeId;
     private List<WeekDays> weekDays;

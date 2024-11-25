@@ -15,7 +15,6 @@ public class TransactionIncomeMapper {
         transaction.setAmount(transactionIncomeAddDto.getAmount());
         transaction.setDescription(transactionIncomeAddDto.getDescription());
         transaction.setIsIncome(true);
-        transaction.setCurrency(transactionIncomeAddDto.getCurrency());
         return transaction;
     }
 }

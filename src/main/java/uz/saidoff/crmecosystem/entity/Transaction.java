@@ -1,8 +1,6 @@
 package uz.saidoff.crmecosystem.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +19,6 @@ public class Transaction extends AbsEntity {
     private String description;
     @ManyToOne
     private Category category;
-    @Enumerated(EnumType.STRING)
     private Currency currency;
     private Boolean isIncome;
     @ManyToOne

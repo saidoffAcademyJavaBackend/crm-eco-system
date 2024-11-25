@@ -1,7 +1,6 @@
 package uz.saidoff.crmecosystem.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.GroupStudent;
@@ -16,10 +15,6 @@ import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
-
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,26 +59,5 @@ public class GroupService {
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
                 groups.stream().map(groupMapper::toDto).toList());
-    }
-
-
-
-    @Scheduled(cron = "0 0 2 * * ?")
-    public void updateGroupStage(){
-        List<Group> allByDeletedIsFalse = groupRepository.findAllByDeletedIsFalse();
-        if (!allByDeletedIsFalse.isEmpty()){
-            Period period;
-            for (Group group : allByDeletedIsFalse){
-                Date startedDate = group.getStartedDate();
-                int groupStage = group.getGroupStage();
-                LocalDate now = LocalDate.now();
-                period = Period.between(startedDate.toLocalDate(), now);
-                int monthDifference = period.getYears()*12+period.getMonths();
-                if (monthDifference+1 > groupStage){
-                    group.setGroupStage(groupStage+1);
-                    groupRepository.save(group);
-                }
-            }
-        }
     }
 }

@@ -24,7 +24,7 @@ public class InternAddDto {
     private Date birthDate;
     private String birthPlace;
     private String currentResidence;
-    private UUID specialtyId;
+    private String specialty;
     private String passportSeries;
     private Double paymentAmount;
     private Date startStudying;

@@ -17,6 +17,7 @@ import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -116,8 +117,8 @@ public class ProjectService {
             }
         }
 
-        ProjectUser projectUser = new ProjectUser(user, project,false);   //false ni ozim qoshib qoydim hatolik berayothani uchun // ToDo Azimbek project bilan project usergan yana boshqa narsa ham qoshuvdim
-        projectUserRepository.save(projectUser);                              // isOwner va yana summasi va currency si  shularni ko'rib tog'irlab qoyarsiz
+        ProjectUser projectUser = new ProjectUser(user, project);
+        projectUserRepository.save(projectUser);
         return ResponseData.successResponse("user and project succesfuly to saved");
     }
 
