@@ -29,8 +29,9 @@ public class Room extends AbsEntity {
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-    @OneToMany
-    public List<RoomCountEquipment> roomCountEquipments;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<RoomCountEquipment> roomCountEquipments;
 
     @ManyToOne
     @JoinColumn(name = "group_id")

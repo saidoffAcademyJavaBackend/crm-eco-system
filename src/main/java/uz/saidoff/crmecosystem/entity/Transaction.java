@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Currency;
 
@@ -23,4 +24,8 @@ public class Transaction extends AbsEntity {
     private Boolean isIncome;
     @ManyToOne
     private Attachment attachment;
+
+    @ManyToOne
+    private User transactor;
+
 }
