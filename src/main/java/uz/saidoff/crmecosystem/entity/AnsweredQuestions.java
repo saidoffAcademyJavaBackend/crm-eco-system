@@ -5,6 +5,8 @@ import lombok.*;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,6 +14,9 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @Builder
 @Entity(name = "answered_questions")
 public class AnsweredQuestions extends AbsEntity {
+
+    @ManyToOne
+    private Question questions;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)

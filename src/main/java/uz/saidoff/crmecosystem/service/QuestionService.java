@@ -10,14 +10,13 @@ import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.ForbiddenException;
 import uz.saidoff.crmecosystem.mapper.QuestionMapper;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
-import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.repository.GroupStudentRepository;
 import uz.saidoff.crmecosystem.repository.QuestionRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.security.JWTProvider;
 import uz.saidoff.crmecosystem.util.UserSession;
 
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +29,15 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
     private final AnswerService answerService;
-    private final JWTProvider jWTProvider;
     private final UserSession userSession;
     private final UserRepository userRepository;
     private final GroupStudentRepository groupStudentRepository;
 
     public ResponseData<?> createQuestion(QuestionCreateDto questionDto) {
+
+        if (questionDto.getStartDate().isAfter(questionDto.getEndDate())) {
+            throw new DateTimeException("Start date cannot be after end date");
+        }
 
         List<Answers> answer = answerService.createAnswer(questionDto);
 

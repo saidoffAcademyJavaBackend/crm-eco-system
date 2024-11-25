@@ -26,7 +26,6 @@ public class QuestionMapper {
         question.setDescription(questionDto.getDescription());
         question.setAnswers(answer);
         question.setAttachmentIDs(questionDto.getAttachmentIds());
-        question.setAnsweredQuestions(questionDto.getAnsweredQuestionIds());
         question.setStartDate(questionDto.getStartDate());
         question.setEndDate(questionDto.getEndDate());
         question.setQuestionnaire(questionDto.isQuestionnaire());
@@ -35,7 +34,7 @@ public class QuestionMapper {
 
         LocalDateTime now = LocalDateTime.now();
 
-        if (now.isAfter(question.getStartDate())) {
+        if (now.isAfter(question.getStartDate()) && now.isBefore(question.getEndDate())) {
             question.setInProcess(true);
         }
 
@@ -52,7 +51,6 @@ public class QuestionMapper {
         questionDto.setDescription(save.getDescription());
         questionDto.setAnswers(answersDto);
         questionDto.setAttachmentIds(save.getAttachmentIDs());
-        questionDto.setAnsweredQuestionIds(save.getAnsweredQuestions());
         questionDto.setStartDate(save.getStartDate());
         questionDto.setEndDate(save.getEndDate());
         questionDto.setQuestionnaire(save.isQuestionnaire());

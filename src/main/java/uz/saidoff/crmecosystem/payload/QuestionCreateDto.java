@@ -19,7 +19,6 @@ public class QuestionCreateDto {
     private List<UUID> attachmentIds;
     private List<AnswersDto> answers;
     private List<UUID> answerIds;
-    private List<AnsweredQuestions> answeredQuestionIds;
     private boolean questionnaire;
     private boolean inProcess;
     private List<UUID> groupIDs;
