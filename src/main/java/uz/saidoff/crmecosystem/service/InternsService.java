@@ -80,7 +80,7 @@ public class InternsService {
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        Optional<Speciality> optionalSpeciality = specialityRepository.findByName(internAddDto.getSpecialty());
+        Optional<Speciality> optionalSpeciality = specialityRepository.findByIdAndDeletedFalse(internAddDto.getSpecialtyId());
         if (optionalSpeciality.isEmpty()) {
             throw new NotFoundException("Speciality not found");
         }
@@ -117,7 +117,7 @@ public class InternsService {
         if (optionalIntern.isEmpty()) {
             throw new NotFoundException("intern not found");
         }
-        Optional<Speciality> optionalSpeciality = specialityRepository.findByName(internGetDto.getSpecialty());
+        Optional<Speciality> optionalSpeciality = specialityRepository.findByIdAndDeletedFalse(internGetDto.getSpecialtyId());
         if (optionalSpeciality.isEmpty()) {
             throw new NotFoundException("Speciality not found");
         }

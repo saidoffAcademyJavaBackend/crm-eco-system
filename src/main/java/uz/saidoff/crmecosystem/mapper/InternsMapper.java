@@ -29,7 +29,7 @@ public class InternsMapper {
         internGetDto.setPassportSeries(user.getPassportSeries());
         internGetDto.setPhoneNumber(user.getPhoneNumber());
         internGetDto.setSecondPhoneNumber(user.getSecondPhoneNumber());
-        internGetDto.setSpecialty(user.getSpeciality().getName());
+        internGetDto.setSpecialtyId(user.getSpeciality().getId());
         internGetDto.setCurrentResidence(user.getCurrentResidence());
         internGetDto.setPaymentAmount(user.getSalary());
         internGetDto.setStartStudying(user.getStartStudying());
