@@ -1,12 +1,15 @@
 package uz.saidoff.crmecosystem.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.payload.PasswordUpdateDto;
 import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.UserService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
+import uz.saidoff.crmecosystem.valid.PasswordValidate;
 
 import java.util.UUID;
 
@@ -42,7 +45,11 @@ public class UserController {
         return this.userService.getAllUser(page,size);
     }
 
-
+    @CheckPermission("EDIT_USER")  //TODO Shu yerda ham Edit user ham UPDATE_INTERN yoki UPDATE_Studentga hammasiga mos keladiganligiga tekshirish kk
+    @PostMapping("update-password/{userId}")
+    public ResponseData<?> updatePassword(@PathVariable(required = false) UUID userId, @Valid @RequestBody PasswordUpdateDto passwordUpdateDto) {
+        return this.userService.updatePassword(userId,passwordUpdateDto);
+    }
 
 
 }
