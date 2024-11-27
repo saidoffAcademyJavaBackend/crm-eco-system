@@ -17,7 +17,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-    @CheckPermission("CREATE_TASK")
+//    @CheckPermission("CREATE_TASK")
     @PostMapping("")
     public ResponseEntity<?> createQuestion(@RequestBody QuestionCreateDto questionDto) {
 
@@ -26,7 +26,7 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
-    @CheckPermission("UPDATE_TASK")
+//    @CheckPermission("UPDATE_TASK")
     @PutMapping("")
     public ResponseEntity<?> updateQuestion(@RequestBody QuestionCreateDto questionDto) {
 
@@ -35,7 +35,7 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
-    @CheckPermission("GET_TASK")
+//    @CheckPermission("GET_TASK")
     @GetMapping("/all")
     public ResponseEntity<?> getAllQuestions() {
 
@@ -44,7 +44,7 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
-    @CheckPermission("GET_TASK")
+//    @CheckPermission("GET_TASK")
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuestion(@PathVariable UUID id) {
 
@@ -61,7 +61,7 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
-    @CheckPermission("DELETE_TASK")
+//    @CheckPermission("DELETE_TASK")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteQuestionById(@PathVariable UUID id) {
 

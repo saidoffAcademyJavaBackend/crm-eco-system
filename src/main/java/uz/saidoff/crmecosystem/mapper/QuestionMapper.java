@@ -41,12 +41,37 @@ public class QuestionMapper {
         return question;
     }
 
+    public Question dtoToEntity(QuestionCreateDto questionDto) {
+
+        Question question = new Question();
+        List<Answers> answers = answerService.updateAnswers(questionDto.getAnswers());
+
+        question.setQuestion(questionDto.getQuestion());
+        question.setDescription(questionDto.getDescription());
+        question.setAttachmentIDs(questionDto.getAttachmentIds());
+        question.setAnswers(answers);
+        question.setStartDate(questionDto.getStartDate());
+        question.setEndDate(questionDto.getEndDate());
+        question.setQuestionnaire(questionDto.isQuestionnaire());
+        question.setGroupIDs(questionDto.getGroupIDs());
+        question.setUsersIDs(questionDto.getUserIDs());
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(question.getStartDate()) && now.isBefore(question.getEndDate())) {
+            question.setInProcess(true);
+        }
+
+        return question;
+    }
+
     public QuestionCreateDto entityToDto(Question save) {
 
         List<AnswersDto> answersDto = answerService.getAnswersDto(save.getAnswers());
 
         QuestionCreateDto questionDto = new QuestionCreateDto();
 
+        questionDto.setQuestionId(save.getId());
         questionDto.setQuestion(save.getQuestion());
         questionDto.setDescription(save.getDescription());
         questionDto.setAnswers(answersDto);
