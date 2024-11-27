@@ -58,7 +58,11 @@ public class QuestionService {
             throw new EntityNotFoundException("Question not found");
         }
 
-        Question question = questionMapper.dtoToEntity(questionDto);
+        List<Answers> answers = answerService.updateAnswers(questionDto.getAnswers());
+
+        Question question = byId.get();
+
+        question = questionMapper.dtoToEntity(questionDto, answers);
 
         Question save = questionRepository.save(question);
 
