@@ -9,6 +9,7 @@ import uz.saidoff.crmecosystem.repository.AnswersRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -60,22 +61,29 @@ public class AnswerService {
     public List<Answers> updateAnswers(List<AnswersDto> answersDtoList) {
 
         List<Answers> answersList = new ArrayList<>();
-        List<UUID> answersIdList = new ArrayList<>();
 
         for (AnswersDto answersDto : answersDtoList) {
-            answersIdList.add(answersDto.getId());
+
+            Integer i = answersRepository.updateAnswersById(answersDto.getValue(),
+                                                            answersDto.getIsRightAnswer(),
+                                                            answersDto.getId());
+
+            if ( i == 0) {
+                throw new RuntimeException("Answer not updated");
+            }
         }
 
-        List<Answers> allById = answersRepository.findAllById(answersIdList);
+        for (AnswersDto answersDto : answersDtoList) {
 
-        for (int i = 0; i < allById.size(); i++) {
+            Optional<Answers> byId = answersRepository.findById(answersDto.getId());
 
-            Answers answers = allById.get(i);
-            answers.setValue(answersDtoList.get(i).getValue());
-            answers.setIsRightAnswer(answersDtoList.get(i).getIsRightAnswer());
+            if (byId.isEmpty()) {
+                throw new RuntimeException("Answer not found");
+            }
 
-            Answers save = answersRepository.save(answers);
-            answersList.add(save);
+            Answers answers = byId.get();
+
+            answersList.add(answers);
         }
 
         return answersList;

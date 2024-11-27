@@ -5,3 +5,18 @@ Content-Type:application/json
   "phoneNumber": "321",
   "password": "321"
 }
+
+###
+
+GET http://localhost:8080/api/questions/all
+
+###
+
+PUT http://localhost:8080/api/questions/
+Content-Type: application/json
+
+{
+  "question": "How old are you?",
+  "description": "Tell your age?"
+
+}
