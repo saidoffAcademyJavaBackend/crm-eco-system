@@ -2,7 +2,6 @@ package uz.saidoff.crmecosystem.mapper;
 
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.RoomEquipment;
-import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomEquipCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomDeletedInfoResponse;
 import uz.saidoff.crmecosystem.payload.RoomEquipmentDto;
@@ -67,11 +66,11 @@ public class RoomEquipmentMapper {
         return dto;
     }
 
-    public RoomEquipmentDto toEquipmentDto(RoomDeletedInfoResponse roomEquipment) {
+    public RoomEquipmentDto toEquipmentResponseDto(RoomEquipment roomEquipment) {
         RoomEquipmentDto dto = new RoomEquipmentDto();
         dto.setId(roomEquipment.getId());
         dto.setName(roomEquipment.getName());
-//        dto.setTotalNumber(roomEquipment.get());
+        dto.setCount(roomEquipment.getTotalNumber());
         return dto;
     }
 
@@ -87,7 +86,7 @@ public class RoomEquipmentMapper {
         return equipmentDtoList;
     }
 
-    public RoomEquipment toEquipmentUpdate(RoomEquipment roomEquipment, RoomEquipCreateUpdateDto roomEquipmentDto) {
+    public RoomEquipment toEquipmentUpdateEntity(RoomEquipment roomEquipment, RoomEquipCreateUpdateDto roomEquipmentDto) {
 
         if (roomEquipmentDto.getName() != null) {
             roomEquipment.setName(roomEquipmentDto.getName());

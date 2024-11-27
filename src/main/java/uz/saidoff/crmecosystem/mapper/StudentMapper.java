@@ -6,24 +6,31 @@ import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
+import uz.saidoff.crmecosystem.repository.AttachmentRepository;
+import uz.saidoff.crmecosystem.util.MessageKey;
+import uz.saidoff.crmecosystem.util.MessageService;
 
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class StudentMapper {
+    private final AttachmentRepository attachmentRepository;
 
-    public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role, Attachment attachment) throws ParseException {
+    public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role) throws ParseException {
 
         User user = new User();
-
-        user.setAttachment(attachment);
+        if (studentResponseDto.getAttachmentId() != null) {
+            user.setAttachment(attachmentRepository.findById(studentResponseDto.getAttachmentId()).orElse(null));
+        }
 
         user.setFirstName(studentResponseDto.getFirstName());
 
@@ -50,6 +57,10 @@ public class StudentMapper {
         user.setSalary(studentResponseDto.getSalary());
 
         user.setStartWork(studentResponseDto.getStartWork());
+
+        user.setNumberOfChildren(studentResponseDto.getNumberOfChildren());
+
+        user.setGender(studentResponseDto.getGender());
 
         return user;
     }
@@ -84,8 +95,9 @@ public class StudentMapper {
     public StudentDto toResponsStudentDo(User user, Group group) {
 
         StudentDto studentResponseDto = new StudentDto();
-
-        studentResponseDto.setAttachmentId(user.getAttachment().getId());
+        if (user.getAttachment() != null) {
+            studentResponseDto.setAttachmentId(user.getAttachment().getId());
+        }
         studentResponseDto.setFirstName(user.getFirstName());
         studentResponseDto.setLastName(user.getLastName());
         studentResponseDto.setFatherName(user.getFatherName());
@@ -104,15 +116,15 @@ public class StudentMapper {
         return studentResponseDto;
     }
 
-    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent) {
+    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent1) {
         PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
-        payment.setGroupStudentId(groupStudent.getStudentId().getId());
-        payment.setActive(groupStudent.getGroupId().isActive());
+        payment.setGroupStudentId(groupStudent1.getId());
+        payment.setActive(groupStudent1.getGroupId().isActive());
         payment.setCurrentMonth(true);
-        payment.setStartMonth(null);
-        payment.setPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
-        payment.setAllPaymentAmount(groupStudent.getGroupId().getPaymentAmount());
-        payment.setMonth(groupStudent.getGroupId().getStartedDate());
+        payment.setStartMonth(1);
+        payment.setPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
+        payment.setAllPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
+        payment.setMonth(groupStudent1.getGroupId().getStartedDate());
         payment.setCurrentMonth(true);
 
         return payment;
