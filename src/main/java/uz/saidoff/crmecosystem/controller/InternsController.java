@@ -37,8 +37,8 @@ public class InternsController {
 
     @CheckPermission("UPDATE_INTERN")
     @PutMapping("update-intern")
-    public ResponseData<?> updateIntern(@RequestParam(required = false) String password ,@RequestBody InternGetDto internGetDto) {
-        return this.internsService.update(internGetDto,password);
+    public ResponseData<?> updateIntern(@RequestParam(required = false) String password, @RequestBody InternGetDto internGetDto) {
+        return this.internsService.update(internGetDto, password);
     }
 
     @CheckPermission("DELETE_INTERN")

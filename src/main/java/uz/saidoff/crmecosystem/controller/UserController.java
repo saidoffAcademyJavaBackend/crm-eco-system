@@ -1,7 +1,9 @@
 package uz.saidoff.crmecosystem.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.saidoff.crmecosystem.payload.PasswordUpdateDto;
 import uz.saidoff.crmecosystem.payload.UserCreateDto;
 import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
@@ -26,7 +28,7 @@ public class UserController {
     @CheckPermission("EDIT_USER")
     @PutMapping("user-update/{userId}")
     public ResponseData<UserDto> updateUser(@PathVariable UUID userId, UserDto userDto) {
-        return this.userService.update(userId,userDto);
+        return this.userService.update(userId, userDto);
     }
 
     @CheckPermission("GET_USER")
@@ -39,10 +41,12 @@ public class UserController {
     @GetMapping("/get-all-users")
     public ResponseData<?> getUsers(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
-        return this.userService.getAllUser(page,size);
+        return this.userService.getAllUser(page, size);
     }
 
-
-
-
+    @CheckPermission("EDIT_USER,UPDATE_INTERN,EDIT_STUDENT")
+    @PostMapping("update-password/{userId}")
+    public ResponseData<?> updatePassword(@PathVariable(required = false) UUID userId, @Valid @RequestBody PasswordUpdateDto passwordUpdateDto) {
+        return this.userService.updatePassword(userId, passwordUpdateDto);
+    }
 }

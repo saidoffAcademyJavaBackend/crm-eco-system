@@ -29,7 +29,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (initMode.equals("always")) {
+        if (userRepository.count() == 0) {
             UserFactorySingleton instance = UserFactorySingleton.getInstance();
 
 

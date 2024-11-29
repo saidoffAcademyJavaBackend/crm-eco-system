@@ -4,19 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.valid.PasswordValidate;
 
-import java.util.UUID;
-
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarningDTO {
-
-    private UUID id;
-    private UUID userId;
-    private String reason;
-    private boolean active;
-
-
+public class PasswordUpdateDto {
+    @PasswordValidate
+    private String password;
 }

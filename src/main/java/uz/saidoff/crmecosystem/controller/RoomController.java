@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
 import uz.saidoff.crmecosystem.payload.RoomEquipCountDto;
+import uz.saidoff.crmecosystem.payload.RoomRequestDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.RoomService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
@@ -29,7 +30,8 @@ public class RoomController {
 
     @CheckPermission("UPDATE_ROOM")
     @PutMapping("updateRoom/{roomId}")
-    public HttpEntity<?> updateRoom(@PathVariable(name = "roomId") UUID roomId, @RequestBody RoomCreateUpdateDto roomDto) {
+    public HttpEntity<?> updateRoom(@PathVariable(name = "roomId") UUID roomId,
+                                    @RequestBody RoomCreateUpdateDto roomDto) {
         ResponseData<?> responseData = roomService.updateRoom(roomId, roomDto);
         return ResponseEntity.ok(responseData);
     }
@@ -88,6 +90,5 @@ public class RoomController {
         ResponseData<?> groupsByRoomId = roomService.getGroupsByRoomId(roomId);
         return ResponseEntity.ok(groupsByRoomId);
     }
-
 
 }

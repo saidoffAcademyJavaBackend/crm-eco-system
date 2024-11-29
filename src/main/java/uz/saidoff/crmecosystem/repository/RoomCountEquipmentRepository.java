@@ -19,5 +19,6 @@ public interface RoomCountEquipmentRepository extends JpaRepository<RoomCountEqu
 
 
     List<RoomCountEquipment> findAllByIdAndDeletedFalse(UUID equipmentId);
+    List<RoomCountEquipment> findAllByDeletedIsFalse();
 
 }

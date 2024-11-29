@@ -28,22 +28,34 @@ public class User extends AbsEntity implements UserDetails {
     private String firstName;
     private String lastName;
     private String fatherName;
+
+    @Column(unique = true)
     private String phoneNumber;
+
     private String secondPhoneNumber;
+
     private Date birthDate;
+
     private String birthPlace;
+
     private String currentResidence;
+
     private String numberOfChildren;
+
     private Boolean gender;
 
     @ManyToOne
     private Speciality speciality;
 
+    @Column(unique = true)
     private String passportSeries;
+
     private Double salary;
     private Date startWork;
     private Date startStudying;
     private Integer warning;
+
+    private double balance;
 
     @ManyToOne(optional = false)
     private Role role;

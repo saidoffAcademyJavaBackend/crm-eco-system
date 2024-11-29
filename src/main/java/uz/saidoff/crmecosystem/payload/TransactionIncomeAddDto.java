@@ -18,4 +18,6 @@ public class TransactionIncomeAddDto {
     private String description;
     private UUID categoryId;
     private UUID attachmentId;
+    private UUID transactorId;
+    private UUID groupId;
 }
