@@ -38,11 +38,4 @@ public class TransactionIncomeController {
     public ResponseData<?> getOneIncomeTransaction(@RequestParam UUID transactionId) {
         return this.transactionIncomeService.getOneIncomeTransaction(transactionId);
     }
-
-    @CheckPermission("CREATE_TRANSACTION")
-    @PostMapping("monthly-payment")
-    public ResponseData<?> monthlyPayment(@RequestParam UUID userId,@RequestParam UUID groupId,
-                                          @RequestParam Double paymentAmount,@RequestParam Integer month) {
-        return this.transactionIncomeService.monthlyPaymentStudentOrIntern(userId,groupId,paymentAmount,month);
-    }
 }
