@@ -9,7 +9,6 @@ import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.UserService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;
-import uz.saidoff.crmecosystem.valid.PasswordValidate;
 
 import java.util.UUID;
 
@@ -29,7 +28,7 @@ public class UserController {
     @CheckPermission("EDIT_USER")
     @PutMapping("user-update/{userId}")
     public ResponseData<UserDto> updateUser(@PathVariable UUID userId, UserDto userDto) {
-        return this.userService.update(userId,userDto);
+        return this.userService.update(userId, userDto);
     }
 
     @CheckPermission("GET_USER")
@@ -42,14 +41,12 @@ public class UserController {
     @GetMapping("/get-all-users")
     public ResponseData<?> getUsers(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
-        return this.userService.getAllUser(page,size);
+        return this.userService.getAllUser(page, size);
     }
 
-    @CheckPermission("EDIT_USER")  //TODO Shu yerda ham Edit user ham UPDATE_INTERN yoki UPDATE_Studentga hammasiga mos keladiganligiga tekshirish kk
+    @CheckPermission("EDIT_USER,UPDATE_INTERN,EDIT_STUDENT")
     @PostMapping("update-password/{userId}")
     public ResponseData<?> updatePassword(@PathVariable(required = false) UUID userId, @Valid @RequestBody PasswordUpdateDto passwordUpdateDto) {
-        return this.userService.updatePassword(userId,passwordUpdateDto);
+        return this.userService.updatePassword(userId, passwordUpdateDto);
     }
-
-
 }

@@ -31,4 +31,7 @@ public class Transaction extends AbsEntity {
     @ManyToOne
     private User transactor;
 
+    @ManyToOne
+    private Group group;
+
 }

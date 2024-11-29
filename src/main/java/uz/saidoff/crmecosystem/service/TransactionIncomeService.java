@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import uz.saidoff.crmecosystem.entity.Attachment;
-import uz.saidoff.crmecosystem.entity.Balance;
-import uz.saidoff.crmecosystem.entity.Category;
-import uz.saidoff.crmecosystem.entity.Transaction;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.TransactionIncomeMapper;
@@ -24,16 +21,23 @@ public class TransactionIncomeService {
     private final TransactionRepository transactionRepository;
     private final TransactionIncomeMapper transactionIncomeMapper;
     private final CategoryRepository categoryRepository;
-    private final PaymentForMonthService paymentForMonthService;
     private final BalanceService balanceService;
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
+    private final GroupRepository groupRepository;
 
 
     public ResponseData<?> addTransactionIncome(TransactionIncomeAddDto transactionIncomeAddDto) {
         Optional<Category> optionalCategory = categoryRepository.findById(transactionIncomeAddDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
             throw new NotFoundException("Category not found");
+        }
+        Optional<Group> optionalGroup = Optional.empty();
+        if (transactionIncomeAddDto.getGroupId() != null) {
+            optionalGroup = groupRepository.findById(transactionIncomeAddDto.getGroupId());
+            if (optionalGroup.isEmpty()) {
+                throw new NotFoundException("Group not found");
+            }
         }
         Attachment attachment = new Attachment();
         if (transactionIncomeAddDto.getAttachmentId() != null) {
@@ -44,7 +48,7 @@ public class TransactionIncomeService {
             attachment = optionalAttachment.get();
         }
 
-        Transaction transaction = transactionIncomeMapper.toIncomeTransaction(transactionIncomeAddDto, optionalCategory.get(),attachment);
+        Transaction transaction = transactionIncomeMapper.toIncomeTransaction(transactionIncomeAddDto, optionalCategory.get(), attachment, optionalGroup);
         transactionRepository.save(transaction);
         BalanceUpdateIncomeOutcomeDto balanceUpdateIncomeOutcomeDto = new BalanceUpdateIncomeOutcomeDto();
         balanceUpdateIncomeOutcomeDto.setIncome(true);

@@ -18,14 +18,19 @@ public class CheckPermissionExecutor {
     public void beforeCheckPermission(CheckPermission checkPermission) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        String[] split = checkPermission.value().split(",");
         boolean exist = false;
+        outerLoop:
         for (GrantedAuthority authority : principal.getAuthorities()) {
-            if (authority.getAuthority().equals(checkPermission.value())) {
-                exist = true;
-                break;
+            for (String s : split) {
+                if (authority.getAuthority().equals(s)) {
+                    exist = true;
+                    break outerLoop;
+                }
             }
         }
-        if (!exist) throw new ForbiddenException(checkPermission.value(), MessageService.getMessage(MessageKey.FORBIDDEN));
+        if (!exist)
+            throw new ForbiddenException(checkPermission.value(), MessageService.getMessage(MessageKey.FORBIDDEN));
     }
 
 }
