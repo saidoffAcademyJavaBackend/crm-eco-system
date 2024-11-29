@@ -163,18 +163,7 @@ public class StudentService {
         return ResponseData.successResponse(responsStudentDo);
     }
 
-    public ResponseData<?> getAllStudent(int page, int size) {
-        Pageable pageable = PageRequest.of(size, page);
-        Page<PaymentForMonth> paymentForMonthPage = paymentForServiceRepository.findAll(pageable);
-        if (paymentForMonthPage.isEmpty()) {
-            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
-        }
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", paymentForMonthPage.toList());
-        response.put("total", paymentForMonthPage.getTotalElements());
-        response.put("totalPages", paymentForMonthPage.getTotalPages());
-        return new ResponseData<>(response, true);
-    }
+
 
     public ResponseData<?> getByAllStudentProject(UUID userId) {
         Optional<User> optionalUser = userRepository.findById(userId);

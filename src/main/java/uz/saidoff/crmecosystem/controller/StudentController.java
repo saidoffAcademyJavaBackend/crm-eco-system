@@ -40,12 +40,6 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
     }
 
-//    @CheckPermission("GET_STUDENT")
-//    @GetMapping("/get-student-group-filter/{groupId}")
-//    public ResponseEntity<ResponseData<?>> getGroupFilter(@PathVariable UUID groupId) {
-//        ResponseData<?> filter = studentService.getFilter(groupId);
-//        return ResponseEntity.status(filter.isSuccess() ? 200 : 409).body(filter);
-//    }
 
     @CheckPermission("EDIT_STUDENT")
     @PatchMapping("/update-student/{studentId}")
@@ -68,13 +62,6 @@ public class StudentController {
         return ResponseEntity.status(responseData.isSuccess() ? 200 : 401).body(responseData);
     }
 
-    @CheckPermission("GET_STUDENT")
-    @GetMapping("/get-all-student-table")
-    public ResponseEntity<?> getAllStudentTable(@RequestParam(defaultValue = "0") int page,
-                                                @RequestParam(defaultValue = "10") int size) {
-        ResponseData<?> responseData = studentService.getAllStudent(page, size);
-        return ResponseEntity.status(responseData.isSuccess() ? 200 : 409).body(responseData);
-    }
 
     // userga tegishli projectlar
     @CheckPermission("GET_STUDENT")
