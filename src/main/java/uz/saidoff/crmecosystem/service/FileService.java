@@ -41,7 +41,7 @@ public class FileService {
     }
 
     @Transactional
-    public ResponseData<String> saved(MultipartFile multipartFile) throws IOException {
+    public ResponseData<?> saved(MultipartFile multipartFile) throws IOException {
         AttachmentContent attachmentContent = new AttachmentContent();
 
         if (!isValidFile(multipartFile)) {
@@ -62,7 +62,7 @@ public class FileService {
         attachmentContent.setAttachment(saved);
         attachmentContentRepository.save(attachmentContent);
 
-        return ResponseData.successResponse("succesfuly file upload");
+        return ResponseData.successResponse(saved);
 
     }
 
