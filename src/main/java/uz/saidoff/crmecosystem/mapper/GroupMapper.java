@@ -47,6 +47,7 @@ public class GroupMapper {
         groupDto.setLinkOfTelegram(group.getLinkForTelegram());
         groupDto.setWeekDays(group.getWeekDays());
         groupDto.setTeacherId(group.getTeacher().getId());
+        groupDto.setGroupStage(group.getGroupStage());
         return groupDto;
     }
 

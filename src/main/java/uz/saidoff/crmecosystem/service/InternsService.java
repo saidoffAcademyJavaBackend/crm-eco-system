@@ -49,7 +49,7 @@ public class InternsService {
         if (interns.isEmpty()) {
             throw new NotFoundException("Interns not found");
         }
-        List<InternGetDto> list = interns.get().map(internsMapper::toInternGetDto).toList();
+        List<InternGetDto> list = interns.get().map(internsMapper:: toInternGetDto).toList();
         Map<String, Object> result = new HashMap<>();
         result.put("data", list);
         result.put("total", interns.getTotalElements());
@@ -80,7 +80,7 @@ public class InternsService {
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        Optional<Speciality> optionalSpeciality = specialityRepository.findByName(internAddDto.getSpecialty());
+        Optional<Speciality> optionalSpeciality = specialityRepository.findByIdAndDeletedFalse(internAddDto.getSpecialtyId());
         if (optionalSpeciality.isEmpty()) {
             throw new NotFoundException("Speciality not found");
         }
@@ -112,12 +112,12 @@ public class InternsService {
         return ResponseData.successResponse("intern deleted successfully");
     }
 
-    public ResponseData<?> update(InternGetDto internGetDto) {
+    public ResponseData<?> update(InternGetDto internGetDto,String password) {
         Optional<User> optionalIntern = internsRepository.findById(internGetDto.getInterId());
         if (optionalIntern.isEmpty()) {
             throw new NotFoundException("intern not found");
         }
-        Optional<Speciality> optionalSpeciality = specialityRepository.findByName(internGetDto.getSpecialty());
+        Optional<Speciality> optionalSpeciality = specialityRepository.findByIdAndDeletedFalse(internGetDto.getSpecialtyId());
         if (optionalSpeciality.isEmpty()) {
             throw new NotFoundException("Speciality not found");
         }
@@ -134,7 +134,7 @@ public class InternsService {
             attachment = optionalAttachment.get();
         }
         User intern = optionalIntern.get();
-        intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get());
+        intern = internsMapper.toUpdateUser(intern, internGetDto, attachment, optionalRole.get(), optionalSpeciality.get(),password);
         internsRepository.save(intern);
         return ResponseData.successResponse("intern updated successfully");
     }
