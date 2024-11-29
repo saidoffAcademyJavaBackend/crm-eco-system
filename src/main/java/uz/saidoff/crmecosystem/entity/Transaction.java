@@ -28,6 +28,8 @@ public class Transaction extends AbsEntity {
     @ManyToOne
     private Attachment attachment;
 
+
+    // TRANSACTION FOR SOMEONE OF FROM SOMEONE
     @ManyToOne
     private User transactor;
 

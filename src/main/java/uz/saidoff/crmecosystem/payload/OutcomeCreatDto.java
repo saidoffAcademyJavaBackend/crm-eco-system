@@ -17,4 +17,5 @@ public class OutcomeCreatDto {
     private UUID categoryId;
     private Boolean isIncome;
     private UUID attachmentId;
+    private UUID employeeId;
 }
