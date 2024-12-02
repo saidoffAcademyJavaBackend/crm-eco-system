@@ -34,5 +34,6 @@ public class InternGetDto {
     private String passportSeries;
     private Double paymentAmount;
     private Date startStudying;
+    private boolean gender;
     private List<Permissions> permissionsList;
 }

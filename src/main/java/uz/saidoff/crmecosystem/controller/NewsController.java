@@ -16,7 +16,7 @@ import java.util.UUID;
 public class NewsController {
     private final NewsService newsService;
 
-    @GetMapping("get-allNews-by-user")
+    @GetMapping("get-all-news-by-user")
     public ResponseData<?> getAllNews(@RequestParam int page, @RequestParam int size) {
         return this.newsService.getAllNewsByUserRoles(size, page);
     }

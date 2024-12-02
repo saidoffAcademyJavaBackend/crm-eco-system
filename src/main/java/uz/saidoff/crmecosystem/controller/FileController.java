@@ -34,8 +34,8 @@ public class FileController {
     @CheckPermission("CREATE_USER")
     @PostMapping(value = "/file-upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> attachmentContentResponseEntity(@Validated @RequestParam("file") MultipartFile multipartFile) throws IOException {
-        ResponseData<String> response = fileService.saved(multipartFile);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 400).body(response);
+        ResponseData<?> responseData = fileService.saved(multipartFile);
+        return ResponseEntity.status(responseData.isSuccess() ? 200 : 400).body(responseData);
     }
 
     @GetMapping("/file-download/{fileId}")

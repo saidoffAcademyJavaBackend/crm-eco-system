@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
@@ -18,5 +19,6 @@ public class RoomCountEquipment extends AbsEntity {
 
     @ManyToOne
     private RoomEquipment roomEquipment;
+
 
 }
