@@ -54,7 +54,7 @@ public class OutcomeService {
       if (optionalUser.isEmpty()) {
         throw new NotFoundException("User not found");
       }
-      transaction.setTransactor(optionalUser.get());
+      transaction.getUserPayments().setTransactor(optionalUser.get());
     }
 
     transaction.setCategory(category.get());

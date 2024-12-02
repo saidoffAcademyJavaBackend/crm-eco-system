@@ -99,7 +99,7 @@ public class TransactionIncomeService {
             attachment = optionalAttachment.get();
         }
         transaction.setAttachment(attachment);
-        transaction.setTransactor(optionalUser.get());
+        transaction.getUserPayments().setTransactor(optionalUser.get());
         transaction.setCategory(optionalCategory.get());
         transaction.setCurrency(transactionIncomeAddDto.getCurrency());
         transaction.setAmount(transactionIncomeAddDto.getAmount());
