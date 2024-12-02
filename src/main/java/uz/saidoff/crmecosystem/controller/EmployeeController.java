@@ -49,10 +49,4 @@ public class EmployeeController {
         return this.employeeService.deleteEmployee(employeeId);
     }
 
-    @CheckPermission("EDIT_USER")
-    @PutMapping("employee-warning-edit/{employeeId}")
-    public ResponseData<?> warningEmployee(@PathVariable UUID employeeId, EmployeeWarningDto employeeWarningDto) {
-        return this.employeeService.warningAddAndSubtraction(employeeId,employeeWarningDto);
-    }
-
 }

@@ -47,6 +47,22 @@ public class TransactionIncomeService {
             }
             attachment = optionalAttachment.get();
         }
+        if (transactionIncomeAddDto.getTransactorId() != null) {
+            Optional<User> optionalUser = userRepository.findByIdAndDeletedFalse(transactionIncomeAddDto.getTransactorId());
+            if (optionalUser.isEmpty()) {
+                throw new NotFoundException("User not found");
+            }
+            User user = optionalUser.get();
+            if (user.getRole().getRoleType().name().equals("STUDENT") || user.getRole().getRoleType().name().equals("INTERN")) {
+                if (user.getSalary() != null && transactionIncomeAddDto.getAmount() > user.getSalary()) {
+                    user.setBalance(transactionIncomeAddDto.getAmount() - user.getSalary());
+                    transactionIncomeAddDto.setAmount(user.getSalary());
+                } else if (optionalGroup.isPresent() && transactionIncomeAddDto.getAmount() > optionalGroup.get().getPaymentAmount()) {
+                    user.setBalance(transactionIncomeAddDto.getAmount() - optionalGroup.get().getPaymentAmount());
+                    transactionIncomeAddDto.setAmount(optionalGroup.get().getPaymentAmount());
+                }
+            }
+        }
 
         Transaction transaction = transactionIncomeMapper.toIncomeTransaction(transactionIncomeAddDto, optionalCategory.get(), attachment, optionalGroup);
         transactionRepository.save(transaction);
@@ -83,7 +99,7 @@ public class TransactionIncomeService {
             attachment = optionalAttachment.get();
         }
         transaction.setAttachment(attachment);
-        transaction.setTransactor(optionalUser.get());
+        transaction.getUserPayments().setTransactor(optionalUser.get());
         transaction.setCategory(optionalCategory.get());
         transaction.setCurrency(transactionIncomeAddDto.getCurrency());
         transaction.setAmount(transactionIncomeAddDto.getAmount());
@@ -111,17 +127,5 @@ public class TransactionIncomeService {
         }
 
         return ResponseData.successResponse(optionalTransaction.get());
-    }
-
-    public ResponseData<?> monthlyPaymentStudentOrIntern(UUID userId, UUID groupId, Double paymentAmount, Integer month) {
-        /*        paymentForMonthService dan payment monthga saqlab kelish
-         */
-        Transaction transaction = new Transaction();
-        transaction.setIsIncome(true);
-        transaction.setAmount(paymentAmount);
-        transaction.setCategory(categoryRepository.findByName("MONTHLY_PAYMENT").get());
-        transaction.setDescription("Monthly Payment For Student");
-        transactionRepository.save(transaction);
-        return ResponseData.successResponse("Monthly Payment For Student successfully added");
     }
 }
