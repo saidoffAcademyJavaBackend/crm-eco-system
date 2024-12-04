@@ -56,7 +56,6 @@ public class User extends AbsEntity implements UserDetails {
     private Double salary;
     private Date startWork;
     private Date startStudying;
-    private Integer warning;
 
     private double balance;
 

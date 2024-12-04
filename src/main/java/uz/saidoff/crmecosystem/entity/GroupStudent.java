@@ -16,9 +16,27 @@ import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 @AllArgsConstructor
 public class GroupStudent extends AbsEntity {
 
+    private boolean completed;
+
+    private double paymentAmount;
+
+    @ManyToOne
+    private User student;
+
+
     @ManyToOne
     private Group groupId;
 
     @ManyToOne
     private User studentId;
+
+    //TODO groupId va studentId
+    // ni olib tashlash keyin  studentni
+    // studentga saqlash kerak group getGroupStudentsni
+    // olib chiqib qo'shish kerak
+
+    public GroupStudent( Group groupId, User studentId) {
+        this.groupId = groupId;
+        this.studentId = studentId;
+    }
 }

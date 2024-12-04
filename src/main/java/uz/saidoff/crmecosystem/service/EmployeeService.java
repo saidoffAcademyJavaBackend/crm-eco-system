@@ -86,16 +86,4 @@ public class EmployeeService {
         return ResponseData.successResponse("delete success");
     }
 
-    public ResponseData<?> warningAddAndSubtraction(UUID employeeId, EmployeeWarningDto employeeWarningDto) {
-        Optional<User> userOptional = this.employeeRepository.findByIdAndDeletedFalse(employeeId);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("Employee not found");
-        }
-        User user = userOptional.get();
-        if (employeeWarningDto.isWarning()) user.setWarning(user.getWarning()+1);
-        else user.setWarning(user.getWarning()-1);
-        this.employeeRepository.save(user);
-        return ResponseData.successResponse("success");
-    }
-
 }
