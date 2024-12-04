@@ -5,9 +5,9 @@ services:
     image: postgres:latest
     container_name: postgres-crm
     environment:
-      POSTGRES_DB: crm_ecosystem
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Root123
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -19,11 +19,11 @@ services:
     depends_on:
       - postgres
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/crm_ecosystem
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Root123
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "8080:8080"
+      - "${SPRING_APP_PORT}:${SPRING_APP_PORT}"
 
 volumes:
   postgres_data:
