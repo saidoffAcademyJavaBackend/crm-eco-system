@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import uz.saidoff.crmecosystem.enums.NotificationType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 @Data
 @AllArgsConstructor
@@ -16,8 +17,7 @@ public class NotificationDto {
     private String title;
     private String description;
     private UUID object;
-    private UUID userId;
-    private Boolean isRead;
+    private List<UUID> rolesId;
     private NotificationType type;
 
 }

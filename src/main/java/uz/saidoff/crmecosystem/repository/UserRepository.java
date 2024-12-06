@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("select count(u.warnings) from users as u where u.id =:userId")
     List<User> findAllWarningsByUserUI(@Param("userId") UUID userId);
+
+    List<User> findAllByRoleIdInAndDeletedFalse(List<UUID> roleIds);
 }

@@ -25,81 +25,87 @@ import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.valid.PasswordValidate;
 import uz.saidoff.crmecosystem.valid.PasswordValidation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    UserFactorySingleton instance = UserFactorySingleton.getInstance();
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
+  UserFactorySingleton instance = UserFactorySingleton.getInstance();
 
-    public ResponseData<?> create(UserCreateDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        UUID roleId = userDto.getRoleId();
-        Optional<Role> optionalRole = roleRepository.findById(roleId);
-        if (optionalRole.isEmpty()) {
-            throw new IllegalArgumentException("Role not found");
-        }
-        instance.createUser(userDto, optionalRole.get());
+  public ResponseData<?> create(UserCreateDto userDto) {
+    User user = userMapper.toEntity(userDto);
+    UUID roleId = userDto.getRoleId();
+    Optional<Role> optionalRole = roleRepository.findById(roleId);
+    if (optionalRole.isEmpty()) {
+      throw new IllegalArgumentException("Role not found");
+    }
+    instance.createUser(userDto, optionalRole.get());
 
-        userRepository.save(user);
-        return ResponseData.successResponse("success");
+    userRepository.save(user);
+    return ResponseData.successResponse("success");
+  }
+
+  public ResponseData<UserDto> update(UUID userId, UserDto userDto) {
+    Optional<User> userOptional = userRepository.findById(userId);
+    if (userOptional.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
+    User user = userOptional.get();
+    user = userMapper.update(userDto, user);
+    userRepository.save(user);
+    return new ResponseData<>(userMapper.toDto(user), true);
+  }
+
+  public ResponseData<UserDto> getUser(UUID userId) {
+    Optional<User> userOptional = userRepository.findById(userId);
+    if (userOptional.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
+    return new ResponseData<>(userMapper.toDto(userOptional.get()), true);
+  }
+
+  public ResponseData<?> getAllUser(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<User> users = userRepository.findAll(pageable);
+    if (users.isEmpty()) {
+      throw new NotFoundException("Users not found!");
     }
 
-    public ResponseData<UserDto> update(UUID userId, UserDto userDto) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("User not found");
-        }
-        User user = userOptional.get();
-        user = userMapper.update(userDto, user);
-        userRepository.save(user);
-        return new ResponseData<>(userMapper.toDto(user), true);
+    Map<String, Object> response = new HashMap<>();
+    response.put("data", userMapper.toDto(users.toList()));
+    response.put("total", users.getTotalElements());
+    response.put("totalPages", users.getTotalPages());
+
+    return new ResponseData<>(response, true);
+  }
+
+  public ResponseData<?> updatePassword(UUID userId, PasswordUpdateDto passwordUpdateDto) {
+
+    if (userId == null) {
+      User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      userId = user.getId();
     }
-
-    public ResponseData<UserDto> getUser(UUID userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new NotFoundException("User not found");
-        }
-        return new ResponseData<>(userMapper.toDto(userOptional.get()), true);
+    Optional<User> optionalUser = userRepository.findById(userId);
+    if (optionalUser.isEmpty()) {
+      throw new NotFoundException("User not found");
     }
+    User user = optionalUser.get();
+    user.setPassword(passwordEncoder.encode(passwordUpdateDto.getPassword()));
+    userRepository.save(user);
+    return ResponseData.successResponse("success");
+  }
 
-    public ResponseData<?> getAllUser(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userRepository.findAll(pageable);
-        if (users.isEmpty()) {
-            throw new NotFoundException("Users not found!");
-        }
+  public List<User> getUsersByRolesId(List<UUID> rolesId) {
+    return userRepository.findAllByRoleIdInAndDeletedFalse(rolesId);
+  }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", userMapper.toDto(users.toList()));
-        response.put("total", users.getTotalElements());
-        response.put("totalPages", users.getTotalPages());
-
-        return new ResponseData<>(response, true);
-    }
-
-    public ResponseData<?> updatePassword(UUID userId, PasswordUpdateDto passwordUpdateDto) {
-
-        if (userId == null) {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            userId = user.getId();
-        }
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("User not found");
-        }
-        User user = optionalUser.get();
-        user.setPassword(passwordEncoder.encode(passwordUpdateDto.getPassword()));
-        userRepository.save(user);
-        return ResponseData.successResponse("success");
-    }
+  public void checkUser(UUID userId) {
+    Optional<User> userOptional = userRepository.findById(userId);
+    if (userOptional.isEmpty()) { throw new NotFoundException("User not found"); }
+  }
 }

@@ -3,41 +3,47 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Notification;
+import uz.saidoff.crmecosystem.entity.NotificationResponse;
+import uz.saidoff.crmecosystem.entity.UsersNotification;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.repository.NotificationRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
+import uz.saidoff.crmecosystem.service.UserService;
+import uz.saidoff.crmecosystem.service.UsersNotificationService;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class NotificationMapper {
 
     private final UserRepository userRepository;
+    private final UserService userService;
+    private final UsersNotificationService usersNotificationService;
 
-    public NotificationDto toDto(Notification notification) {
-        NotificationDto dto = new NotificationDto();
-        dto.setId(notification.getId());
+    public NotificationResponse toDto(Notification notification) {
+        NotificationResponse dto = new NotificationResponse();
         dto.setTitle(notification.getTitle());
         dto.setDescription(notification.getDescription());
-        dto.setObject(notification.getObjectId());
-        dto.setUserId(notification.getUser().getId());//?
-        dto.setIsRead(notification.getRead());
-        dto.setType(notification.getType());
+        dto.setObjectId(notification.getObjectId());
         return dto;
     }
 
     public Notification toEntity(NotificationDto dto) {
         Notification notification = new Notification();
-        notification.setId(dto.getId());
         notification.setTitle(dto.getTitle());
         notification.setDescription(dto.getDescription());
         notification.setObjectId(dto.getObject());
+        notification.setType(dto.getType());
 
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new NotFoundException("user not found"));
-        notification.setUser(user);
-        notification.setRead(dto.getIsRead());
+        // SET USERS TO NOTIFICATION
+        List<User> usersByRolesId = userService.getUsersByRolesId(dto.getRolesId());
+        List<UsersNotification> usersNotifications = usersNotificationService.saveUsersNotification(usersByRolesId);
+        notification.setUsersNotifications(usersNotifications);
+
+
         notification.setType(dto.getType());
         return notification;
     }
