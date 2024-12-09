@@ -23,6 +23,8 @@ public class UserPayments extends AbsEntity {
   @ManyToOne
   private Group group;
 
+  private Integer groupStage;
+
   @ManyToOne
   private User transactor;
 
