@@ -20,6 +20,7 @@ public class StudentResponseDto {
     private String fatherName;
     private String phoneNumber;
     private String secondPhoneNumber;
+    private String password;
     private Date dateOfBirth;
     private String placeOfBirth; // tug'ulgan joyi
     private String currentResidence; // hozirgi yashash joyi

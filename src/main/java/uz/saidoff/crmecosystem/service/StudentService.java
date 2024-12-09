@@ -59,20 +59,20 @@ public class StudentService {
         }
 
         User newUserEntity = studentMapper.toFromUserEntity(studentResponseDto, byName.get(), byRoleType.get());
-        // groupStudentRepository.getUserByGroup(newUserEntity.getId()).orElseThrow(() -> new NotFoundException(MessageService.getMessage(MessageKey.USER_ALREADY_REGISTERED)));
-        List<User> idPassportSeries = groupStudentRepository.findByStudentIdPassportSeries(studentResponseDto.getGroupId());
-        for (User user : idPassportSeries) {
-            if (user.getPassportSeries().equals(newUserEntity.getPassportSeries())) {
+        for (GroupStudent groupStudent : group.get().getGroupStudents()) {
+            if (groupStudent.getStudent().getPassportSeries().equals(newUserEntity.getPassportSeries())) {
                 throw new NotFoundException("student already exists");
             }
         }
-        User saved = userRepository.save(newUserEntity);
+        User savedUser = studentRepository.save(newUserEntity);
+
         GroupStudent groupStudent = new GroupStudent();
-        groupStudent.setStudentId(saved);
-        groupStudent.setGroupId(group.get());
-        groupStudentRepository.save(groupStudent);
-        // PaymentForMonthCreatDto paymentForDTO = studentMapper.toPaymentForDTO(groupStudent);
-        // paymentForMonthService.creat(paymentForDTO);
+        groupStudent.setStudent(savedUser);
+        GroupStudent respons = groupStudentRepository.save(groupStudent);
+        Group group1 = group.get();
+        group1.getGroupStudents().add(respons);
+        groupRepository.save(group1);
+
         return ResponseData.successResponse("student succesfuly created to group");
     }
 
@@ -148,21 +148,20 @@ public class StudentService {
     }
 
     public ResponseData<?> getUserById(UUID userId) {
-        Optional<User> userByGroup = groupStudentRepository.getUserByGroup(userId);
-        if (userByGroup.isEmpty()) {
+        Optional<User> optionalUser = studentRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
             throw new NotFoundException("student not found");
         }
-        User user = userByGroup.get();
-        Optional<Group> groupByUser = groupStudentRepository.getGroupByUser(user.getId());
-        if (groupByUser.isEmpty()) {
+        User user = optionalUser.get();
+        List<Group> studentGroups = groupRepository.getStudentGroups(user.getId());
+        if (studentGroups.isEmpty()) {
             throw new NotFoundException("userga tegishli guruh topilmadi");
         }
-        Group group = groupByUser.get();
+        Group group = studentGroups.get(0);
 
         StudentDto responsStudentDo = studentMapper.toResponsStudentDo(user, group);
         return ResponseData.successResponse(responsStudentDo);
     }
-
 
 
     public ResponseData<?> getByAllStudentProject(UUID userId) {
@@ -183,7 +182,7 @@ public class StudentService {
         Optional<User> optionalUser = userRepository.findById(studentId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            Optional<Group> dayByStudentId = groupStudentRepository.getWeekDayByStudentId(user.getId());
+            Optional<Group> dayByStudentId = groupRepository.usergaTegishliGroup(user.getId());
             if (dayByStudentId.isEmpty()) {
                 throw new NotFoundException("There are no students in the group.");
             }
@@ -193,9 +192,7 @@ public class StudentService {
             request.setDays(group.getWeekDays());
             request.setStartTime(group.getStartTime());
             request.setEndTime(group.getEndTime());
-            request.setCount(groupStudentRepository.countStudentsGroup(group.getId()));
-
-
+            request.setCount(group.getGroupStudents().size());
         } else {
             throw new NotFoundException("student not found");
         }
@@ -204,18 +201,21 @@ public class StudentService {
 
     public ResponseData<?> getStudentGroups(UUID userId) {
 
-        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<User> optionalUser = studentRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("user not found");
         }
         User user = optionalUser.get();
-        List<Group> studentGroups = groupStudentRepository.getStudentGroups(user.getId());
+        List<Group> studentGroups = groupRepository.getStudentGroups(user.getId());
+        if (studentGroups.isEmpty()) {
+            throw new NotFoundException("group not found");
+        }
 
         StudentGroupsResponseDto responseDto = new StudentGroupsResponseDto();
         for (Group group : studentGroups) {
             responseDto.setStudentId(user.getId());
             responseDto.setGroupsName(group.getName());
-            responseDto.setCount(groupStudentRepository.countStudentsGroup(group.getId()));
+            responseDto.setCount(groupRepository.countStudentsGroup(group.getId()));
             responseDto.setTeacherName(group.getTeacher().getFirstName());
         }
         return ResponseData.successResponse(responseDto);

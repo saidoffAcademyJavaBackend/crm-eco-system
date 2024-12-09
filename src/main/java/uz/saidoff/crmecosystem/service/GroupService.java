@@ -45,15 +45,15 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.GROUP_NOT_FOUND)));
         GroupStudent groupStudent = new GroupStudent();
-        groupStudent.setStudentId(student);
-        groupStudent.setGroupId(group);
-        groupStudentRepository.save(groupStudent);
+        groupStudent.setStudent(student);
+        group.setGroupStudents(List.of(groupStudent));
+        groupRepository.save(group);
 
-        return ResponseData.successResponse(groupStudent.getId());
+        return ResponseData.successResponse(group.getId());
     }
 
     public ResponseData<GroupDto> getById(UUID groupId) {
-        Group group =  groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(
+        Group group = groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT)));
         return ResponseData.successResponse(groupMapper.toDto(group));
     }
@@ -67,20 +67,19 @@ public class GroupService {
     }
 
 
-
     @Scheduled(cron = "0 0 2 * * ?")
-    public void updateGroupStage(){
+    public void updateGroupStage() {
         List<Group> allByDeletedIsFalse = groupRepository.findAllByDeletedIsFalse();
-        if (!allByDeletedIsFalse.isEmpty()){
+        if (!allByDeletedIsFalse.isEmpty()) {
             Period period;
-            for (Group group : allByDeletedIsFalse){
+            for (Group group : allByDeletedIsFalse) {
                 Date startedDate = group.getStartedDate();
                 int groupStage = group.getGroupStage();
                 LocalDate now = LocalDate.now();
                 period = Period.between(startedDate.toLocalDate(), now);
-                int monthDifference = period.getYears()*12+period.getMonths();
-                if (monthDifference+1 > groupStage){
-                    group.setGroupStage(groupStage+1);
+                int monthDifference = period.getYears() * 12 + period.getMonths();
+                if (monthDifference + 1 > groupStage) {
+                    group.setGroupStage(groupStage + 1);
                     groupRepository.save(group);
                 }
             }

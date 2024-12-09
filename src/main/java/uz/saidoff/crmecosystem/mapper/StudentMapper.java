@@ -2,28 +2,25 @@ package uz.saidoff.crmecosystem.mapper;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import uz.saidoff.crmecosystem.entity.*;
+import uz.saidoff.crmecosystem.entity.Group;
+import uz.saidoff.crmecosystem.entity.Speciality;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
 import uz.saidoff.crmecosystem.payload.StudentDto;
 import uz.saidoff.crmecosystem.payload.StudentResponseDto;
 import uz.saidoff.crmecosystem.repository.AttachmentRepository;
-import uz.saidoff.crmecosystem.util.MessageKey;
-import uz.saidoff.crmecosystem.util.MessageService;
-
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class StudentMapper {
     private final AttachmentRepository attachmentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public User toFromUserEntity(StudentResponseDto studentResponseDto, Speciality speciality, Role role) throws ParseException {
 
@@ -43,6 +40,8 @@ public class StudentMapper {
         user.setPhoneNumber(studentResponseDto.getPhoneNumber());
 
         user.setSecondPhoneNumber(studentResponseDto.getSecondPhoneNumber());
+
+        user.setPassword(passwordEncoder.encode(studentResponseDto.getPassword()));
 
         user.setBirthPlace(studentResponseDto.getPlaceOfBirth());
 
@@ -116,17 +115,4 @@ public class StudentMapper {
         return studentResponseDto;
     }
 
-    public PaymentForMonthCreatDto toPaymentForDTO(GroupStudent groupStudent1) {
-        PaymentForMonthCreatDto payment = new PaymentForMonthCreatDto();
-        payment.setGroupStudentId(groupStudent1.getId());
-        payment.setActive(groupStudent1.getGroupId().isActive());
-        payment.setCurrentMonth(true);
-        payment.setStartMonth(1);
-        payment.setPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
-        payment.setAllPaymentAmount(groupStudent1.getGroupId().getPaymentAmount());
-        payment.setMonth(groupStudent1.getGroupId().getStartedDate());
-        payment.setCurrentMonth(true);
-
-        return payment;
-    }
 }
