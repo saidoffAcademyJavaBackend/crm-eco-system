@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.EmployeeCreatDto;
 import uz.saidoff.crmecosystem.payload.EmployeeDto;
-import uz.saidoff.crmecosystem.payload.EmployeeWarningDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.EmployeeService;
 import uz.saidoff.crmecosystem.valid.CheckPermission;

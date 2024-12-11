@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.GroupCreateDto;
 import uz.saidoff.crmecosystem.payload.GroupDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.service.GroupPayHistoryService;
 import uz.saidoff.crmecosystem.service.GroupService;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class GroupController {
 
     private final GroupService groupService;
+    private final GroupPayHistoryService groupPayHistoryService;
 
     @PostMapping("create-group")
     private ResponseData<?> createGroup(@RequestBody GroupCreateDto createDto){
@@ -36,5 +38,10 @@ public class GroupController {
     @GetMapping("get-all")
     private ResponseData<List<GroupDto>> getAllGroup(){
         return groupService.getAll();
+    }
+
+    @GetMapping("get-group-pay-by-id/{group-id}")
+    private ResponseData<?> getGroupPayById(@PathVariable("group-id") UUID groupId){
+        return this.groupPayHistoryService.getGroupPayHistory(groupId);
     }
 }
