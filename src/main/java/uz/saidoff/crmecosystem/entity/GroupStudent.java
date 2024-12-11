@@ -24,19 +24,10 @@ public class GroupStudent extends AbsEntity {
     private User student;
 
 
-    @ManyToOne
-    private Group groupId;
-
-    @ManyToOne
-    private User studentId;
 
     //TODO groupId va studentId
     // ni olib tashlash keyin  studentni
     // studentga saqlash kerak group getGroupStudentsni
     // olib chiqib qo'shish kerak
 
-    public GroupStudent( Group groupId, User studentId) {
-        this.groupId = groupId;
-        this.studentId = studentId;
-    }
 }
