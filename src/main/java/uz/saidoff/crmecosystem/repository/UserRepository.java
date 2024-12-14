@@ -2,6 +2,8 @@ package uz.saidoff.crmecosystem.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uz.saidoff.crmecosystem.entity.auth.User;
 
@@ -17,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByRole_Name(String roleName);
 
     Optional<User> findByIdAndDeletedFalse(UUID userId);
+
+    @Query("select count(u.warnings) from users as u where u.id =:userId")
+    List<User> findAllWarningsByUserUI(@Param("userId") UUID userId);
 }

@@ -25,12 +25,10 @@ public class Notification extends AbsEntity {
 
     private UUID objectId;
 
-    @ManyToOne
-    private User user;
-
-    private Boolean read = false;
-
     @Enumerated(EnumType.STRING)
     private NotificationType type;
+
+    @OneToMany
+    private List<UsersNotification> usersNotifications;
 
 }

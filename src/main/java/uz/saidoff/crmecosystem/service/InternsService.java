@@ -17,7 +17,6 @@ import uz.saidoff.crmecosystem.mapper.InternsMapper;
 import uz.saidoff.crmecosystem.payload.GroupDto;
 import uz.saidoff.crmecosystem.payload.InternAddDto;
 import uz.saidoff.crmecosystem.payload.InternGetDto;
-import uz.saidoff.crmecosystem.payload.PaymentForMonthDto.PaymentForMonthCreatDto;
 import uz.saidoff.crmecosystem.payload.ProjectResponseDto;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
@@ -98,7 +97,9 @@ public class InternsService {
         }
         User user = internsMapper.toUser(userId, internAddDto, optionalSpeciality.get(), optionalRole.get(), optionalAttachment);
         internsRepository.save(user);
-        optionalGroup.ifPresent(group -> groupStudentRepository.save(new GroupStudent(group, user)));
+        GroupStudent groupStudent = new GroupStudent();
+        groupStudent.setStudent(user);
+        optionalGroup.ifPresent(group -> groupStudentRepository.save(groupStudent));
         return ResponseData.successResponse("intern added successfully");
     }
 
@@ -183,11 +184,12 @@ public class InternsService {
         if (groupStudents.isEmpty()) {
             throw new NotFoundException("Group not found");
         }
+        //TODO  new problem
         List<GroupDto> groupDtos = new LinkedList<>();
-        groupMapper.toDto(groupStudents.getFirst().getGroupId());
-        for (GroupStudent groupStudent : groupStudents) {
-            groupDtos.add(groupMapper.toDto(groupStudent.getGroupId()));
-        }
+//        groupMapper.toDto(groupStudents.getFirst().getGroupId());
+//        for (GroupStudent groupStudent : groupStudents) {
+//            groupDtos.add(groupMapper.toDto(groupStudent.getGroupId()));
+//        }
         return ResponseData.successResponse(groupDtos);
     }
 }

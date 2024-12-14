@@ -8,11 +8,13 @@ import uz.saidoff.crmecosystem.entity.Attachment;
 import uz.saidoff.crmecosystem.entity.News;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.NotificationType;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.NewsMapper;
 import uz.saidoff.crmecosystem.payload.NewsCreateDto;
 import uz.saidoff.crmecosystem.payload.NewsGetByUserIdDto;
 import uz.saidoff.crmecosystem.payload.NewsUpdateDto;
+import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.repository.AttachmentRepository;
 import uz.saidoff.crmecosystem.repository.NewsRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
@@ -34,6 +36,7 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final RoleRepository roleRepository;
     private final AttachmentRepository fileRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public ResponseData<?> getAllNewsByUserRoles(int size, int page) {
@@ -48,7 +51,7 @@ public class NewsService {
     }
 
     public ResponseData<?> addNews(NewsCreateDto newsCreateDto) {
-        List<Role> roles = roleRepository.findAllById(newsCreateDto.getRoleId());
+        List<Role> roles = roleRepository.findAllByIdIn(newsCreateDto.getRoleId());
         if (roles.isEmpty()) {
             throw new NotFoundException("Role not found");
         }
@@ -58,6 +61,16 @@ public class NewsService {
         }
         News news = newsMapper.fromNewsCreateDtoToNews(newsCreateDto, roles, optionalAttachment.get());
         newsRepository.save(news);
+
+        //CREATING AND SENDING NOTIFICATION_DTO TO NOTIFICATION_SERVICE
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setTitle(news.getTitle());
+        notificationDto.setDescription(news.getContent().substring(0,100)+"...");
+        notificationDto.setRolesId(newsCreateDto.getRoleId());
+        notificationDto.setType(NotificationType.NEWS);
+        notificationDto.setObject(news.getId());
+        notificationService.saveNotification(notificationDto);
+
         return ResponseData.successResponse("News added successfully");
     }
 

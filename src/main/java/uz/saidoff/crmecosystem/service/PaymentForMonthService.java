@@ -44,7 +44,7 @@ public class PaymentForMonthService {
         if (groupStudentOptional.isEmpty()) {
             throw new NotFoundException("group student not found");
         }
-        Optional<User> userOptional = userRepository.findById(groupStudentOptional.get().getStudentId().getId());
+        Optional<User> userOptional = userRepository.findById(groupStudentOptional.get().getStudent().getId());
         if (userOptional.isEmpty()) {
             throw new NotFoundException("user not found");
         }
