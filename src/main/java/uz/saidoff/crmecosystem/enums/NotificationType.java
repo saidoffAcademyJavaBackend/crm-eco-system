@@ -7,5 +7,6 @@ public enum NotificationType {
     HOLIDAYS,
     EVENTS,
     TASKS,
-    WARNING
+    WARNING,
+    QUESTIONNAIRE
 }
