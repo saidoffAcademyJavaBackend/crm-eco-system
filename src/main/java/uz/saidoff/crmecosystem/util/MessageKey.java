@@ -25,4 +25,5 @@ public interface MessageKey {
     String NOTIFICATION_NOT_FOUND = "NOTIFICATION_NOT_FOUND";
     String GROUP_NOT_FOUND = "GROUP_NOT_FOUND";
     String PROJECT_NOT_FOUND = "PROJECT_NOT_FOUND";
+  String READ_NOTIFICATIONS = "Read user notifications!";
 }

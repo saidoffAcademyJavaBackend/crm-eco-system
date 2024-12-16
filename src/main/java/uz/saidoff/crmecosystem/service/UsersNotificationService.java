@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.service;
 
 import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.UsersNotification;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.repository.UsersNotificationRepository;
@@ -13,9 +14,11 @@ public class UsersNotificationService {
 
 
   private final UsersNotificationRepository usersNotificationRepository;
+  private final UserService userService;
 
-  public UsersNotificationService(UsersNotificationRepository usersNotificationRepository) {
+  public UsersNotificationService(UsersNotificationRepository usersNotificationRepository, UserService userService) {
     this.usersNotificationRepository = usersNotificationRepository;
+    this.userService = userService;
   }
 
   public List<UsersNotification> saveUsersNotification(List<User> users) {
@@ -31,4 +34,12 @@ public class UsersNotificationService {
   }
 
 
+  public void readUserNotifications(List<Notification> notificationsList) {
+    notificationsList.forEach(notification -> {
+      notification.getUsersNotifications()
+        .stream().filter(
+          a -> a.getUser().getId().equals(userService.getCurrentUser().getId()))
+        .map(a ->{ a.setRead(true); return a;}).forEach(usersNotificationRepository::save);
+    });
+  }
 }

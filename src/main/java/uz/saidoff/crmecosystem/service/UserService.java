@@ -7,6 +7,7 @@ import org.hibernate.validator.internal.engine.constraintvalidation.CrossParamet
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -107,5 +108,15 @@ public class UserService {
   public void checkUser(UUID userId) {
     Optional<User> userOptional = userRepository.findById(userId);
     if (userOptional.isEmpty()) { throw new NotFoundException("User not found"); }
+  }
+
+
+  /**
+   * GET CURRENT USER VIA TOKEN
+   * @return
+   */
+  public User getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return (User) authentication.getPrincipal();
   }
 }

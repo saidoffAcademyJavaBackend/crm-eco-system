@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Setter
@@ -14,9 +16,9 @@ import java.util.UUID;
 public class WarningDTO {
 
     private UUID id;
-    private UUID userId;
     private String reason;
     private boolean active;
+    private Timestamp warningDate;
 
 
 }

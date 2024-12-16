@@ -37,8 +37,6 @@ public class WarningService {
             Warning war = new Warning();
             war.setReason(reason);
             war.setPunishment(true);
-            war.setWarningCount(warnings.size() + 1);
-            war.setUser(user);
 
             warnings
                     .stream()
@@ -51,8 +49,6 @@ public class WarningService {
             Warning warning = Warning
                     .builder()
                     .reason(reason)
-                    .warningCount(warnings.size() + 1)
-                    .user(user)
                     .build();
 
             warningRepository.save(warning);
