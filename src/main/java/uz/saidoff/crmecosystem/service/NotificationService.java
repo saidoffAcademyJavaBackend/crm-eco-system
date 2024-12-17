@@ -28,7 +28,10 @@ public class NotificationService {
     userService.checkUser(userId);
 
     List<Notification> notificationsList = notificationRepository.findByUserId(userId);
-    return notificationsList.stream().map(notificationMapper::toDto).toList();
+    return notificationsList
+            .stream()
+            .map(notificationMapper::toDto)
+            .toList();
   }
 
 

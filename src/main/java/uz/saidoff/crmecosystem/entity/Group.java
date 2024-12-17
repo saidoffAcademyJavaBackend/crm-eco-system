@@ -1,6 +1,7 @@
 package uz.saidoff.crmecosystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,10 +29,10 @@ public class Group extends AbsEntity {
   @ManyToOne
   private User teacher;
 
-  @JsonFormat(pattern = "HH-mm")
+  @Schema(type = "String", pattern = "HH:mm")
   private LocalTime startTime;
 
-  @JsonFormat(pattern = "HH-mm")
+  @Schema(type = "String", pattern = "HH:mm")
   private LocalTime endTime;
 
   private boolean active = true;

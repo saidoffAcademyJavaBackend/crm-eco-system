@@ -6,7 +6,12 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.media.Schema;
+import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.context.annotation.Configuration;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @OpenAPIDefinition(info = @Info(
         description = "OpenAPI documentation for CRM EcoSystem",
@@ -27,4 +32,12 @@ import org.springframework.context.annotation.Configuration;
 )
 @Configuration
 public class SwaggerConfig {
+        static {
+                var schema = new Schema<LocalTime>();
+                schema.example(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+                schema.pattern("HH:mm");
+                SpringDocUtils
+                        .getConfig()
+                        .replaceWithSchema(LocalTime.class, schema);
+        }
 }
