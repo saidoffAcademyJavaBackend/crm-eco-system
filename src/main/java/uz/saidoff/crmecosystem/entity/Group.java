@@ -1,5 +1,6 @@
 package uz.saidoff.crmecosystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import uz.saidoff.crmecosystem.enums.WeekDays;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity(name = "groups")
@@ -25,9 +28,11 @@ public class Group extends AbsEntity {
   @ManyToOne
   private User teacher;
 
-  private Time startTime;
+  @JsonFormat(pattern = "HH-mm")
+  private LocalTime startTime;
 
-  private Time endTime;
+  @JsonFormat(pattern = "HH-mm")
+  private LocalTime endTime;
 
   private boolean active = true;
 
@@ -36,7 +41,8 @@ public class Group extends AbsEntity {
   @ManyToOne
   private GroupType groupType;
 
-  private Date startedDate;
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private LocalDate startedDate;
 
   private Double paymentAmount;
 
@@ -49,7 +55,6 @@ public class Group extends AbsEntity {
   private boolean student;
 
   private String room;
-
 
   @OneToMany
   private List<GroupStudent> groupStudents;

@@ -7,6 +7,7 @@ import lombok.Setter;
 import uz.saidoff.crmecosystem.enums.WeekDays;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class RequestWeekDayStudentDTO {
     private UUID studentId;
     private String groupName;
     private List<WeekDays> days;
-    private Time startTime;
-    private Time endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private int count;
 }

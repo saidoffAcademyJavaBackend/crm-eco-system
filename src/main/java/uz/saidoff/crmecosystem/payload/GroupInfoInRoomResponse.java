@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.saidoff.crmecosystem.entity.GroupType;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,8 +18,8 @@ public class GroupInfoInRoomResponse {
     private UUID groupId;
     private String groupName;
     private UUID teacherId;
-    private Time startTime;
-    private Time endTime;
-    private Date startedDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalDate startedDate;
 
 }
