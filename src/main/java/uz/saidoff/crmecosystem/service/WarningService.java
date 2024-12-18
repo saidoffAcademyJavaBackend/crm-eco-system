@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.saidoff.crmecosystem.entity.Warning;
@@ -26,6 +25,7 @@ public class WarningService {
     private final WarningRepository warningRepository;
     private final WarningMapper warningMapper;
     private final UserRepository userRepository;
+    private final UserService userService;
 
 
     @Transactional
@@ -38,8 +38,6 @@ public class WarningService {
             Warning war = new Warning();
             war.setReason(reason);
             war.setPunishment(true);
-            war.setWarningCount(warnings.size() + 1);
-            war.setUser(user);
 
             warnings
                     .stream()
@@ -52,8 +50,6 @@ public class WarningService {
             Warning warning = Warning
                     .builder()
                     .reason(reason)
-                    .warningCount(warnings.size() + 1)
-                    .user(user)
                     .build();
 
             warningRepository.save(warning);
@@ -82,5 +78,17 @@ public class WarningService {
         Page<Warning> warningList = warningRepository.findAllByPunishmentIsTrue(pageable);
         List<WarningDTO> warningDTO = warningMapper.toPunishmentDTOList(warningList);
         return new ResponseData<>(warningDTO, true);
+    }
+
+    public ResponseData<?> getAllWarningsByUserId(UUID userId) {
+        List<Warning> warningList = userService.getUserCurrentWarnings(userId);
+        if (warningList.isEmpty()) {
+            throw new NotFoundException("there is no any warnings");
+        }
+        List<WarningDTO> warningDTOList = warningList
+                .stream()
+                .map(warningMapper::toWarningGetDTO)
+                .toList();
+        return new ResponseData<>(warningDTOList, true);
     }
 }

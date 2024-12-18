@@ -37,6 +37,7 @@ public class NewsService {
     private final RoleRepository roleRepository;
     private final AttachmentRepository fileRepository;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     @Transactional
     public ResponseData<?> getAllNewsByUserRoles(int size, int page) {
@@ -55,17 +56,20 @@ public class NewsService {
         if (roles.isEmpty()) {
             throw new NotFoundException("Role not found");
         }
-        Optional<Attachment> optionalAttachment = fileRepository.findById(newsCreateDto.getAttachmentId());
+        Optional<Attachment> optionalAttachment = Optional.empty();
+        if (newsCreateDto.getAttachmentId() !=null){
+        optionalAttachment = fileRepository.findById(newsCreateDto.getAttachmentId());
         if (optionalAttachment.isEmpty()) {
             throw new NotFoundException("attachment not found");
         }
-        News news = newsMapper.fromNewsCreateDtoToNews(newsCreateDto, roles, optionalAttachment.get());
+        }
+        News news = newsMapper.fromNewsCreateDtoToNews(newsCreateDto, roles, optionalAttachment);
         newsRepository.save(news);
 
         //CREATING AND SENDING NOTIFICATION_DTO TO NOTIFICATION_SERVICE
         NotificationDto notificationDto = new NotificationDto();
         notificationDto.setTitle(news.getTitle());
-        notificationDto.setDescription(news.getContent().substring(0,100)+"...");
+        notificationDto.setDescription(news.getContent().length() > 100 ? news.getContent().substring(0,100)+"..." : news.getContent());
         notificationDto.setRolesId(newsCreateDto.getRoleId());
         notificationDto.setType(NotificationType.NEWS);
         notificationDto.setObject(news.getId());

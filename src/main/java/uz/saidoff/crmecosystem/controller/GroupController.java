@@ -26,7 +26,8 @@ public class GroupController {
     }
 
     @PostMapping("attach-student")
-    private ResponseData<?> attachStudent(@PathParam("groupId") UUID groupId, @PathParam("studentId") UUID studentId){
+    private ResponseData<?> attachStudent(@PathParam("groupId") UUID groupId,
+                                          @PathParam("studentId") UUID studentId){
         return groupService.attachStudentGroup(studentId, groupId);
     }
 

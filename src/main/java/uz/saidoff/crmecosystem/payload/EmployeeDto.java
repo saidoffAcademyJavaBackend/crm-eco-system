@@ -31,6 +31,7 @@ public class EmployeeDto {
     private String addedBy;
     private Date startWork;
     private UUID roleId;
+    private WarningResponseDto warningDto;
 
     private List<Permissions> permissions;
 

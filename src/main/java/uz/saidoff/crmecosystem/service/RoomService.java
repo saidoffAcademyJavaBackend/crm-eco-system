@@ -127,31 +127,5 @@ public class RoomService {
         }
         return new ResponseData<>(groupsByRoomId, true);
     }
-//
-//    public ResponseData<?> updateAssignRoom(UUID roomId, UUID userId, UUID groupId, List<WeekDays> daysAssigned) {
-//        if (daysAssigned == null || daysAssigned.isEmpty()) {
-//            throw new NotFoundException("Days assigned cannot be empty");
-//        }
-//        Room room = roomRepository.findRoomByIdAndDeletedFalse(roomId).orElseThrow(()
-//                -> new NotFoundException("room not found"));
-//        User user = userRepository.findByIdAndDeletedFalse(userId).orElseThrow(()
-//                -> new NotFoundException("user not found"));
-//        Group group = groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(()
-//                -> new NotFoundException("group not found"));
-//
-//        RoomEquipment assignment = roomAssignmentRepository.findByRoomIdAndResponsiblePersonIdAndGroupId(roomId, userId, groupId).orElseThrow(
-//                () -> new NotFoundException("assignment not found"));
-//
-//        assignment.setRoom(room);
-//        assignment.setResponsiblePerson(user);
-//        assignment.setGroup(group);
-//        assignment.setWeekDays(daysAssigned);
-//        roomAssignmentRepository.save(assignment);
-//        return new ResponseData<>("successfully updated", true);
-//    }
-//
-//    public ResponseData<?> getTeacherAvailableDaysAndTime(UUID teacherId) {
-//
-//        return null;
-//    }
+
 }

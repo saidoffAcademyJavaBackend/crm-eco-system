@@ -31,6 +31,7 @@ public class GroupService {
     private final GroupStudentRepository groupStudentRepository;
     private final UserRepository userRepository;
     private final GroupMapper groupMapper;
+    private final TransactionIncomeService transactionIncomeService;
 
 
     public ResponseData<?> create(GroupCreateDto createDto) {
@@ -45,15 +46,15 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.GROUP_NOT_FOUND)));
         GroupStudent groupStudent = new GroupStudent();
-        groupStudent.setStudentId(student);
-        groupStudent.setGroupId(group);
-        groupStudentRepository.save(groupStudent);
+        groupStudent.setStudent(student);
+        group.getGroupStudents().add(groupStudent);
+        groupRepository.save(group);
 
-        return ResponseData.successResponse(groupStudent.getId());
+        return ResponseData.successResponse(group.getId());
     }
 
     public ResponseData<GroupDto> getById(UUID groupId) {
-        Group group =  groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(
+        Group group = groupRepository.findByIdAndDeletedIsFalse(groupId).orElseThrow(
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT)));
         return ResponseData.successResponse(groupMapper.toDto(group));
     }
@@ -63,25 +64,30 @@ public class GroupService {
         if (groups.isEmpty())
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
-                groups.stream().map(groupMapper::toDto).toList());
+                groups
+                        .stream()
+                        .map(groupMapper::toDto)
+                        .toList());
     }
 
 
-
-    @Scheduled(cron = "0 0 2 * * ?")
-    public void updateGroupStage(){
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void updateGroupStage() {
         List<Group> allByDeletedIsFalse = groupRepository.findAllByDeletedIsFalse();
-        if (!allByDeletedIsFalse.isEmpty()){
+        if (!allByDeletedIsFalse.isEmpty()) {
             Period period;
-            for (Group group : allByDeletedIsFalse){
-                Date startedDate = group.getStartedDate();
+            for (Group group : allByDeletedIsFalse) {
+                LocalDate startedDate = group.getStartedDate();
                 int groupStage = group.getGroupStage();
                 LocalDate now = LocalDate.now();
-                period = Period.between(startedDate.toLocalDate(), now);
-                int monthDifference = period.getYears()*12+period.getMonths();
-                if (monthDifference+1 > groupStage){
-                    group.setGroupStage(groupStage+1);
+
+                //vaqtni faqrqini xisoblash
+                period = Period.between(startedDate, now);
+                int monthDifference = period.getYears() * 12 + period.getMonths();
+                if (monthDifference + 1 > groupStage) {
+                    group.setGroupStage(groupStage + 1);
                     groupRepository.save(group);
+                    transactionIncomeService.payment(group);
                 }
             }
         }

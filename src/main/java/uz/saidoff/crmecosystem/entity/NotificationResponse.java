@@ -2,6 +2,7 @@ package uz.saidoff.crmecosystem.entity;
 
 import jakarta.persistence.Entity;
 import lombok.*;
+import uz.saidoff.crmecosystem.enums.NotificationType;
 
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ public class NotificationResponse {
   private String title;
 
   private String description;
+
+  private NotificationType type;
 
   private UUID objectId;
 

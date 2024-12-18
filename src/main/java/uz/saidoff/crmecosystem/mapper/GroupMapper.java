@@ -3,22 +3,19 @@ package uz.saidoff.crmecosystem.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.GroupCreateDto;
 import uz.saidoff.crmecosystem.payload.GroupDto;
-import uz.saidoff.crmecosystem.repository.GroupTypeRepository;
-import uz.saidoff.crmecosystem.repository.UserRepository;
-import uz.saidoff.crmecosystem.util.MessageKey;
-import uz.saidoff.crmecosystem.util.MessageService;
+import uz.saidoff.crmecosystem.service.GroupTypeService;
+import uz.saidoff.crmecosystem.service.UserService;
 
 @Component
 @RequiredArgsConstructor
 public class GroupMapper {
 
-    private final UserRepository userRepository;
-    private final GroupTypeRepository groupTypeRepository;
+    private final UserService userService;
+    private final GroupTypeService groupTypeService;
 
-    public Group toEntity(GroupCreateDto createDto){
+    public Group toEntity(GroupCreateDto createDto) {
         Group group = new Group();
         group.setName(createDto.getName());
         group.setActive(createDto.isActive());
@@ -28,16 +25,13 @@ public class GroupMapper {
         group.setLinkForTelegram(createDto.getLinkOfTelegram());
         group.setStudent(createDto.isStudent());
         group.setPaymentAmount(createDto.getPaymentAmount());
-        group.setTeacher(userRepository.findById(createDto.getTeacherId()).orElseThrow(
-                () -> new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND))));
+        group.setTeacher(userService.getUserById(createDto.getTeacherId()));
         group.setWeekDays(createDto.getWeekDays());
-        group.setGroupType(groupTypeRepository.findById(createDto.getGroupTypeId()).orElseThrow(
-                () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT))));
-
+        group.setGroupType(groupTypeService.getGroupTypeById(createDto.getGroupTypeId()));
         return group;
     }
 
-    public GroupDto toDto(Group group){
+    public GroupDto toDto(Group group) {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(group.getId());
         groupDto.setName(group.getName());

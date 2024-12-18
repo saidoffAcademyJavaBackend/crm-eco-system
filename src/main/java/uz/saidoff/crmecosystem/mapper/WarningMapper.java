@@ -25,21 +25,11 @@ public class WarningMapper {
         this.userRepository = userRepository;
     }
 
-    public Warning toWarning(WarningDTO dto) {
-        User user = userRepository.findByIdAndDeletedFalse(dto.getUserId()).orElseThrow(()
-                -> new NotFoundException("user not found"));
-        Warning warning = new Warning();
-        warning.setReason(dto.getReason());
-        warning.setUser(user);
-        warning.setDeleted(dto.isActive());
-        return warning;
-    }
-
     public WarningDTO toWarningDTO(Warning warning) {
         WarningDTO dto = new WarningDTO();
         dto.setId(warning.getId());
+        dto.setWarningDate(warning.getCreatedAt());
         dto.setReason(warning.getReason());
-        dto.setUserId(warning.getUser().getId());
         dto.setActive(warning.isDeleted());
         return dto;
     }
@@ -47,7 +37,6 @@ public class WarningMapper {
         WarningDTO dto = new WarningDTO();
         dto.setId(warning.getId());
         dto.setReason(warning.getReason());
-        dto.setUserId(warning.getUser().getId());
         return dto;
     }
 

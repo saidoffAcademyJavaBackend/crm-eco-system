@@ -37,6 +37,9 @@ public class TransactionIncomeMapper {
         if (attachment != null) {
             transaction.setAttachment(attachment);
         }
+        if (transactionIncomeAddDto.getGroupStage()!=null){
+            transaction.getUserPayments().setGroupStage(transactionIncomeAddDto.getGroupStage());
+        }
         return transaction;
     }
 }

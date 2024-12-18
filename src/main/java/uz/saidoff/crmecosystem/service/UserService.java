@@ -7,10 +7,12 @@ import org.hibernate.validator.internal.engine.constraintvalidation.CrossParamet
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.saidoff.crmecosystem.entity.Warning;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
@@ -22,6 +24,8 @@ import uz.saidoff.crmecosystem.payload.UserDto;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.util.MessageKey;
+import uz.saidoff.crmecosystem.util.MessageService;
 import uz.saidoff.crmecosystem.valid.PasswordValidate;
 import uz.saidoff.crmecosystem.valid.PasswordValidation;
 
@@ -106,6 +110,28 @@ public class UserService {
 
   public void checkUser(UUID userId) {
     Optional<User> userOptional = userRepository.findById(userId);
-    if (userOptional.isEmpty()) { throw new NotFoundException("User not found"); }
+    if (userOptional.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
+  }
+
+  public User getUserById(UUID userId) {
+    return userRepository.findByIdAndDeletedFalse(userId).orElseThrow(
+      () -> new NotFoundException(MessageService.getMessage(MessageKey.USER_NOT_FOUND)));
+  }
+
+  /**
+   * GET CURRENT USER VIA TOKEN
+   *
+   * @return
+   */
+  public User getCurrentUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return (User) authentication.getPrincipal();
+  }
+
+  public List<Warning> getUserCurrentWarnings(UUID userId) {
+    User userById = getUserById(userId);
+    return userById.getWarnings().stream().filter(a -> !a.isDeleted()).toList();
   }
 }
