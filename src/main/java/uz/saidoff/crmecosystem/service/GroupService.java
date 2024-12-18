@@ -63,7 +63,10 @@ public class GroupService {
         if (groups.isEmpty())
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
-                groups.stream().map(groupMapper::toDto).toList());
+                groups
+                        .stream()
+                        .map(groupMapper::toDto)
+                        .toList());
     }
 
 
