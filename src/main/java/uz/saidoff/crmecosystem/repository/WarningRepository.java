@@ -14,5 +14,4 @@ public interface WarningRepository extends JpaRepository<Warning, UUID> {
 
     Page<Warning> findAllByPunishmentIsTrue(Pageable pageable);
 
-    List<Warning> findAllByUserId(UUID userId);
 }

@@ -65,7 +65,7 @@ public class User extends AbsEntity implements UserDetails {
     @OneToMany
     private List<ProjectUser> projectUsers;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Warning> warnings;
 
     private boolean enabled = false;

@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.NotificationResponse;
-import uz.saidoff.crmecosystem.entity.UsersNotification;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.mapper.NotificationMapper;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.repository.NotificationRepository;
-import uz.saidoff.crmecosystem.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

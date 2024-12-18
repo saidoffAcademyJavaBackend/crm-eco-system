@@ -25,6 +25,7 @@ public class WarningService {
     private final WarningRepository warningRepository;
     private final WarningMapper warningMapper;
     private final UserRepository userRepository;
+    private final UserService userService;
 
 
     @Transactional
@@ -80,7 +81,7 @@ public class WarningService {
     }
 
     public ResponseData<?> getAllWarningsByUserId(UUID userId) {
-        List<Warning> warningList = warningRepository.findAllByUserId(userId);
+        List<Warning> warningList = userService.getUserCurrentWarnings(userId);
         if (warningList.isEmpty()) {
             throw new NotFoundException("there is no any warnings");
         }

@@ -46,7 +46,7 @@ public class GroupService {
                 () -> new NotFoundException(MessageService.getMessage(MessageKey.GROUP_NOT_FOUND)));
         GroupStudent groupStudent = new GroupStudent();
         groupStudent.setStudent(student);
-        group.setGroupStudents(List.of(groupStudent));
+        group.getGroupStudents().add(groupStudent);
         groupRepository.save(group);
 
         return ResponseData.successResponse(group.getId());
