@@ -58,4 +58,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             String currency,
             Boolean isIncome
     );
+
+
+    @Query(nativeQuery = true,value = "select sum(t.amount), u.group_stage from transaction t left join user_payments u on t.user_payments_id = u.id" +
+            " where u.group_id and u.transactor_id and t.currency='SUM' group by u.group_stage")
+    List<Object[]> findSumAmount(UUID groupId, UUID transactorId);
 }

@@ -20,4 +20,5 @@ public class TransactionIncomeAddDto {
     private UUID attachmentId;
     private UUID transactorId;
     private UUID groupId;
+    private Integer groupStage;
 }

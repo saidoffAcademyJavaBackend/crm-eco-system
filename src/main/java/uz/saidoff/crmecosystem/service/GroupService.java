@@ -31,6 +31,7 @@ public class GroupService {
     private final GroupStudentRepository groupStudentRepository;
     private final UserRepository userRepository;
     private final GroupMapper groupMapper;
+    private final TransactionIncomeService transactionIncomeService;
 
 
     public ResponseData<?> create(GroupCreateDto createDto) {
@@ -67,7 +68,7 @@ public class GroupService {
     }
 
 
-    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void updateGroupStage() {
         List<Group> allByDeletedIsFalse = groupRepository.findAllByDeletedIsFalse();
         if (!allByDeletedIsFalse.isEmpty()) {
@@ -81,6 +82,7 @@ public class GroupService {
                 if (monthDifference + 1 > groupStage) {
                     group.setGroupStage(groupStage + 1);
                     groupRepository.save(group);
+                    transactionIncomeService.payment(group);
                 }
             }
         }

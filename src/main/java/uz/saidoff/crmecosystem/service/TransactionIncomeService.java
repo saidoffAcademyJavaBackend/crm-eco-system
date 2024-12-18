@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.entity.auth.User;
+import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.TransactionIncomeMapper;
 import uz.saidoff.crmecosystem.payload.BalanceUpdateIncomeOutcomeDto;
@@ -25,7 +26,6 @@ public class TransactionIncomeService {
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
     private final GroupRepository groupRepository;
-
 
     public ResponseData<?> addTransactionIncome(TransactionIncomeAddDto transactionIncomeAddDto) {
         Optional<Category> optionalCategory = categoryRepository.findById(transactionIncomeAddDto.getCategoryId());
@@ -52,14 +52,47 @@ public class TransactionIncomeService {
             if (optionalUser.isEmpty()) {
                 throw new NotFoundException("User not found");
             }
+
             User user = optionalUser.get();
             if (user.getRole().getRoleType().name().equals("STUDENT") || user.getRole().getRoleType().name().equals("INTERN")) {
-                if (user.getSalary() != null && transactionIncomeAddDto.getAmount() > user.getSalary()) {
-                    user.setBalance(transactionIncomeAddDto.getAmount() - user.getSalary());
-                    transactionIncomeAddDto.setAmount(user.getSalary());
-                } else if (optionalGroup.isPresent() && transactionIncomeAddDto.getAmount() > optionalGroup.get().getPaymentAmount()) {
-                    user.setBalance(transactionIncomeAddDto.getAmount() - optionalGroup.get().getPaymentAmount());
-                    transactionIncomeAddDto.setAmount(optionalGroup.get().getPaymentAmount());
+
+                if (transactionIncomeAddDto.getGroupId() != null && optionalGroup.isPresent()) {
+                    Group group = optionalGroup.get();
+                    List<GroupStudent> groupStudents = group.getGroupStudents();
+                    for (GroupStudent groupStudent : groupStudents) {
+                        if (groupStudent.getStudent().getId().equals(user.getId())) {
+                            double balance = user.getBalance();
+                            if (transactionIncomeAddDto.getAmount() > groupStudent.getPaymentAmount()) {
+                                if (balance >= 0) {
+                                    balance += transactionIncomeAddDto.getAmount() - groupStudent.getPaymentAmount();
+                                    user.setBalance(balance);
+                                    transactionIncomeAddDto.setAmount(groupStudent.getPaymentAmount());
+                                    break;
+                                } else {
+                                    if (balance * (-1) >= transactionIncomeAddDto.getAmount()) {
+                                        balance += transactionIncomeAddDto.getAmount();
+                                    } else {
+                                        balance = 0;
+                                        balance += transactionIncomeAddDto.getAmount() - groupStudent.getPaymentAmount();
+                                    }
+                                    user.setBalance(balance);
+                                    transactionIncomeAddDto.setAmount(groupStudent.getPaymentAmount());
+                                }
+                            } else {
+                                if (balance < 0) {
+                                    if (balance * (-1) >= transactionIncomeAddDto.getAmount()) {
+                                        balance += transactionIncomeAddDto.getAmount();
+                                        user.setBalance(balance);
+                                        transactionIncomeAddDto.setAmount(transactionIncomeAddDto.getAmount());
+                                    } else {
+                                        balance += transactionIncomeAddDto.getAmount();
+                                        user.setBalance(balance);
+                                        transactionIncomeAddDto.setAmount(transactionIncomeAddDto.getAmount());
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -127,5 +160,43 @@ public class TransactionIncomeService {
         }
 
         return ResponseData.successResponse(optionalTransaction.get());
+    }
+
+
+    public void payment(Group group) {
+        List<GroupStudent> groupStudents = group.getGroupStudents();
+        for (GroupStudent groupStudent : groupStudents) {
+            User student = groupStudent.getStudent();
+            double paymentAmount = groupStudent.getPaymentAmount();
+            double balance = student.getBalance();
+            boolean makeTransaction = false;
+            Transaction transaction = new Transaction();
+            if (paymentAmount < balance) {
+                transaction.setAmount(paymentAmount);
+                makeTransaction = true;
+                balance = balance - paymentAmount;
+            } else if (paymentAmount > balance && balance > 0) {
+                transaction.setAmount(balance);
+                makeTransaction = true;
+                balance = balance - paymentAmount;
+            } else if (balance <= 0) {
+                balance = balance - paymentAmount;
+            }
+            if (makeTransaction) {
+                transaction.setIsIncome(true);
+                transaction.setDescription("oylikk tolov uchun pul yechildi");
+                Optional<Category> byName = categoryRepository.findByName("STUDENT_PAYMENT");
+                byName.ifPresent(transaction::setCategory);
+                transaction.setCurrency(Currency.SUM);
+                UserPayments userPayments = new UserPayments();
+                userPayments.setTransactor(student);
+                userPayments.setGroupStage(group.getGroupStage());
+                userPayments.setGroup(group);
+                transaction.setUserPayments(userPayments);
+                transactionRepository.save(transaction);
+            }
+            student.setBalance(balance);
+            userRepository.save(student);
+        }
     }
 }
