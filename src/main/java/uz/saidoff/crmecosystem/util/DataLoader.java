@@ -6,12 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.saidoff.crmecosystem.entity.Balance;
+import uz.saidoff.crmecosystem.entity.Category;
 import uz.saidoff.crmecosystem.entity.auth.Role;
 import uz.saidoff.crmecosystem.enums.Currency;
 import uz.saidoff.crmecosystem.enums.Permissions;
 import uz.saidoff.crmecosystem.enums.RoleType;
 import uz.saidoff.crmecosystem.factory.UserFactorySingleton;
 import uz.saidoff.crmecosystem.repository.BalanceRepository;
+import uz.saidoff.crmecosystem.repository.CategoryRepository;
 import uz.saidoff.crmecosystem.repository.RoleRepository;
 import uz.saidoff.crmecosystem.repository.UserRepository;
 
@@ -25,6 +27,7 @@ public class DataLoader implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final BalanceRepository balanceRepository;
+    private final CategoryRepository categoryRepository;
 
     @Value("${spring.sql.init.mode}")
     private String initMode;
@@ -86,6 +89,13 @@ public class DataLoader implements CommandLineRunner {
             balance2.setCurrency(Currency.USD);
             balance2.setAmount(0.0);
             balanceRepository.save(balance2);
+
+
+            Category category = new Category();
+            category.setDescription("Payment for month");
+            category.setName("STUDENT_PAYMENT");
+            category.setIncome(true);
+            categoryRepository.save(category);
         }
     }
 }
