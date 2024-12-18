@@ -19,11 +19,6 @@ import java.util.Map;
 @Component
 public class WarningMapper {
 
-    private final UserRepository userRepository;
-
-    public WarningMapper(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public WarningDTO toWarningDTO(Warning warning) {
         WarningDTO dto = new WarningDTO();
@@ -49,7 +44,7 @@ public class WarningMapper {
         return dto;
     }
 
-    public List<WarningDTO> toWarningDTO(Page<Warning> warnings) {
+    public List<WarningDTO> toWarningDTO(List<Warning> warnings) {
         List<WarningDTO> dtos = new ArrayList<>();
         for (Warning warning : warnings) {
             dtos.add(toWarningDTO(warning));
@@ -57,7 +52,7 @@ public class WarningMapper {
         return dtos;
     }
 
-    public List<WarningDTO> toPunishmentDTOList(Page<Warning> warnings) {
+    public List<WarningDTO> toPunishmentDTOList(List<Warning> warnings) {
         List<WarningDTO> dtos = new ArrayList<>();
         for (Warning warning : warnings) {
             dtos.add(toPunishmentDTO(warning));

@@ -30,10 +30,8 @@ public class WarningController {
 
     @CheckPermission("GET_ALL_WARNINGS")
     @GetMapping("/getWarnings")
-    public HttpEntity<?> getWarnings(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
-        ResponseData<?> warnings = warningService.getWarnings(page, size);
+    public HttpEntity<?> getWarnings() {
+        ResponseData<?> warnings = warningService.getWarnings();
         return ResponseEntity.ok(warnings);
     }
 
@@ -46,10 +44,8 @@ public class WarningController {
 
     @CheckPermission("GET_ALL_WARNINGS")
     @GetMapping("/getPunishments")
-    public HttpEntity<?> getPunishments(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
-        ResponseData<?> punishments = warningService.getPunishments(page, size);
+    public HttpEntity<?> getPunishments() {
+        ResponseData<?> punishments = warningService.getPunishments();
         return ResponseEntity.ok(punishments);
     }
 

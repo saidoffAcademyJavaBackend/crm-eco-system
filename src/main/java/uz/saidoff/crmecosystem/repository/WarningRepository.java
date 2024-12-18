@@ -12,6 +12,6 @@ import java.util.UUID;
 @Repository
 public interface WarningRepository extends JpaRepository<Warning, UUID> {
 
-    Page<Warning> findAllByPunishmentIsTrue(Pageable pageable);
+    List<Warning> findAllByPunishmentIsTrue();
 
 }

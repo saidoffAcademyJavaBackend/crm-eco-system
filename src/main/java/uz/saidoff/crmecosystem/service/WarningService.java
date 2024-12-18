@@ -30,8 +30,7 @@ public class WarningService {
 
     @Transactional
     public ResponseData<?> addWarning(UUID userId, String reason) {
-        User user = userRepository.findByIdAndDeletedFalse(userId).orElseThrow(
-                () -> new NotFoundException("User not found"));
+        User user = userService.getUserById(userId);
         List<Warning> warnings = user.getWarnings();
         if ((warnings.size() + 1) % 3 == 0) {
 
@@ -59,9 +58,8 @@ public class WarningService {
         return new ResponseData<>("Warning has been added", true);
     }
 
-    public ResponseData<List<WarningDTO>> getWarnings(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Warning> warnings = warningRepository.findAll(pageable);
+    public ResponseData<List<WarningDTO>> getWarnings() {
+        List<Warning> warnings = warningRepository.findAll();
         List<WarningDTO> warningDTO = warningMapper.toWarningDTO(warnings);
         return new ResponseData<>(warningDTO, true);
     }
@@ -73,9 +71,8 @@ public class WarningService {
         return new ResponseData<>(warningDTO, true);
     }
 
-    public ResponseData<List<WarningDTO>> getPunishments(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Warning> warningList = warningRepository.findAllByPunishmentIsTrue(pageable);
+    public ResponseData<List<WarningDTO>> getPunishments() {
+        List<Warning> warningList = warningRepository.findAllByPunishmentIsTrue();
         List<WarningDTO> warningDTO = warningMapper.toPunishmentDTOList(warningList);
         return new ResponseData<>(warningDTO, true);
     }
