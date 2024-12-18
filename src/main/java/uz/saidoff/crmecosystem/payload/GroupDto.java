@@ -7,6 +7,8 @@ import lombok.Setter;
 import uz.saidoff.crmecosystem.enums.WeekDays;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,9 +21,9 @@ public class GroupDto {
     private UUID id;
     private String name;
     private UUID teacherId;
-    private Time startTime;
-    private Time endTime;
-    private Date startDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalDate startDate;
     private int groupStage;
     private String linkOfTelegram;
     private UUID groupTypeId;

@@ -1,10 +1,11 @@
 package uz.saidoff.crmecosystem.payload;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import uz.saidoff.crmecosystem.entity.GroupType;
-import java.sql.Time;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -16,8 +17,8 @@ public class GroupInfoInRoomResponse {
     private UUID groupId;
     private String groupName;
     private UUID teacherId;
-    private Time startTime;
-    private Time endTime;
-    private Date startedDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalDate startedDate;
 
 }

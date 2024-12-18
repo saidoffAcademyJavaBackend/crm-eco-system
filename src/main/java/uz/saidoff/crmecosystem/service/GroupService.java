@@ -63,7 +63,10 @@ public class GroupService {
         if (groups.isEmpty())
             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
         return ResponseData.successResponse(
-                groups.stream().map(groupMapper::toDto).toList());
+                groups
+                        .stream()
+                        .map(groupMapper::toDto)
+                        .toList());
     }
 
 
@@ -73,10 +76,12 @@ public class GroupService {
         if (!allByDeletedIsFalse.isEmpty()) {
             Period period;
             for (Group group : allByDeletedIsFalse) {
-                Date startedDate = group.getStartedDate();
+                LocalDate startedDate = group.getStartedDate();
                 int groupStage = group.getGroupStage();
                 LocalDate now = LocalDate.now();
-                period = Period.between(startedDate.toLocalDate(), now);
+
+                //vaqtni faqrqini xisoblash
+                period = Period.between(startedDate, now);
                 int monthDifference = period.getYears() * 12 + period.getMonths();
                 if (monthDifference + 1 > groupStage) {
                     group.setGroupStage(groupStage + 1);

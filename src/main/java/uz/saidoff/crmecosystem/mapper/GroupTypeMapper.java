@@ -11,7 +11,6 @@ import uz.saidoff.crmecosystem.repository.GroupTypeRepository;
 @RequiredArgsConstructor
 public class GroupTypeMapper {
 
-    private final GroupTypeRepository groupTypeRepository;
 
     public GroupType toEntity(GroupTypeCreateDto createDto){
         GroupType groupType = new GroupType();

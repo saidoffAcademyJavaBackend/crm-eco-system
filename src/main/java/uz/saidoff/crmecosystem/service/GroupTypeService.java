@@ -11,6 +11,7 @@ import uz.saidoff.crmecosystem.repository.GroupTypeRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.util.MessageKey;
 import uz.saidoff.crmecosystem.util.MessageService;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -36,8 +37,15 @@ public class GroupTypeService {
     public ResponseData<List<GroupTypeDto>> getAll() {
         List<GroupType> groupTypeList = groupTypeRepository.findAllByDeletedIsFalse();
         if (groupTypeList.isEmpty())
-             throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
-        return ResponseData.successResponse(
-                groupTypeList.stream().map(groupTypeMapper::toDto).toList());
+            throw new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT));
+        return ResponseData.successResponse(groupTypeList
+                .stream()
+                .map(groupTypeMapper::toDto)
+                .toList());
+    }
+
+    public GroupType getGroupTypeById(UUID groupTypeId) {
+        return groupTypeRepository.findByIdAndDeletedIsFalse(groupTypeId).orElseThrow(
+                () -> new NotFoundException(MessageService.getMessage(MessageKey.NO_CONTENT)));
     }
 }
