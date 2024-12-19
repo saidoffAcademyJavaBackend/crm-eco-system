@@ -18,16 +18,16 @@ public class GroupMapper {
     public Group toEntity(GroupCreateDto createDto) {
         Group group = new Group();
         group.setName(createDto.getName());
-        group.setActive(createDto.isActive());
+        group.setTeacher(userService.getUserById(createDto.getTeacherId()));
         group.setStartTime(createDto.getStartTime());
         group.setEndTime(createDto.getEndTime());
         group.setStartedDate(createDto.getStartDate());
         group.setLinkForTelegram(createDto.getLinkOfTelegram());
+        group.setGroupType(groupTypeService.getGroupTypeById(createDto.getGroupTypeId()));
+        group.setWeekDays(createDto.getWeekDays());
+        group.setActive(createDto.isActive());
         group.setStudent(createDto.isStudent());
         group.setPaymentAmount(createDto.getPaymentAmount());
-        group.setTeacher(userService.getUserById(createDto.getTeacherId()));
-        group.setWeekDays(createDto.getWeekDays());
-        group.setGroupType(groupTypeService.getGroupTypeById(createDto.getGroupTypeId()));
         return group;
     }
 
@@ -35,12 +35,15 @@ public class GroupMapper {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(group.getId());
         groupDto.setName(group.getName());
-        groupDto.setActive(group.isActive());
+        groupDto.setTeacherId(group.getTeacher().getId());
         groupDto.setStartTime(group.getStartTime());
         groupDto.setEndTime(group.getEndTime());
+        groupDto.setStartDate(group.getStartedDate());
         groupDto.setLinkOfTelegram(group.getLinkForTelegram());
+        groupDto.setGroupTypeId(group.getGroupType().getId());
         groupDto.setWeekDays(group.getWeekDays());
-        groupDto.setTeacherId(group.getTeacher().getId());
+        groupDto.setActive(group.isActive());
+        groupDto.setStudent(group.isStudent());
         groupDto.setGroupStage(group.getGroupStage());
         return groupDto;
     }

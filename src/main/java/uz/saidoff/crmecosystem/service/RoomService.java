@@ -7,15 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.Room;
-import uz.saidoff.crmecosystem.entity.RoomCountEquipment;
-import uz.saidoff.crmecosystem.entity.RoomEquipment;
 import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.enums.RoomStatus;
 import uz.saidoff.crmecosystem.exception.AlreadyExistException;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.mapper.RoomEquipmentMapper;
 import uz.saidoff.crmecosystem.mapper.RoomMapper;
-import uz.saidoff.crmecosystem.payload.*;
+import uz.saidoff.crmecosystem.payload.GroupInfoInRoomResponse;
+import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
+import uz.saidoff.crmecosystem.payload.RoomDto;
+import uz.saidoff.crmecosystem.payload.RoomResponseDto;
 import uz.saidoff.crmecosystem.repository.*;
 import uz.saidoff.crmecosystem.response.ResponseData;
 
@@ -30,9 +30,7 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final RoomEquipmentRepository roomEquipmentRepository;
-    private final RoomEquipmentMapper roomEquipmentMapper;
-    private final RoomCountEquipmentRepository roomCountEquipmentRepository;
+
 
 
     public ResponseData<?> addRoom(RoomCreateUpdateDto roomDto) {
@@ -51,7 +49,6 @@ public class RoomService {
                 -> new NotFoundException("room not found"));
         Room updatedRoom = roomMapper.toRoomUpdateEntity(room, roomDto);
         Room savedRoom = roomRepository.save(updatedRoom);
-//        RoomResponseDto mapperRoomDto = roomMapper.toRoomResponseDto(savedRoom);
         return new ResponseData<>("Room has been successfully updated: " + savedRoom, true);
     }
 

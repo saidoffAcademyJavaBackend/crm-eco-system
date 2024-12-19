@@ -2,14 +2,13 @@ package uz.saidoff.crmecosystem.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.Room;
 import uz.saidoff.crmecosystem.entity.RoomCountEquipment;
-import uz.saidoff.crmecosystem.entity.RoomEquipment;
-import uz.saidoff.crmecosystem.entity.auth.User;
-import uz.saidoff.crmecosystem.exception.NotFoundException;
-import uz.saidoff.crmecosystem.payload.*;
-import uz.saidoff.crmecosystem.repository.*;
+import uz.saidoff.crmecosystem.payload.RoomCreateUpdateDto;
+import uz.saidoff.crmecosystem.payload.RoomDto;
+import uz.saidoff.crmecosystem.payload.RoomEquipCountDto;
+import uz.saidoff.crmecosystem.payload.RoomResponseDto;
+import uz.saidoff.crmecosystem.repository.RoomCountEquipmentRepository;
 import uz.saidoff.crmecosystem.service.EquipmentService;
 
 import java.util.ArrayList;
@@ -18,45 +17,18 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class RoomMapper {
-
-  private final RoomEquipmentRepository roomEquipmentRepository;
-  private final UserRepository userRepository;
-  private final GroupRepository groupRepository;
-  private final RoomEquipmentMapper roomEquipmentMapper;
-  private final RoomRepository roomRepository;
   private final RoomCountEquipmentRepository roomCountEquipmentRepository;
   private final EquipmentService equipmentService;
 
 
-  public Room toRoomEntity(RoomDto roomDto) {
-    User user = userRepository.findByIdAndDeletedFalse(roomDto.getResponsiblePersonId()).orElseThrow(
-      () -> new NotFoundException("User not found"));
-    Group group = groupRepository.findByIdAndDeletedIsFalse(roomDto.getGroupId()).orElseThrow(
-      () -> new NotFoundException("Group not found"));
-    RoomEquipment equipment = roomEquipmentRepository.findByIdAndDeletedFalse(roomDto.getEquipmentId())
-      .orElseThrow(() -> new NotFoundException("Equipment not found"));
-    Room room = new Room();
-    room.setRoomName(roomDto.getRoomName());
-    room.setCapacity(roomDto.getCapacity());
-    room.setComment(roomDto.getComment());
-    room.setRoomType(roomDto.getRoomType());
-    room.setGroup(group);
-    room.setResponsiblePerson(user);
-    return room;
-  }
 
-  public List<RoomCountEquipment> toRoomCountEquipmentEntity(List<RoomCountEquipment> existEquipments, List<RoomEquipCountDto> roomCountEquipmentList) {
+  public List<RoomCountEquipment> toRoomCountEquipmentEntity(List<RoomCountEquipment> existEquipments,
+                                                             List<RoomEquipCountDto> roomCountEquipmentList) {
     roomCountEquipmentRepository.deleteAll(existEquipments);
-
     return getRoomCountEquipmentList(roomCountEquipmentList);
   }
 
-  public RoomCountEquipment toRoomCountEquipmentEntity(RoomEquipCountDto roomCountEquipment) {
-    RoomCountEquipment countDto = new RoomCountEquipment();
-    countDto.setId(roomCountEquipment.getId());
-    countDto.setCount(roomCountEquipment.getCount());
-    return countDto;
-  }
+
 
 
   public Room toRoomEntity(RoomCreateUpdateDto roomDto) {
