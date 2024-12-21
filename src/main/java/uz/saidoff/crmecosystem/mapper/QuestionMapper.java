@@ -44,7 +44,7 @@ public class QuestionMapper {
     public Question dtoToEntity(QuestionCreateDto questionDto) {
 
         Question question = new Question();
-        List<Answers> answers = answerService.updateAnswers(questionDto.getAnswers());
+        List<Answers> answers = answerService.updateAnswers(questionDto);
 
         question.setQuestion(questionDto.getQuestion());
         question.setDescription(questionDto.getDescription());

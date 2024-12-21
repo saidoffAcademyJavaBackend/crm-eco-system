@@ -70,6 +70,13 @@ public class GroupService {
                         .toList());
     }
 
+    public List<Group> getGroupsById(List<UUID> groupIds) {
+
+        List<Group> groupsList = groupRepository.findAllByIdIn(groupIds);
+
+        return groupsList;
+    }
+
 
     @Scheduled(cron = "0 0 1 * * ?")
     public void updateGroupStage() {

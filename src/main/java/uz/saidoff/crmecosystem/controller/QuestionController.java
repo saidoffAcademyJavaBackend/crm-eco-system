@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.QuestionService;
-import uz.saidoff.crmecosystem.valid.CheckPermission;
 
 import java.util.UUID;
 

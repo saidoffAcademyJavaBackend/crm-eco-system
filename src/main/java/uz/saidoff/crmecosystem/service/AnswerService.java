@@ -3,6 +3,8 @@ package uz.saidoff.crmecosystem.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Answers;
+import uz.saidoff.crmecosystem.entity.Question;
+import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.AnswersDto;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
 import uz.saidoff.crmecosystem.repository.AnswersRepository;
@@ -12,11 +14,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.coyote.http11.Constants.a;
+
 @RequiredArgsConstructor
 @Service
 public class AnswerService {
 
     private final AnswersRepository answersRepository;
+    private final QuestionService questionService;
 
     public List<Answers> createAnswer(QuestionCreateDto questionCreateDto) {
 
@@ -58,35 +63,26 @@ public class AnswerService {
         return answersDtoList;
     }
 
-    public List<Answers> updateAnswers(List<AnswersDto> answersDtoList) {
+    public List<Answers> updateAnswers(QuestionCreateDto questionCreateDto) {
 
-        List<Answers> answersList = new ArrayList<>();
+        List<AnswersDto> answers = questionCreateDto.getAnswers();
 
-        for (AnswersDto answersDto : answersDtoList) {
+        Question question = questionService.getQuestion(questionCreateDto.getQuestionId());
 
-            Integer i = answersRepository.updateAnswersById(answersDto.getValue(),
-                                                            answersDto.getIsRightAnswer(),
-                                                            answersDto.getId());
+        List<Answers> byQuestion = answersRepository.findByQuestion(question);
 
-            if ( i == 0) {
-                throw new RuntimeException("Answer not updated");
+        if (byQuestion.isEmpty()) {
+            throw new NotFoundException("Answers not found");
+        }
+
+        for (AnswersDto answer : answers) {
+            for (Answers value : byQuestion) {
+                value.setValue(answer.getValue());
+                value.setIsRightAnswer(answer.getIsRightAnswer());
             }
         }
 
-        for (AnswersDto answersDto : answersDtoList) {
-
-            Optional<Answers> byId = answersRepository.findById(answersDto.getId());
-
-            if (byId.isEmpty()) {
-                throw new RuntimeException("Answer not found");
-            }
-
-            Answers answers = byId.get();
-
-            answersList.add(answers);
-        }
-
-        return answersList;
+        return answersRepository.saveAll(byQuestion);
     }
 
 }

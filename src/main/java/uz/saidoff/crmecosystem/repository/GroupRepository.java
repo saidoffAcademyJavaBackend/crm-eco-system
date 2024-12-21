@@ -31,4 +31,5 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
     Optional<Group> usergaTegishliGroup(@Param("studentId") UUID studentId);
 
 
+    List<Group> findAllByIdIn(List<UUID> ids);
 }

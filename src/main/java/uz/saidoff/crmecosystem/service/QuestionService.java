@@ -4,9 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Answers;
+import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.GroupStudent;
 import uz.saidoff.crmecosystem.entity.Question;
-import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.exception.ForbiddenException;
 import uz.saidoff.crmecosystem.mapper.QuestionMapper;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
@@ -32,6 +32,7 @@ public class QuestionService {
     private final UserSession userSession;
     private final UserRepository userRepository;
     private final GroupStudentRepository groupStudentRepository;
+    private final GroupService groupService;
 
     public ResponseData<?> createQuestion(QuestionCreateDto questionDto) {
 
@@ -106,32 +107,34 @@ public class QuestionService {
         UUID userId = userSession.getUser().getId();
 
         Optional<Question> questionById = questionRepository.findById(id);
-        Optional<User> userById = userRepository.findById(userId);
-        List<GroupStudent> byStudentId = groupStudentRepository.findByStudentId(userId);
 
         if (questionById.isEmpty()) {
             throw new EntityNotFoundException("Question not found");
         }
-        if (userById.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
 
         Question question = questionById.get();
 
-        for (UUID groupID : question.getGroupIDs()) {
-            for (GroupStudent groupStudent : byStudentId) {
-                if (!groupID.equals(groupStudent.getGroupId())) {
-                    throw new ForbiddenException("This user", "forbidden");
-                }
-            }
-        }
+        List<UUID> groupIDs = question.getGroupIDs();
+        List<Group> groupsByIDs = groupService.getGroupsById(groupIDs);
 
-        for (UUID usersID : question.getUsersIDs()) {
-            for (GroupStudent groupStudent : byStudentId) {
-                if(usersID.equals(groupStudent.getStudentId())) {
-                    throw new ForbiddenException("This user", "forbidden");
+        for (Group groupsByID : groupsByIDs) {
+
+            for (int i = 0; i < question.getGroupIDs().size(); i++) {
+                if (!groupsByID.getId().equals(question.getGroupIDs().get(i))) {
+                    throw new ForbiddenException("This group", "forbidden");
                 }
             }
+
+            List<GroupStudent> groupStudents = groupsByID.getGroupStudents();
+
+            for (GroupStudent groupStudent : groupStudents) {
+                for (int i = 0; i < question.getUsersIDs().size(); i++) {
+                    if (groupStudent.getStudent().getId().equals(question.getUsersIDs().get(i))) {
+                        throw new ForbiddenException("This user", "forbidden");
+                    }
+                }
+            }
+
         }
 
         QuestionCreateDto questionCreateDto = questionMapper.entityToDto(question);
@@ -144,5 +147,12 @@ public class QuestionService {
         questionRepository.deleteById(id);
 
         return new ResponseData<>(true);
+    }
+
+    public Question getQuestion(UUID id) {
+
+        return questionRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Question not found")
+        );
     }
 }
