@@ -18,6 +18,13 @@ public class QuestionMapper {
 
     private final AnswerService answerService;
 
+    /**
+     * TURN QuestionCreateDto INTO Question WITH List<Answers> WHEN CREATING QUESTIONNAIRE
+     * @param questionDto, QuestionCreateDto
+     * @param answer, List<Answers>
+     * @return Question
+     */
+
     public Question dtoToEntity(QuestionCreateDto questionDto, List<Answers> answer) {
 
         Question question = new Question();
@@ -40,6 +47,12 @@ public class QuestionMapper {
 
         return question;
     }
+
+    /**
+     * TURN QuestionCreateDto INTO Question WHEN UPDATING QUESTIONNAIRE
+     * @param questionDto, QuestionCreateDto
+     * @return Question
+     */
 
     public Question dtoToEntity(QuestionCreateDto questionDto) {
 
@@ -64,6 +77,12 @@ public class QuestionMapper {
 
         return question;
     }
+
+    /**
+     * TURN Question INTO QuestionCreateDto
+     * @param save, Question
+     * @return QuestionCreateDto
+     */
 
     public QuestionCreateDto entityToDto(Question save) {
 

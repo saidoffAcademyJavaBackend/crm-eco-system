@@ -16,6 +16,12 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+    /**
+     * CREATE QUESTIONNAIRE
+     * @param questionDto, QuestionCreateDto
+     * @return ResponseEntity.ok
+     */
+
     @PostMapping("")
     public ResponseEntity<?> createQuestion(@RequestBody QuestionCreateDto questionDto) {
 
@@ -23,6 +29,12 @@ public class QuestionController {
 
         return ResponseEntity.ok(question);
     }
+
+    /**
+     * UPDATE QUESTIONNAIRE
+     * @param questionDto, QuestionCreateDto
+     * @return ResponseEntity.ok
+     */
 
     @PutMapping("")
     public ResponseEntity<?> updateQuestion(@RequestBody QuestionCreateDto questionDto) {
@@ -32,6 +44,11 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
+    /**
+     * GET ALL QUESTIONNAIRES
+     * @return ResponseEntity.ok
+     */
+
     @GetMapping("/all")
     public ResponseEntity<?> getAllQuestions() {
 
@@ -39,6 +56,12 @@ public class QuestionController {
 
         return ResponseEntity.ok(question);
     }
+
+    /**
+     * GET ONLY ONE QUESTIONNAIRE BY ID
+     * @param id, UUID
+     * @return ResponseEntity.ok
+     */
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getQuestion(@PathVariable UUID id) {
@@ -48,6 +71,12 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
+    /**
+     * GET QUESTIONNAIRE BY ID FOR STUDENT
+     * @param id, UUID
+     * @return ResponseEntity.ok
+     */
+
     @GetMapping("/for_student/{id}")
     public ResponseEntity<?> getQuestionById(@PathVariable UUID id) {
 
@@ -55,6 +84,12 @@ public class QuestionController {
 
         return ResponseEntity.ok(question);
     }
+
+    /**
+     * DELETE QUESTIONNAIRE BY ID (CHANGE deleted STATUS)
+     * @param id, UUID
+     * @return ResponseEntity.ok
+     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteQuestionById(@PathVariable UUID id) {

@@ -27,6 +27,12 @@ public class AnswerQuestionService {
     private final UserRepository userRepository;
     private final AnsweredQuestionsRepository answeredQuestionsRepository;
 
+    /**
+     * SET USER'S ANSWER TO QUESTIONNAIRE
+     * @param answerQuestionsDto, AnswerQuestionsDto
+     * @return ResponseData<answerQuestionsDto>
+     */
+
     public ResponseData<?> setAnswerQuestions(AnswerQuestionsDto answerQuestionsDto) {
 
         UUID id = userSession.getUser().getId();
@@ -34,7 +40,9 @@ public class AnswerQuestionService {
         AnsweredQuestions answeredQuestions = new AnsweredQuestions();
 
         Optional<Question> byId = questionRepository.findById(answerQuestionsDto.getQuestionId());
-        Optional<User> userById = userRepository.findById(id);
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Question not found")
+        );
 
         if (byId.isEmpty()) {
             throw new NotFoundException("Question not found");
@@ -44,17 +52,17 @@ public class AnswerQuestionService {
 
         List<Answers> answers = question.getAnswers();
 
-        for (int i = 0; i < answers.size(); i++) {
-            if (answers.get(i).getId().equals(answerQuestionsDto.getAnswerId())) {
+        for (Answers answer : answers) {
+            if (answer.getId().equals(answerQuestionsDto.getAnswerId())) {
 
-                answeredQuestions.setSelectedAnswer(answers.get(i));
+                answeredQuestions.setSelectedAnswer(answer);
 
                 break;
             }
         }
 
         answeredQuestions.setQuestions(question);
-        answeredQuestions.setParticipant(userById.get());
+        answeredQuestions.setParticipant(user);
 
         AnsweredQuestions save = answeredQuestionsRepository.save(answeredQuestions);
 

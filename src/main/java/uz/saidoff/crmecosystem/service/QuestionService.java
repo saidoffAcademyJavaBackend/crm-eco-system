@@ -7,14 +7,13 @@ import uz.saidoff.crmecosystem.entity.Answers;
 import uz.saidoff.crmecosystem.entity.Group;
 import uz.saidoff.crmecosystem.entity.GroupStudent;
 import uz.saidoff.crmecosystem.entity.Question;
+import uz.saidoff.crmecosystem.enums.NotificationType;
 import uz.saidoff.crmecosystem.exception.ForbiddenException;
 import uz.saidoff.crmecosystem.mapper.QuestionMapper;
+import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
-import uz.saidoff.crmecosystem.repository.GroupStudentRepository;
 import uz.saidoff.crmecosystem.repository.QuestionRepository;
-import uz.saidoff.crmecosystem.repository.UserRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
-import uz.saidoff.crmecosystem.util.UserSession;
 
 import java.time.DateTimeException;
 import java.util.ArrayList;
@@ -29,10 +28,14 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
     private final AnswerService answerService;
-    private final UserSession userSession;
-    private final UserRepository userRepository;
-    private final GroupStudentRepository groupStudentRepository;
     private final GroupService groupService;
+    private final NotificationService notificationService;
+
+    /**
+     * CREATE NEW QUESTIONNAIRE
+     * @param questionDto, QuestionCreateDto
+     * @return ResponseData<questionDto>
+     */
 
     public ResponseData<?> createQuestion(QuestionCreateDto questionDto) {
 
@@ -46,10 +49,28 @@ public class QuestionService {
 
         Question save = questionRepository.save(question);
 
+
+        //CREATING NOTIFICATION WITH THIS QUESTIONNAIRE
+
+
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setTitle(save.getQuestion());
+        notificationDto.setDescription(save.getDescription().length() > 100 ? save.getDescription().substring(0, 100) : save.getDescription());
+        notificationDto.setObject(save.getId());
+        notificationDto.setType(NotificationType.QUESTIONNAIRE);
+
+        notificationService.saveNotification(notificationDto);
+
         QuestionCreateDto questionCreateDto = questionMapper.entityToDto(save);
 
         return new ResponseData<>(questionCreateDto, true);
     }
+
+    /**
+     * UPDATE QUESTIONNAIRE VIA INFO IN QuestionCreateDto
+     * @param questionDto, QuestionCreteDto
+     * @return ResponseData<questionDto>
+     */
 
     public ResponseData<?> updateQuestion(QuestionCreateDto questionDto) {
 
@@ -67,6 +88,11 @@ public class QuestionService {
 
         return new ResponseData<>(questionCreateDto, true);
     }
+
+    /**
+     * GET ALL QUESTIONNAIRES
+     * @return ResponseData<questionDtoList>
+     */
 
     public ResponseData<?> getAllQuestions() {
 
@@ -87,6 +113,12 @@ public class QuestionService {
         return new ResponseData<>(questionDtoList, true);
     }
 
+    /**
+     * GET ONE QUESTIONNAIRE BY ITS ID
+     * @param id, UUID
+     * @return ResponseData<questionCreateDto>
+     */
+
     public ResponseData<?> getQuestionById(UUID id) {
 
         Optional<Question> byId = questionRepository.findById(id);
@@ -102,9 +134,13 @@ public class QuestionService {
         return new ResponseData<>(questionCreateDto, true);
     }
 
-    public ResponseData<?> getQuestionForStudents(UUID id) {
+    /**
+     * GET QUESTION BY ID FOR ONE EXACT USER
+     * @param id, UUID
+     * @return ResponseData<questionCreateDto>
+     */
 
-        UUID userId = userSession.getUser().getId();
+    public ResponseData<?> getQuestionForStudents(UUID id) {
 
         Optional<Question> questionById = questionRepository.findById(id);
 
@@ -116,6 +152,10 @@ public class QuestionService {
 
         List<UUID> groupIDs = question.getGroupIDs();
         List<Group> groupsByIDs = groupService.getGroupsById(groupIDs);
+
+
+        //CHECKING IF THE USER CAN READ THIS QUESTIONNAIRE
+
 
         for (Group groupsByID : groupsByIDs) {
 
@@ -142,12 +182,24 @@ public class QuestionService {
         return new ResponseData<>(questionCreateDto, true);
     }
 
+    /**
+     * DELETE ONE QUESTIONNAIRE BY ITS ID (CHANGE deleted STATUS)
+     * @param id, UUID
+     * @return ResponseData<>
+     */
+
     public ResponseData<?> deleteQuestion(UUID id) {
 
-        questionRepository.deleteById(id);
+        questionRepository.updateByIdAndDeleted(id,true);
 
         return new ResponseData<>(true);
     }
+
+    /**
+     * GET ONE QUESTIONNAIRE (FOR ADMINS)
+     * @param id, UUID
+     * @return Question
+     */
 
     public Question getQuestion(UUID id) {
 

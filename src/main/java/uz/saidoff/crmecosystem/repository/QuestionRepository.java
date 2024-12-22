@@ -12,4 +12,6 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     Optional<Question> findById(UUID id);
 
+    Integer updateByIdAndDeleted(UUID id,boolean deleted);
+
 }

@@ -11,10 +11,6 @@ import uz.saidoff.crmecosystem.repository.AnswersRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.apache.coyote.http11.Constants.a;
 
 @RequiredArgsConstructor
 @Service
@@ -22,6 +18,12 @@ public class AnswerService {
 
     private final AnswersRepository answersRepository;
     private final QuestionService questionService;
+
+    /**
+     * CREATE ANSWERS
+     * @param questionCreateDto, QuestionCreateDto
+     * @return List<Answers>
+     */
 
     public List<Answers> createAnswer(QuestionCreateDto questionCreateDto) {
 
@@ -40,10 +42,14 @@ public class AnswerService {
             answersList.add(answers);
         }
 
-        List<Answers> answers = answersRepository.saveAll(answersList);
-
-        return answers;
+        return answersRepository.saveAll(answersList);
     }
+
+    /**
+     * GET ANSWERS
+     * @param answers, List<Answers>
+     * @return List<AnswersDto>
+     */
 
     public List<AnswersDto> getAnswersDto(List<Answers> answers) {
 
@@ -62,6 +68,12 @@ public class AnswerService {
 
         return answersDtoList;
     }
+
+    /**
+     * UPDATE ANSWERS
+     * @param questionCreateDto, QuestionCreateDto
+     * @return List<Answers>
+     */
 
     public List<Answers> updateAnswers(QuestionCreateDto questionCreateDto) {
 

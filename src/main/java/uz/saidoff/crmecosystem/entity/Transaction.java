@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.entity.template.AbsEntity;
 import uz.saidoff.crmecosystem.enums.Currency;
 

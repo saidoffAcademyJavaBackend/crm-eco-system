@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.saidoff.crmecosystem.payload.AnswerQuestionsDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.AnswerQuestionService;
-import uz.saidoff.crmecosystem.valid.CheckPermission;
 
 @RestController
 @RequestMapping("/api/answer_question")
@@ -17,6 +16,12 @@ import uz.saidoff.crmecosystem.valid.CheckPermission;
 public class AnswerQuestionController {
 
     private final AnswerQuestionService answerQuestionService;
+
+    /**
+     * SET USER'S ANSWER TO QUESTIONNAIRE
+     * @param answerQuestionsDto, AnswerQuestionsDto
+     * @return ResponseEntity.ok
+     */
 
     @PostMapping("")
     public ResponseEntity<?> setAnswerToQuestion(@RequestBody AnswerQuestionsDto answerQuestionsDto) {
