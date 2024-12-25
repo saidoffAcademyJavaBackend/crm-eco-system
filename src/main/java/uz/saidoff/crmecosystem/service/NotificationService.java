@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Notification;
 import uz.saidoff.crmecosystem.entity.NotificationResponse;
+import uz.saidoff.crmecosystem.entity.Question;
 import uz.saidoff.crmecosystem.entity.auth.User;
 import uz.saidoff.crmecosystem.mapper.NotificationMapper;
 import uz.saidoff.crmecosystem.payload.NotificationDto;
@@ -49,5 +50,16 @@ public class NotificationService {
   public void readNotifications(List<UUID> notifications) {
     List<Notification> notificationsList = notificationRepository.findAllById(notifications);
     usersNotificationService.readUserNotifications(notificationsList);
+  }
+
+  public List<NotificationResponse> getNotificationForScheduledJob(List<Question> questions){
+
+    List<Notification> notificationsForScheduledJob = null;
+
+    for (Question question : questions) {
+      notificationsForScheduledJob = notificationRepository.getNotificationsForScheduledJob(question.getId());
+    }
+
+    return notificationsForScheduledJob.stream().map(notificationMapper::toDto).toList();
   }
 }

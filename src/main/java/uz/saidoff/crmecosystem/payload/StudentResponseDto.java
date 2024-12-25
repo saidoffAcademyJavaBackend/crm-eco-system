@@ -24,12 +24,14 @@ public class StudentResponseDto {
     private Date dateOfBirth;
     private String placeOfBirth; // tug'ulgan joyi
     private String currentResidence; // hozirgi yashash joyi
-    private String specialty; // mutahasisligi
+    private UUID specialtyId; // mutahasisligi
     private String passportSeries; // pasport seriasi
 
     private String role ;
     private Double salary;
     private Date startWork;
+    private String numberOfChildren;
+    private Boolean gender;
 
 
 

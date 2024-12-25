@@ -39,12 +39,6 @@ public class QuestionMapper {
         question.setGroupIDs(questionDto.getGroupIDs());
         question.setUsersIDs(questionDto.getUserIDs());
 
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.isAfter(question.getStartDate()) && now.isBefore(question.getEndDate())) {
-            question.setInProcess(true);
-        }
-
         return question;
     }
 
@@ -68,12 +62,6 @@ public class QuestionMapper {
         question.setQuestionnaire(questionDto.isQuestionnaire());
         question.setGroupIDs(questionDto.getGroupIDs());
         question.setUsersIDs(questionDto.getUserIDs());
-
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.isAfter(question.getStartDate()) && now.isBefore(question.getEndDate())) {
-            question.setInProcess(true);
-        }
 
         return question;
     }
@@ -100,7 +88,6 @@ public class QuestionMapper {
         questionDto.setQuestionnaire(save.isQuestionnaire());
         questionDto.setGroupIDs(save.getGroupIDs());
         questionDto.setUserIDs(save.getUsersIDs());
-        questionDto.setInProcess(save.isInProcess());
 
         return questionDto;
     }

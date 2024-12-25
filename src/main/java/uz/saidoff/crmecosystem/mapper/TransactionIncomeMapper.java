@@ -31,9 +31,9 @@ public class TransactionIncomeMapper {
                 throw new NotFoundException("Transactor not found");
             }
             User user = optionalUser.get();
-            transaction.setTransactor(user);
+            transaction.getUserPayments().setTransactor(user);
         }
-        optionalGroup.ifPresent(transaction::setGroup);
+        optionalGroup.ifPresent(v -> transaction.getUserPayments().setGroup(v));
         if (attachment != null) {
             transaction.setAttachment(attachment);
         }

@@ -40,8 +40,6 @@ public class Question extends AbsEntity {
     @ElementCollection
     private List<UUID> usersIDs;
 
-    private boolean isInProcess = false;
-
     //if true it is questionnaire, else it's test
     private boolean questionnaire = true;
 }

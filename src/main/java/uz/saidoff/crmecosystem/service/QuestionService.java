@@ -3,10 +3,7 @@ package uz.saidoff.crmecosystem.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.saidoff.crmecosystem.entity.Answers;
-import uz.saidoff.crmecosystem.entity.Group;
-import uz.saidoff.crmecosystem.entity.GroupStudent;
-import uz.saidoff.crmecosystem.entity.Question;
+import uz.saidoff.crmecosystem.entity.*;
 import uz.saidoff.crmecosystem.enums.NotificationType;
 import uz.saidoff.crmecosystem.exception.ForbiddenException;
 import uz.saidoff.crmecosystem.mapper.QuestionMapper;
@@ -14,8 +11,10 @@ import uz.saidoff.crmecosystem.payload.NotificationDto;
 import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
 import uz.saidoff.crmecosystem.repository.QuestionRepository;
 import uz.saidoff.crmecosystem.response.ResponseData;
+import uz.saidoff.crmecosystem.util.UserSession;
 
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +29,7 @@ public class QuestionService {
     private final AnswerService answerService;
     private final GroupService groupService;
     private final NotificationService notificationService;
+    private final UserSession userSession;
 
     /**
      * CREATE NEW QUESTIONNAIRE
@@ -142,6 +142,8 @@ public class QuestionService {
 
     public ResponseData<?> getQuestionForStudents(UUID id) {
 
+        UUID userId = userSession.getUser().getId();
+
         Optional<Question> questionById = questionRepository.findById(id);
 
         if (questionById.isEmpty()) {
@@ -153,29 +155,7 @@ public class QuestionService {
         List<UUID> groupIDs = question.getGroupIDs();
         List<Group> groupsByIDs = groupService.getGroupsById(groupIDs);
 
-
-        //CHECKING IF THE USER CAN READ THIS QUESTIONNAIRE
-
-
-        for (Group groupsByID : groupsByIDs) {
-
-            for (int i = 0; i < question.getGroupIDs().size(); i++) {
-                if (!groupsByID.getId().equals(question.getGroupIDs().get(i))) {
-                    throw new ForbiddenException("This group", "forbidden");
-                }
-            }
-
-            List<GroupStudent> groupStudents = groupsByID.getGroupStudents();
-
-            for (GroupStudent groupStudent : groupStudents) {
-                for (int i = 0; i < question.getUsersIDs().size(); i++) {
-                    if (groupStudent.getStudent().getId().equals(question.getUsersIDs().get(i))) {
-                        throw new ForbiddenException("This user", "forbidden");
-                    }
-                }
-            }
-
-        }
+        checkIfUserCanReadQuestion(userId, groupsByIDs, question);
 
         QuestionCreateDto questionCreateDto = questionMapper.entityToDto(question);
 
@@ -206,5 +186,54 @@ public class QuestionService {
         return questionRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Question not found")
         );
+    }
+
+    public List<NotificationResponse> getQuestionsForScheduledJob() {
+
+        UUID id = userSession.getUser().getId();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Question> questions = questionRepository.getQuestions(now);
+
+        for (Question question : questions) {
+            if (question.getUsersIDs().contains(id)) {
+                throw new ForbiddenException("This user", "Forbidden");
+            }
+        }
+
+        return notificationService.getNotificationForScheduledJob(questions);
+    }
+
+    /**
+     * CHECK IF USER IN THIS SESSION IS NOT FORBIDDEN
+     * @param userId, UUID
+     * @param groupsByIDs, List<Group>
+     * @param question, Question
+     */
+
+    public void checkIfUserCanReadQuestion(UUID userId, List<Group> groupsByIDs, Question question) {
+
+        for (Group groupsByID : groupsByIDs) {
+
+            for (int i = 0; i < question.getGroupIDs().size(); i++) {
+                if (!groupsByID.getId().equals(question.getGroupIDs().get(i))) {
+                    throw new ForbiddenException("This group", "forbidden");
+                }
+            }
+
+            List<GroupStudent> groupStudents = groupsByID.getGroupStudents();
+
+            for (GroupStudent groupStudent : groupStudents) {
+                for (int i = 0; i < question.getUsersIDs().size(); i++) {
+                    if (groupStudent.getStudent().getId().equals(question.getUsersIDs().get(i))
+                            &&
+                            groupStudent.getStudent().getId().equals(userId)) {
+                        throw new ForbiddenException("This user", "forbidden");
+                    }
+                }
+            }
+
+        }
     }
 }

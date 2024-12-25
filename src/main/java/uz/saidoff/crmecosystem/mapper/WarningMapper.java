@@ -33,6 +33,15 @@ public class WarningMapper {
         dto.setActive(warning.isDeleted());
         return dto;
     }
+
+    public WarningDTO toWarningGetDTO(Warning warning) {
+        WarningDTO dto = new WarningDTO();
+        dto.setId(warning.getId());
+        dto.setReason(warning.getReason());
+        dto.setActive(warning.isPunishment());
+        dto.setActive(warning.isDeleted());
+        return dto;
+    }
     public WarningDTO toPunishmentDTO(Warning warning) {
         WarningDTO dto = new WarningDTO();
         dto.setId(warning.getId());
