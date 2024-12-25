@@ -3,7 +3,7 @@ package uz.saidoff.crmecosystem.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
+import uz.saidoff.crmecosystem.payload.questionnaire.QuestionCreateDto;
 import uz.saidoff.crmecosystem.response.ResponseData;
 import uz.saidoff.crmecosystem.service.QuestionService;
 
@@ -36,10 +36,10 @@ public class QuestionController {
      * @return ResponseEntity.ok
      */
 
-    @PutMapping("")
-    public ResponseEntity<?> updateQuestion(@RequestBody QuestionCreateDto questionDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateQuestion(@RequestBody QuestionCreateDto questionDto,@PathVariable UUID id) {
 
-        ResponseData<?> question = questionService.updateQuestion(questionDto);
+        ResponseData<?> question = questionService.updateQuestion(id,questionDto);
 
         return ResponseEntity.ok(question);
     }

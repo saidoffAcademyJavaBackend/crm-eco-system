@@ -1,14 +1,11 @@
-package uz.saidoff.crmecosystem.payload;
+package uz.saidoff.crmecosystem.payload.questionnaire;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
-public class AnswersDto {
-    private UUID id;
+public class AnswersCreateDto {
     private String value;
     private Boolean isRightAnswer;
 }

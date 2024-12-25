@@ -1,100 +1,106 @@
 package uz.saidoff.crmecosystem.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import uz.saidoff.crmecosystem.entity.Answers;
-import uz.saidoff.crmecosystem.entity.Question;
 import uz.saidoff.crmecosystem.exception.NotFoundException;
 import uz.saidoff.crmecosystem.payload.AnswersDto;
-import uz.saidoff.crmecosystem.payload.QuestionCreateDto;
+import uz.saidoff.crmecosystem.payload.questionnaire.AnswersCreateDto;
+import uz.saidoff.crmecosystem.payload.questionnaire.QuestionCreateDto;
 import uz.saidoff.crmecosystem.repository.AnswersRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
 public class AnswerService {
 
-    private final AnswersRepository answersRepository;
-    private final QuestionService questionService;
+  private final AnswersRepository answersRepository;
+  private final QuestionService questionService;
 
-    /**
-     * CREATE ANSWERS
-     * @param questionCreateDto, QuestionCreateDto
-     * @return List<Answers>
-     */
+  public AnswerService(AnswersRepository answersRepository,@Lazy QuestionService questionService) {
+    this.answersRepository = answersRepository;
+    this.questionService = questionService;
+  }
 
-    public List<Answers> createAnswer(QuestionCreateDto questionCreateDto) {
+  /**
+   * CREATE ANSWERS
+   *
+   * @param questionCreateDto, QuestionCreateDto
+   * @return List<Answers>
+   */
 
-        List<Answers> answersList = new ArrayList<>();
+  public List<Answers> createAnswer(QuestionCreateDto questionCreateDto) {
 
-        for (AnswersDto answersDto : questionCreateDto.getAnswers()) {
+    List<Answers> answersList = new ArrayList<>();
 
-            Answers answers = new Answers();
+    for (AnswersCreateDto answersDto : questionCreateDto.getAnswers()) {
 
-            answers.setValue(answersDto.getValue());
+      Answers answers = new Answers();
 
-            if (!questionCreateDto.isQuestionnaire()) {
-                answers.setIsRightAnswer(answersDto.getIsRightAnswer());
-            }
+      answers.setValue(answersDto.getValue());
 
-            answersList.add(answers);
-        }
+      if (!questionCreateDto.isQuestionnaire()) {
+        answers.setIsRightAnswer(answersDto.getIsRightAnswer());
+      }
 
-        return answersRepository.saveAll(answersList);
+      answersList.add(answers);
     }
 
-    /**
-     * GET ANSWERS
-     * @param answers, List<Answers>
-     * @return List<AnswersDto>
-     */
+    return answersRepository.saveAll(answersList);
+  }
 
-    public List<AnswersDto> getAnswersDto(List<Answers> answers) {
+  /**
+   * GET ANSWERS
+   *
+   * @param answers, List<Answers>
+   * @return List<AnswersDto>
+   */
 
-        List<AnswersDto> answersDtoList = new ArrayList<>();
+  public List<AnswersDto> getAnswersDto(List<Answers> answers) {
 
-        for (Answers answer : answers) {
+    List<AnswersDto> answersDtoList = new ArrayList<>();
 
-            AnswersDto answersDto = new AnswersDto();
+    for (Answers answer : answers) {
 
-            answersDto.setId(answer.getId());
-            answersDto.setValue(answer.getValue());
-            answersDto.setIsRightAnswer(answer.getIsRightAnswer());
+      AnswersDto answersDto = new AnswersDto();
 
-            answersDtoList.add(answersDto);
-        }
+      answersDto.setId(answer.getId());
+      answersDto.setValue(answer.getValue());
+      answersDto.setIsRightAnswer(answer.getIsRightAnswer());
 
-        return answersDtoList;
+      answersDtoList.add(answersDto);
     }
 
-    /**
-     * UPDATE ANSWERS
-     * @param questionCreateDto, QuestionCreateDto
-     * @return List<Answers>
-     */
+    return answersDtoList;
+  }
 
-    public List<Answers> updateAnswers(QuestionCreateDto questionCreateDto) {
+  /**
+   * UPDATE ANSWERS
+   *
+   * @param questionCreateDto, QuestionCreateDto
+   * @return List<Answers>
+   */
 
-        List<AnswersDto> answers = questionCreateDto.getAnswers();
+  public List<Answers> updateAnswers(QuestionCreateDto questionCreateDto) {
 
-        Question question = questionService.getQuestion(questionCreateDto.getQuestionId());
+    List<AnswersDto> answers = questionCreateDto.getAnswers();
 
-        List<Answers> byQuestion = answersRepository.findByQuestion(question);
 
-        if (byQuestion.isEmpty()) {
-            throw new NotFoundException("Answers not found");
-        }
+    List<Answers> byQuestion = questionService.getQuestionsAnswers(questionCreateDto.getQuestionId());
 
-        for (AnswersDto answer : answers) {
-            for (Answers value : byQuestion) {
-                value.setValue(answer.getValue());
-                value.setIsRightAnswer(answer.getIsRightAnswer());
-            }
-        }
-
-        return answersRepository.saveAll(byQuestion);
+    if (byQuestion.isEmpty()) {
+      throw new NotFoundException("Answers not found");
     }
+
+    for (AnswersDto answer : answers) {
+      for (Answers value : byQuestion) {
+        value.setValue(answer.getValue());
+        value.setIsRightAnswer(answer.getIsRightAnswer());
+      }
+    }
+
+    return answersRepository.saveAll(byQuestion);
+  }
 
 }
